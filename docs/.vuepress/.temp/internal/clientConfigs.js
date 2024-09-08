@@ -7,6 +7,7 @@ import * as clientConfig5 from '/Users/yichen/Projects/structural-space-vuepress
 import * as clientConfig6 from '/Users/yichen/Projects/structural-space-vuepress/node_modules/@vuepress/theme-default/lib/client/config.js'
 import * as clientConfig7 from '/Users/yichen/Projects/structural-space-vuepress/node_modules/@vuepress/plugin-back-to-top/lib/client/config.js'
 import * as clientConfig8 from '/Users/yichen/Projects/structural-space-vuepress/node_modules/@vuepress/plugin-medium-zoom/lib/client/config.js'
+import * as clientConfig9 from '/Users/yichen/Projects/structural-space-vuepress/docs/.vuepress/.temp/register-components/clientConfig.2fc998f8.js'
 
 export const clientConfigs = [
   clientConfig0,
@@ -18,4 +19,5 @@ export const clientConfigs = [
   clientConfig6,
   clientConfig7,
   clientConfig8,
+  clientConfig9,
 ].map((m) => m.default).filter(Boolean)

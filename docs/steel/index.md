@@ -2,3 +2,5 @@
 ---
 
 # Steel
+
+<steel-test />

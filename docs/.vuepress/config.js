@@ -4,6 +4,11 @@ import { viteBundler } from '@vuepress/bundler-vite'
 
 import { backToTopPlugin } from '@vuepress/plugin-back-to-top'
 import { mediumZoomPlugin } from '@vuepress/plugin-medium-zoom'
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+
+import { getDirname, path } from 'vuepress/utils'
+
+const __dirname = getDirname(import.meta.url)
 
 export default defineUserConfig({
   lang: 'en-US',
@@ -81,6 +86,9 @@ export default defineUserConfig({
   plugins: [
     backToTopPlugin(),
     mediumZoomPlugin({}),
+    registerComponentsPlugin({
+      componentsDir: path.resolve(__dirname, './components'),
+    }),
   ],
 
   bundler: viteBundler(),
