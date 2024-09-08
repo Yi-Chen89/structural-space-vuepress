@@ -1,1 +1,1 @@
-# structural-space-vuepress
+# Structural Space
