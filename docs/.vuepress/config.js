@@ -11,7 +11,59 @@ export default defineUserConfig({
   theme: defaultTheme({
     logo: 'https://vuejs.press/images/hero.png',
 
-    navbar: ['/', '/get-started'],
+    // configure GitHub link on navbar
+    repo: 'https://github.com/Yi-Chen89/structural-space-vuepress.git',
+
+    // configure navbar
+    navbar: [
+      {
+        text: 'Home',
+        link: '/home/',
+      },
+      {
+        text: 'Page',
+        children: [
+          '/steel/',
+          '/concrete/'
+        ],
+      },
+    ],
+
+    // configure sidebar
+    sidebar: {
+      '/home/': [
+        {
+          text: 'Home',
+          children: [
+            '',
+            'release',
+          ],
+        }
+      ],
+      '/steel/': [
+        {
+          text: 'Steel',
+          children: [
+            '',
+            'release',
+            'development',
+          ],
+        }
+      ],
+      '/concrete/': [
+        {
+          text: 'Concrete',
+          children: [
+            '',
+            'release',
+            'development',
+          ],
+        }
+      ],
+    },
+
+    // configure 'Edit this page' link
+    editLink: false,
   }),
 
   bundler: viteBundler(),

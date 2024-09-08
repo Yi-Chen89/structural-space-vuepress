@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
 # VuePress default temp directory
-.vuepress/.temp
+docs/.vuepress/.temp
 # VuePress default cache directory
-.vuepress/.cache
+docs/.vuepress/.cache
 # VuePress default build output directory
-.vuepress/dist
+docs/.vuepress/dist

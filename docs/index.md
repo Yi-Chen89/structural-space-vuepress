@@ -2,22 +2,17 @@
 home: true
 title: Home
 heroImage: https://vuejs.press/images/hero.png
+
 actions:
-  - text: Get Started
-    link: /getting-started.html
+  - text: Home
+    link: /home/
     type: primary
 
-  # - text: Introduction
-  #   link: https://vuejs.press/guide/introduction.html
-  #   type: secondary
-
 features:
-  - title: Steel Calculator
-    details: Steel calculator.
+  - title: Steel
+    details: Steel calcs
+  - title: Concrete
+    details: Concrete calcs
 
-footer: MIT Licensed | Copyright © 2018-present VuePress Community
+footer: MIT Licensed | Copyright © 2024 Yi Chen
 ---
-
-This is the content of home page. Check [Home Page Docs][default-theme-home] for more details.
-
-[default-theme-home]: https://vuejs.press/reference/default-theme/frontmatter.html#home-page
