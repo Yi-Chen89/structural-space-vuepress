@@ -3,6 +3,7 @@ import { defineUserConfig } from 'vuepress/cli'
 import { viteBundler } from '@vuepress/bundler-vite'
 
 import { backToTopPlugin } from '@vuepress/plugin-back-to-top'
+import { mediumZoomPlugin } from '@vuepress/plugin-medium-zoom'
 
 export default defineUserConfig({
   lang: 'en-US',
@@ -79,6 +80,7 @@ export default defineUserConfig({
 
   plugins: [
     backToTopPlugin(),
+    mediumZoomPlugin({}),
   ],
 
   bundler: viteBundler(),
