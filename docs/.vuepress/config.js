@@ -31,6 +31,7 @@ export default defineUserConfig({
 
     // configure sidebar
     sidebar: {
+      // home page
       '/home/': [
         {
           text: 'Home',
@@ -40,6 +41,7 @@ export default defineUserConfig({
           ],
         }
       ],
+      // steel page
       '/steel/': [
         {
           text: 'Steel',
@@ -50,6 +52,7 @@ export default defineUserConfig({
           ],
         }
       ],
+      // concrete page
       '/concrete/': [
         {
           text: 'Concrete',
@@ -64,6 +67,12 @@ export default defineUserConfig({
 
     // configure 'Edit this page' link
     editLink: false,
+
+    // configure 'Last Updated'
+    lastUpdated: true,
+
+    // configure 'Contributors'
+    contributors: false,
   }),
 
   bundler: viteBundler(),
