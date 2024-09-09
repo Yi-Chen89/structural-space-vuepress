@@ -15,7 +15,7 @@
     data() {
       return {
         x: 'Test',
-        y: 'test value'
+        y: 'W44X262'
       }
     },
 
