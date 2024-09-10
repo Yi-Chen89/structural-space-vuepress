@@ -1,6 +1,7 @@
 ---
+footer: Only work with US units
 ---
 
 # Steel
 
-<steel-test />
+<steel-calculator/>
