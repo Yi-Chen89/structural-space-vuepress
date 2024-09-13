@@ -46,6 +46,8 @@
     <br>
     {{ selectedShapeTypeAxialSlenderLimitRatio }}
     <br>
+    {{ selectedShapeAxialSlenderClass }}
+    <br>
     {{ selectedShapeTypeFlexureSlenderLimitRatio }}
     <br>
     {{ selectedShapeFlexureSlenderClass }}
@@ -63,6 +65,7 @@
   import { shapeSlenderRatioFetcher } from './utils';
 
   import { axialSlenderLimitRatioCalculator } from './calculator-utils';
+  import { axialSlenderClassifier } from './calculator-utils';
   import { flexureSlenderLimitRatioCalculator } from './calculator-utils';
   import { flexureSlenderClassifier } from './calculator-utils';
 
@@ -158,6 +161,10 @@
 
       selectedShapeTypeAxialSlenderLimitRatio () {
         return axialSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
+      },
+
+      selectedShapeAxialSlenderClass () {
+        return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio)
       },
 
       selectedShapeTypeFlexureSlenderLimitRatio () {

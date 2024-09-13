@@ -46,28 +46,35 @@ export function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
 }
 
 
+export function axialSlenderClassifier(shapeType, shapeSlenderRatio, shapeTypeAxialSlenderLimitRatio) {
+  // A360-16 B4 Table B4.1a
+  if (shapeType && shapeSlenderRatio && shapeTypeAxialSlenderLimitRatio) {
+    const flangeNonslenderLimitRatio = shapeTypeAxialSlenderLimitRatio['lambdarf'];
+    const webNonslenderLimitRatio = shapeTypeAxialSlenderLimitRatio['lambdarw'];
+  
+    let flangeSlenderRatio = 0;
+    let webSlenderRatio = 0;
+  
+    let flange = null;
+    let web = null;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    [flangeSlenderRatio, webSlenderRatio] = slenderRatioFetcher(shapeType, shapeSlenderRatio);
+  
+    if (flangeSlenderRatio) {
+      flange = axialElementClassifier(flangeSlenderRatio, flangeNonslenderLimitRatio);
+    }
+    if (webSlenderRatio) {
+      web = axialElementClassifier(webSlenderRatio, webNonslenderLimitRatio);
+    }
+  
+    return {
+      'flange': flange,
+      'web': web,
+    };
+  } else {
+    return null;
+  }
+}
 
 
 export function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
@@ -139,29 +146,13 @@ export function flexureSlenderClassifier(shapeType, shapeSlenderRatio, shapeType
     const webCompactLimitRatio = shapeTypeFlexureSlenderLimitRatio['lambdapw'];
     const webNoncompactLimitRatio = shapeTypeFlexureSlenderLimitRatio['lambdarw'];
 
-    let flangeSlenderRatio = null;
-    let webSlenderRatio = null;
+    let flangeSlenderRatio = 0;
+    let webSlenderRatio = 0;
 
     let flange = null;
     let web = null;
 
-    if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-      flangeSlenderRatio = shapeSlenderRatio['bf/2tf'];
-      webSlenderRatio = shapeSlenderRatio['h/tw'];
-    } else if (['C', 'MC'].includes(shapeType)) {
-      flangeSlenderRatio = shapeSlenderRatio['b/t'];
-      webSlenderRatio = shapeSlenderRatio['h/tw'];
-    } else if (['L', '2L'].includes(shapeType)) {
-      flangeSlenderRatio = shapeSlenderRatio['b/t'];
-    } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
-      flangeSlenderRatio = shapeSlenderRatio['bf/2tf'];
-      webSlenderRatio = shapeSlenderRatio['D/t'];
-    } else if (['HSS Rect.'].includes(shapeType)) {
-      flangeSlenderRatio = shapeSlenderRatio['b/tdes'];
-      webSlenderRatio = shapeSlenderRatio['h/tdes'];
-    } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
-      flangeSlenderRatio = shapeSlenderRatio['D/t'];
-    }
+    [flangeSlenderRatio, webSlenderRatio] = slenderRatioFetcher(shapeType, shapeSlenderRatio);
 
     if (flangeSlenderRatio) {
       flange = flexureElementClassifier(flangeSlenderRatio, flangeCompactLimitRatio, flangeNoncompactLimitRatio);
@@ -183,6 +174,30 @@ export function flexureSlenderClassifier(shapeType, shapeSlenderRatio, shapeType
 
 
 // helper function
+function slenderRatioFetcher(shapeType, shapeSlenderRatio) {
+  if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
+    return [shapeSlenderRatio['bf/2tf'], shapeSlenderRatio['h/tw']];
+  } else if (['C', 'MC'].includes(shapeType)) {
+    return [shapeSlenderRatio['b/t'], shapeSlenderRatio['h/tw']];
+  } else if (['L', '2L'].includes(shapeType)) {
+    return [shapeSlenderRatio['b/t'], 0];
+  } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    return [shapeSlenderRatio['bf/2tf'], shapeSlenderRatio['D/t']];
+  } else if (['HSS Rect.'].includes(shapeType)) {
+    return [shapeSlenderRatio['b/tdes'], shapeSlenderRatio['h/tdes']];
+  } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
+    return [shapeSlenderRatio['D/t'], 0];
+  }
+}
+
+function axialElementClassifier(slenderRatio, nonslenderLimitRatio) {
+  if (slenderRatio <= nonslenderLimitRatio) {
+    return 'nonslender';
+  } else {
+    return 'slender';
+  }
+}
+
 function flexureElementClassifier(slenderRatio, compactLimitRatio, noncompactLimitRatio) {
   if (slenderRatio <= compactLimitRatio) {
     return 'compact';
