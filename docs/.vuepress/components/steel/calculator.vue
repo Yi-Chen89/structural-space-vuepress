@@ -46,7 +46,7 @@
     <br>
     {{ selectedShapeTypeFlexureSlenderLimitRatio }}
     <br>
-    {{ xx }}
+    {{ selectedShapeFlexureSlenderClass }}
 
   </div>
 </template>
@@ -158,14 +158,16 @@
         return flexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
       },
 
-      xx () {
+      selectedShapeFlexureSlenderClass () {
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio)
       }
 
     },
 
-    mounted() {
-      
+    watch: {
+      selectedShape(newShape) {
+        this.selectedGrade = this.selectedShapeTypeASTMSpecPreferredKey;
+      },     
     },
 
     methods: {
