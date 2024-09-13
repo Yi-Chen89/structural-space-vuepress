@@ -1,0 +1,34 @@
+﻿,ASTM_Designation,Type,Fy,Fu
+A36,ASTM A36,Carbon,36,58
+A53 Gr. B,ASTM A53 Gr. B,Carbon,35,60
+A500 Gr. B Round,ASTM A500 Gr. B,Carbon,42,58
+A500 Gr. B Rect.,ASTM A500 Gr. B,Carbon,46,58
+A500 Gr. C Round,ASTM A500 Gr. C,Carbon,46,62
+A500 Gr. C Rect.,ASTM A500 Gr. C,Carbon,50,62
+A501 Gr. A,ASTM A501 Gr. A,Carbon,36,58
+A501 Gr. B,ASTM A501 Gr. B,Carbon,50,70
+A529 Gr. 50,ASTM A529 Gr. 50,Carbon,50,65
+A529 Gr. 55,ASTM A529 Gr. 55,Carbon,55,70
+A709 36,ASTM A709 36,Carbon,36,58
+A1043 36,ASTM A1043 36,Carbon,36,58
+A1043 50,ASTM A1043 50,Carbon,50,65
+A1085 Gr. A,ASTM A1085 Gr. A,Carbon,50,65
+A572 Gr. 42,ASTM A572 Gr. 42,High-Strength Low-Alloy,42,60
+A572 Gr. 50,ASTM A572 Gr. 50,High-Strength Low-Alloy,50,65
+A572 Gr. 55,ASTM A572 Gr. 55,High-Strength Low-Alloy,55,70
+A572 Gr. 60,ASTM A572 Gr. 60,High-Strength Low-Alloy,60,75
+A572 Gr. 65,ASTM A572 Gr. 65,High-Strength Low-Alloy,65,80
+"A618 Gr. Ia, Ib & II","ASTM A618 Gr. Ia, Ib & II",High-Strength Low-Alloy,50,70
+A618 Gr. III,ASTM A618 Gr. III,High-Strength Low-Alloy,50,65
+A709 50,ASTM A709 50,High-Strength Low-Alloy,50,65
+A709 50S,ASTM A709 50S,High-Strength Low-Alloy,50,65
+A709 50W,ASTM A709 50W,High-Strength Low-Alloy,50,70
+A913 50,ASTM A913 50,High-Strength Low-Alloy,50,65
+A913 60,ASTM A913 60,High-Strength Low-Alloy,60,75
+A913 65,ASTM A913 65,High-Strength Low-Alloy,65,80
+A913 70,ASTM A913 70,High-Strength Low-Alloy,70,90
+A992,ASTM A992,High-Strength Low-Alloy,50,65
+A1065 Gr. 50,ASTM A1065 Gr. 50,High-Strength Low-Alloy,50,60
+A588,ASTM A588,Corrosion Resistant High-Strength Low-Alloy,50,70
+A847,ASTM A847,Corrosion Resistant High-Strength Low-Alloy,50,70
+A1065 Gr. 50W,ASTM A1065 Gr. 50W,Corrosion Resistant High-Strength Low-Alloy,50,70

@@ -1,0 +1,200 @@
+{
+  "A36": {
+    "ASTM_Designation": "ASTM A36",
+    "Type": "Carbon",
+    "Fy": 36,
+    "Fu": 58
+  },
+  "A53 Gr. B": {
+    "ASTM_Designation": "ASTM A53 Gr. B",
+    "Type": "Carbon",
+    "Fy": 35,
+    "Fu": 60
+  },
+  "A500 Gr. B Round": {
+    "ASTM_Designation": "ASTM A500 Gr. B",
+    "Type": "Carbon",
+    "Fy": 42,
+    "Fu": 58
+  },
+  "A500 Gr. B Rect.": {
+    "ASTM_Designation": "ASTM A500 Gr. B",
+    "Type": "Carbon",
+    "Fy": 46,
+    "Fu": 58
+  },
+  "A500 Gr. C Round": {
+    "ASTM_Designation": "ASTM A500 Gr. C",
+    "Type": "Carbon",
+    "Fy": 46,
+    "Fu": 62
+  },
+  "A500 Gr. C Rect.": {
+    "ASTM_Designation": "ASTM A500 Gr. C",
+    "Type": "Carbon",
+    "Fy": 50,
+    "Fu": 62
+  },
+  "A501 Gr. A": {
+    "ASTM_Designation": "ASTM A501 Gr. A",
+    "Type": "Carbon",
+    "Fy": 36,
+    "Fu": 58
+  },
+  "A501 Gr. B": {
+    "ASTM_Designation": "ASTM A501 Gr. B",
+    "Type": "Carbon",
+    "Fy": 50,
+    "Fu": 70
+  },
+  "A529 Gr. 50": {
+    "ASTM_Designation": "ASTM A529 Gr. 50",
+    "Type": "Carbon",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A529 Gr. 55": {
+    "ASTM_Designation": "ASTM A529 Gr. 55",
+    "Type": "Carbon",
+    "Fy": 55,
+    "Fu": 70
+  },
+  "A709 36": {
+    "ASTM_Designation": "ASTM A709 36",
+    "Type": "Carbon",
+    "Fy": 36,
+    "Fu": 58
+  },
+  "A1043 36": {
+    "ASTM_Designation": "ASTM A1043 36",
+    "Type": "Carbon",
+    "Fy": 36,
+    "Fu": 58
+  },
+  "A1043 50": {
+    "ASTM_Designation": "ASTM A1043 50",
+    "Type": "Carbon",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A1085 Gr. A": {
+    "ASTM_Designation": "ASTM A1085 Gr. A",
+    "Type": "Carbon",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A572 Gr. 42": {
+    "ASTM_Designation": "ASTM A572 Gr. 42",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 42,
+    "Fu": 60
+  },
+  "A572 Gr. 50": {
+    "ASTM_Designation": "ASTM A572 Gr. 50",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A572 Gr. 55": {
+    "ASTM_Designation": "ASTM A572 Gr. 55",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 55,
+    "Fu": 70
+  },
+  "A572 Gr. 60": {
+    "ASTM_Designation": "ASTM A572 Gr. 60",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 60,
+    "Fu": 75
+  },
+  "A572 Gr. 65": {
+    "ASTM_Designation": "ASTM A572 Gr. 65",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 65,
+    "Fu": 80
+  },
+  "A618 Gr. Ia, Ib & II": {
+    "ASTM_Designation": "ASTM A618 Gr. Ia, Ib & II",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 70
+  },
+  "A618 Gr. III": {
+    "ASTM_Designation": "ASTM A618 Gr. III",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A709 50": {
+    "ASTM_Designation": "ASTM A709 50",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A709 50S": {
+    "ASTM_Designation": "ASTM A709 50S",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A709 50W": {
+    "ASTM_Designation": "ASTM A709 50W",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 70
+  },
+  "A913 50": {
+    "ASTM_Designation": "ASTM A913 50",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A913 60": {
+    "ASTM_Designation": "ASTM A913 60",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 60,
+    "Fu": 75
+  },
+  "A913 65": {
+    "ASTM_Designation": "ASTM A913 65",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 65,
+    "Fu": 80
+  },
+  "A913 70": {
+    "ASTM_Designation": "ASTM A913 70",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 70,
+    "Fu": 90
+  },
+  "A992": {
+    "ASTM_Designation": "ASTM A992",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 65
+  },
+  "A1065 Gr. 50": {
+    "ASTM_Designation": "ASTM A1065 Gr. 50",
+    "Type": "High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 60
+  },
+  "A588": {
+    "ASTM_Designation": "ASTM A588",
+    "Type": "Corrosion Resistant High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 70
+  },
+  "A847": {
+    "ASTM_Designation": "ASTM A847",
+    "Type": "Corrosion Resistant High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 70
+  },
+  "A1065 Gr. 50W": {
+    "ASTM_Designation": "ASTM A1065 Gr. 50W",
+    "Type": "Corrosion Resistant High-Strength Low-Alloy",
+    "Fy": 50,
+    "Fu": 70
+  }
+}

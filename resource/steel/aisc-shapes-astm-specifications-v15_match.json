@@ -1,0 +1,278 @@
+{
+  "W": {
+    "ASTM_Designation_preferred": "A992",
+    "ASTM_Designation_applicable": [
+      "A36",
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A1043 36",
+      "A1043 50",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A588"
+    ]
+  },
+  "M": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "S": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "HP": {
+    "ASTM_Designation_preferred": "A572 Gr. 50",
+    "ASTM_Designation_applicable": [
+      "A36",
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "C": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "MC": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "L": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "HSS Rect.": {
+    "ASTM_Designation_preferred": "A500 Gr. C Rect.",
+    "ASTM_Designation_applicable": [
+      "A500 Gr. B Rect.",
+      "A501 Gr. A",
+      "A501 Gr. B",
+      "A1085 Gr. A",
+      "A618 Gr. Ia, Ib & II",
+      "A618 Gr. III",
+      "A1065 Gr. 50",
+      "A847",
+      "A1065 Gr. 50W"
+    ]
+  },
+  "HSS Round": {
+    "ASTM_Designation_preferred": "A500 Gr. C Round",
+    "ASTM_Designation_applicable": [
+      "A500 Gr. B Round",
+      "A501 Gr. A",
+      "A501 Gr. B",
+      "A1085 Gr. A",
+      "A618 Gr. Ia, Ib & II",
+      "A618 Gr. III",
+      "A847"
+    ]
+  },
+  "PIPE": {
+    "ASTM_Designation_preferred": "A53 Gr. B",
+    "ASTM_Designation_applicable": []
+  },
+  "WT": {
+    "ASTM_Designation_preferred": "A992",
+    "ASTM_Designation_applicable": [
+      "A36",
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A1043 36",
+      "A1043 50",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A588"
+    ]
+  },
+  "MT": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "ST": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "2L": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  }
+}
