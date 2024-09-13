@@ -1,3 +1,75 @@
+export function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
+  // A360-16 B4 Table B4.1a
+  if (shapeType && astmSpecProp) {
+    const E = astmSpecProp['E'];
+    const Fy = astmSpecProp['Fy'];
+    const sqrtEonFy = Math.sqrt(E / Fy);
+  
+    // limiting slenderness for nonslender flange
+    let lambdarf = 0;
+  
+    if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
+      // Table B4.1a Case 1
+      lambdarf = 0.56 * sqrtEonFy;
+    } else if (['L'].includes(shapeType)) {
+      // Table B4.1a Case 3
+      lambdarf = 0.45 * sqrtEonFy;
+    } else if (['HSS Rect.'].includes(shapeType)) {
+      // Table B4.1a Case 6
+      lambdarf = 1.40 * sqrtEonFy;
+    } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
+      // Table B4.1a Case 9
+      lambdarf = 0.11 * (E / Fy);
+    }
+  
+    // limiting slenderness for nonslender web
+    let lambdarw = 0;
+  
+    if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+      // Table B4.1a Case 5
+      lambdarw = 1.49 * sqrtEonFy;
+    } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+      // Table B4.1a Case 4
+      lambdarw = 0.75 * sqrtEonFy;
+    } else if (['HSS Rect.'].includes(shapeType)) {
+      // Table B4.1a Case 6
+      lambdarw = 1.40 * sqrtEonFy;
+    }
+  
+    return {
+      'lambdarf': lambdarf,
+      'lambdarw': lambdarw,
+    };
+  } else {
+    return null;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
   // A360-16 B4 Table B4.1b
   if (shapeType && astmSpecProp) {
