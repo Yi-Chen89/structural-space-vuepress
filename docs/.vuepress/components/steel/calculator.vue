@@ -45,6 +45,8 @@
     {{ selectedShapeSlenderRatio }}
     <br>
     {{ selectedShapeTypeFlexureSlenderLimitRatio }}
+    <br>
+    {{ xx }}
 
   </div>
 </template>
@@ -57,7 +59,9 @@
   import { astmSpecDesigFetcher } from './utils';
   import { astmSpecPropFetcher } from './utils';
   import { shapeSlenderRatioFetcher } from './utils';
-  import { FlexureSlenderLimitRatioCalculator } from './utils';
+
+  import { flexureSlenderLimitRatioCalculator } from './calculator-utils';
+  import { flexureSlenderClassifier } from './calculator-utils';
 
 
   import { selectionValidator } from '../validation.js';
@@ -151,8 +155,12 @@
 
 
       selectedShapeTypeFlexureSlenderLimitRatio () {
-        return FlexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
+        return flexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
       },
+
+      xx () {
+        return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio)
+      }
 
     },
 
