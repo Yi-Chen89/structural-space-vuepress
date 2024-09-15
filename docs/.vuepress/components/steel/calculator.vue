@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div v-if="shapeDisplay" class="select-container">
+    <div v-if="shapeSelectionDisplay" class="select-container">
       <label for="shape">Select shape:&emsp;</label>
       <select id="shape" v-model="selectedShape" class="select">
         <option v-for="shape in shapeList" :key="shape" :value="shape">
@@ -10,7 +10,7 @@
       </select>
     </div>
 
-    <div v-if="gradeDisplay" class="select-container">
+    <div v-if="gradeSelectionDisplay" class="select-container">
       <label for="grade">Select grade:&emsp;</label>
       <select id="grade" v-model="selectedGrade" class="select">
         <option :key="selectedShapeTypeASTMSpecPreferredDesig" :value="selectedShapeTypeASTMSpecPreferredKey">
@@ -25,6 +25,20 @@
         </option>
       </select>
     </div>
+
+    <div v-if="unbracedLengthInputDisplay" class="input-container">
+      <label for="unbracedLength">Enter unbraced length, <em>L<sub>b</sub></em>:&emsp;</label>
+      <input type="number" id="unbracedLength" v-model="enteredUnbracedLength" class="input-number-short" @input="unbracedLengthInputValidator">
+      <span><em>ft</em></span>
+      <p v-if="unbracedLengthInputError" class="error-message">{{ unbracedLengthInputError }}</p>
+    </div>
+
+    <div v-if="ltbModFactorInputDisplay" class="input-container">
+      <label for="ltbModFactor">Enter LTB modification factor, <em>C<sub>b</sub></em>:&emsp;</label>
+      <input type="number" id="ltbModFactor" v-model="enteredLTBModFactor" class="input-number-short" @input="ltbModFactorInputValidator">
+      <p v-if="ltbModFactorInputError" class="error-message">{{ ltbModFactorInputError }}</p>
+    </div>
+
 
     {{ selectedShapeType }}
     <br>
@@ -74,6 +88,8 @@
 
 
   import { selectionValidator } from '../validation.js';
+  import { positiveNumberInputValidator } from '../validation.js';
+  import { nonnegativeNumberInputValidator } from '../validation.js';
   
   
   export default {
@@ -84,10 +100,16 @@
 
         selectedShape: null,
         selectedGrade: null,
+        enteredUnbracedLength: 0,
+        enteredLTBModFactor: 1,
 
 
         // display variable
-        shapeDisplay: true,
+        shapeSelectionDisplay: true,
+
+        // error variable
+        unbracedLengthInputError: '',
+        ltbModFactorInputError: '',
         
       }
     },
@@ -136,11 +158,23 @@
         return selectionValidator(this.selectedShape);
       },
 
+      selectedGradeValid() {
+        return selectionValidator(this.selectedGrade);
+      },
+
 
       // display variable
 
-      gradeDisplay() {
+      gradeSelectionDisplay() {
         return this.selectedShapeValid;
+      },
+
+      unbracedLengthInputDisplay() {
+        return this.selectedGradeValid;
+      },
+
+      ltbModFactorInputDisplay() {
+        return this.selectedGradeValid;
       },
 
 
@@ -168,7 +202,7 @@
       },
 
       selectedShapeAxialSlenderClass() {
-        return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio)
+        return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio);
       },
 
       selectedShapeTypeFlexureSlenderLimitRatio() {
@@ -176,11 +210,27 @@
       },
 
       selectedShapeFlexureSlenderClass() {
-        return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio)
+        return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio);
+      },
+
+      validatedUnbracedLength() {
+        if (this.unbracedLengthInputError) {
+          return 0;
+        } else {
+          return this.enteredUnbracedLength * 12;
+        }
+      },
+
+      validatedLTBModFactor() {
+        if (this.ltbModFactorInputError) {
+          return 1;
+        } else {
+          return this.enteredLTBModFactor;
+        }
       },
 
       selectedShapeMajorFlexureCapacity() {
-        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, 1, 0)
+        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
       },
 
     },
@@ -188,11 +238,17 @@
     watch: {
       selectedShape(newShape) {
         this.selectedGrade = this.selectedShapeTypeASTMSpecPreferredKey;
-      },     
+      },
     },
 
     methods: {
+      unbracedLengthInputValidator() {
+        this.unbracedLengthInputError = nonnegativeNumberInputValidator(this.enteredUnbracedLength);
+      },
 
+      ltbModFactorInputValidator() {
+        this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
+      },
     },
   };
 </script>

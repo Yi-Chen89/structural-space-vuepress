@@ -174,26 +174,29 @@ export function flexureSlenderClassifier(shapeType, shapeSlenderRatio, shapeType
 
 
 // A360 Chapter F
-export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Cb, Lb) {
+export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lb, Cb) {
   if (shapeData && shapeType && astmSpecProp && slenderClass && Cb) {
     const { flange, web } = slenderClass;
 
     let result = {
       'Mn_2_1': 0,
+      'Mn_2_2': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
       // F2
       // limit state: Y, LTB
       
-      const { Fy } = astmSpecProp;
-      const { Zx } = shapeData;
-
+      const { Fy, E } = astmSpecProp;
+      const { Zx, Sx, Iy, ry, J, Cw, rts, ho } = shapeData;
 
 
       // F2.1 Yielding
-      result['Mn_2_1'] = F2_1Yielding(Fy, Zx);
+      const Mp = F2_1Yielding(Fy, Zx);
+      result['Mn_2_1'] = Mp;
 
+      // F2.2 Lateral-Torsional Buckling
+      result['Mn_2_2'] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
 
     }
 
@@ -247,6 +250,38 @@ function F2_1Yielding(Fy, Zx) {
 }
 
 // F2.2 Lateral-Torsional Buckling
-function F2_2LateralTorsionalBuckling() {
-  return null;
+function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb) {
+  // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
+  const Lp = 1.76 * ry * Math.sqrt(E / Fy);
+
+  let Lr = 0;
+
+  if (Lb <= Lp) {
+    // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
+    return 0;
+  } else {
+    // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
+    const calcTerm1 = E / (0.7 * Fy);
+
+    let c = 0;
+    if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
+      c = 1;
+    } else if (['C', 'MC'].includes(shapeType)) {
+      c = (ho / 2) * Math.sqrt(Iy / Cw);
+    }
+    const calcTerm2 = (J * c) / (Sx * ho);
+
+    Lr = 1.95 * rts * calcTerm1 * Math.sqrt(calcTerm2 + Math.sqrt(calcTerm2**2 + 6.76 * (1 / calcTerm1)**2));
+
+    // Mn
+    if (Lb <= Lr) {
+      // when Lp < Lb ≤ Lr
+      return Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
+    } else {
+      // when Lb > Lr
+      const calcTerm3 = (Lb / rts)**2;
+      const Fcr = (Cb * Math.PI**2 * E / calcTerm3) * Math.sqrt(1 + 0.078 * calcTerm2 * calcTerm3);
+      return Fcr * Sx;
+    }
+  }
 }
