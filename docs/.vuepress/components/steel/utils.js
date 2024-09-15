@@ -89,9 +89,10 @@ export function astmSpecPropFetcher(astmSpecKey) {
   if (dataset && astmSpecKey in dataset) {
     const data = dataset[astmSpecKey]
     return {
-      'Fy': data['Fy'],
-      'Fu': data['Fu'],
-      'E': 29000,
+      'Fy': data['Fy'],  // Specified minimum yield stress, ksi (MPa)
+      'Fu': data['Fu'],  // Specified minimum tensile strength, ksi (MPa)
+      'E': 29000,  // Modulus of elasticity of steel = 29,000 ksi (200 000 MPa)
+      'G': 11200,  // Shear modulus of elasticity of steel = 11,200 ksi (77 200 MPa)
     };
   } else {
     return null;

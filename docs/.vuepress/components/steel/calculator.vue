@@ -51,6 +51,8 @@
     {{ selectedShapeTypeFlexureSlenderLimitRatio }}
     <br>
     {{ selectedShapeFlexureSlenderClass }}
+    <br>
+    {{ selectedShapeMajorFlexureCapacity }}
 
   </div>
 </template>
@@ -68,6 +70,7 @@
   import { axialSlenderClassifier } from './calculator-utils';
   import { flexureSlenderLimitRatioCalculator } from './calculator-utils';
   import { flexureSlenderClassifier } from './calculator-utils';
+  import { majorFlexureCalculator } from './calculator-utils';
 
 
   import { selectionValidator } from '../validation.js';
@@ -94,10 +97,6 @@
 
       shapeList() {
         return shapeListFecher(this.unit);
-      },
-
-      selectedShapeData() {
-        return shapeDataFetcher(this.unit, this.selectedShape);  ////////////
       },
 
       selectedShapeTypeASTMSpecPreferredKey() {
@@ -132,6 +131,7 @@
 
 
       // valid variable
+
       selectedShapeValid() {
         return selectionValidator(this.selectedShape);
       },
@@ -147,6 +147,10 @@
       // calc variable
       // value in a dict format for 1 selected input value
 
+      selectedShapeData() {
+        return shapeDataFetcher(this.unit, this.selectedShape);
+      },
+
       selectedShapeType() {
         return shapeTypeFetcher(this.unit, this.selectedShape);
       },
@@ -159,21 +163,25 @@
         return shapeSlenderRatioFetcher(this.unit, this.selectedShape, this.selectedShapeType);
       },
 
-      selectedShapeTypeAxialSlenderLimitRatio () {
+      selectedShapeTypeAxialSlenderLimitRatio() {
         return axialSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
       },
 
-      selectedShapeAxialSlenderClass () {
+      selectedShapeAxialSlenderClass() {
         return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio)
       },
 
-      selectedShapeTypeFlexureSlenderLimitRatio () {
+      selectedShapeTypeFlexureSlenderLimitRatio() {
         return flexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
       },
 
-      selectedShapeFlexureSlenderClass () {
+      selectedShapeFlexureSlenderClass() {
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio)
-      }
+      },
+
+      selectedShapeMajorFlexureCapacity() {
+        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, 1, 0)
+      },
 
     },
 

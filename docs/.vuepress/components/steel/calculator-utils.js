@@ -1,3 +1,5 @@
+// A360 Chapter B
+
 export function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
   // A360-16 B4 Table B4.1a
   if (shapeType && astmSpecProp) {
@@ -171,6 +173,35 @@ export function flexureSlenderClassifier(shapeType, shapeSlenderRatio, shapeType
 }
 
 
+// A360 Chapter F
+export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Cb, Lb) {
+  if (shapeData && shapeType && astmSpecProp && slenderClass && Cb) {
+    const { flange, web } = slenderClass;
+
+    let result = {
+      'Mn_2_1': 0,
+    };
+
+    if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
+      // F2
+      // limit state: Y, LTB
+      
+      const { Fy } = astmSpecProp;
+      const { Zx } = shapeData;
+
+
+
+      // F2.1 Yielding
+      result['Mn_2_1'] = F2_1Yielding(Fy, Zx);
+
+
+    }
+
+    return result;
+  } else {
+    return null;
+  }
+}
 
 
 // helper function
@@ -206,4 +237,16 @@ function flexureElementClassifier(slenderRatio, compactLimitRatio, noncompactLim
   } else {
     return 'slender';
   }
+}
+
+
+// A360 Chapter F Helper Function
+// F2.1 Yielding
+function F2_1Yielding(Fy, Zx) {
+  return Fy * Zx;
+}
+
+// F2.2 Lateral-Torsional Buckling
+function F2_2LateralTorsionalBuckling() {
+  return null;
 }
