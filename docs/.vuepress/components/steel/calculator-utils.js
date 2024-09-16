@@ -174,13 +174,14 @@ export function flexureSlenderClassifier(shapeType, shapeSlenderRatio, shapeType
 
 
 // A360 Chapter F
-export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lb, Cb) {
-  if (shapeData && shapeType && astmSpecProp && slenderClass && Cb) {
+export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shapeSlenderRatio, shapeTypeSlenderLimitRatio, slenderClass, Lb, Cb) {
+  if (shapeData && shapeType && astmSpecProp && shapeSlenderRatio && shapeTypeSlenderLimitRatio && slenderClass && Cb) {
     const { flange, web } = slenderClass;
 
     let result = {
       'Mn_2_1': 0,
       'Mn_2_2': 0,
+      'Mn_3_2': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -190,6 +191,21 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       const { Fy, E } = astmSpecProp;
       const { Zx, Sx, Iy, ry, J, Cw, rts, ho } = shapeData;
 
+      // F2.1 Yielding
+      const Mp = F2_1Yielding(Fy, Zx);
+      result['Mn_2_1'] = Mp;
+
+      // F2.2 Lateral-Torsional Buckling
+      result['Mn_2_2'] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
+    } else if (['W', 'M', 'S', 'HP'].includes(shapeType) && ['noncompact', 'slender'].includes(flange) && web === 'compact') {
+      // F3
+      // limit state: LTB, FLB
+
+      const { Fy, E } = astmSpecProp;
+      const { Zx, Sx, Iy, ry, J, Cw, rts, ho } = shapeData;
+      const { 'bf/2tf': lambdaf, 'h/tw': lambdaw } = shapeSlenderRatio;
+      const { lambdapf, lambdarf } = shapeTypeSlenderLimitRatio;
+      
 
       // F2.1 Yielding
       const Mp = F2_1Yielding(Fy, Zx);
@@ -198,6 +214,8 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2'] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
 
+      // F3.2 Compression Flange Local Buckling
+      result['Mn_3_2'] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
     }
 
     return result;
@@ -283,5 +301,18 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
       const Fcr = (Cb * Math.PI**2 * E / calcTerm3) * Math.sqrt(1 + 0.078 * calcTerm2 * calcTerm3);
       return Fcr * Sx;
     }
+  }
+}
+
+// F3.2 Compression Flange Local Buckling
+function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flangeClass) {
+  if (flangeClass === 'noncompact') {
+    return Mp - (Mp - 0.7 * Fy * Sx) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
+  } else if (flangeClass === 'slender') {
+    let kc = 4 / Math.sqrt(lambdaw);
+    kc = Math.max(0.35, Math.min(kc, 0.76));
+    return 0.9 * E * kc * Sx / lambdaf**2;
+  } else {
+    return 0;
   }
 }

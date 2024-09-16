@@ -42,31 +42,23 @@
 
     {{ selectedShapeType }}
     <br>
-    <!-- {{ selectedShapeData }} -->
-    <br>
-    <!-- {{ selectedShapeTypeASTMSpecPreferredKey }} -->
-    <br>
-    <!-- {{ selectedShapeTypeASTMSpecPreferredDesig }} -->
-    <br>
-    <!-- {{ selectedShapeTypeASTMSpecApplicableKeys }} -->
-    <br>
-    <!-- {{ selectedShapeTypeASTMSpecApplicableDesigs }} -->
-    <br>
     {{ selectedGrade }}
     <br>
     {{ selectedASTMSpecProp }}
     <br>
-    {{ selectedShapeSlenderRatio }}
-    <br>
-    {{ selectedShapeTypeAxialSlenderLimitRatio }}
-    <br>
     {{ selectedShapeAxialSlenderClass }}
-    <br>
-    {{ selectedShapeTypeFlexureSlenderLimitRatio }}
     <br>
     {{ selectedShapeFlexureSlenderClass }}
     <br>
+    {{ validatedUnbracedLength }}
+    <br>
+    {{ validatedLTBModFactor }}
+    <br>
     {{ selectedShapeMajorFlexureCapacity }}
+    <br>
+    {{ selectedShapeSlenderRatio }}
+    <br>
+    {{ selectedShapeTypeFlexureSlenderLimitRatio }}
 
   </div>
 </template>
@@ -230,7 +222,7 @@
       },
 
       selectedShapeMajorFlexureCapacity() {
-        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
+        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
       },
 
     },
