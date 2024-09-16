@@ -182,6 +182,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_2_1': 0,
       'Mn_2_2': 0,
       'Mn_3_2': 0,
+      'Mn_7_1': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -206,7 +207,6 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       const { 'bf/2tf': lambdaf, 'h/tw': lambdaw } = shapeSlenderRatio;
       const { lambdapf, lambdarf } = shapeTypeSlenderLimitRatio;
       
-
       // F2.1 Yielding
       const Mp = F2_1Yielding(Fy, Zx);
       result['Mn_2_1'] = Mp;
@@ -216,6 +216,16 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F3.2 Compression Flange Local Buckling
       result['Mn_3_2'] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
+    } else if (['HSS Rect.'].includes(shapeType)) {
+      // F7
+      // limit state: Y, FLB, WLB, LTB
+
+      const { Fy, E } = astmSpecProp;
+      const { Zx, Sx, Iy, ry, J } = shapeData;
+
+      // F7.1 Yielding
+      const Mp = F7_1Yielding(Fy, Zx);
+      result['Mn_7_1'] = Mp;
     }
 
     return result;
@@ -315,4 +325,10 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
   } else {
     return 0;
   }
+}
+
+
+// F7.1 Yielding
+function F7_1Yielding(Fy, Zx) {
+  return Fy * Zx;
 }
