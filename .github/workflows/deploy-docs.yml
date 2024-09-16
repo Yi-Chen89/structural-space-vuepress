@@ -1,11 +1,13 @@
 
-name: Deploy Docs
+name: Deploy Site
 
 on:
-  push:
-    branches:
-      # make sure this is the branch you are using
-      - main
+  # run workflow when there is a push to main branch
+  # push:
+    # branches:
+      # - main
+  # run workflow manually
+  workflow_dispatch:
 
 permissions:
   contents: write
