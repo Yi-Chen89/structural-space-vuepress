@@ -223,14 +223,14 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       const { Fy, E } = astmSpecProp;
       const { Ht, b, tdes, Ix, Zx, Sx, Iy, ry, J } = shapeData;
-      const { 'b/tdes': lambdaf, 'h/tdes': lambdaw } = shapeSlenderRatio;
+      // const { 'b/tdes': lambdaf, 'h/tdes': lambdaw } = shapeSlenderRatio;
 
       // F7.1 Yielding
       const Mp = F7_1Yielding(Fy, Zx);
       result['Mn_7_1'] = Mp;
 
       // F7.2 Flange Local Buckling
-      result['Mn_7_2'] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, lambdaf, flange);
+      result['Mn_7_2'] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
     }
 
     return result;
@@ -339,16 +339,17 @@ function F7_1Yielding(Fy, Zx) {
 }
 
 // F7.2 Flange Local Buckling
-function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, lambdaf, flangeClass) {
+function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, flangeClass) {
   if (flangeClass === 'compact') {
     return 0;
   } else {
-    const calcTerm1 = Math.sqrt(Fy / E);
+    const calcTerm1 = b / tf;
+    const calcTerm2 = Math.sqrt(Fy / E);
 
     if (flangeClass === 'noncompact') {
-      return Mp - (Mp - Fy * Sx) * (3.57 * lambdaf * calcTerm1 - 4.0);
+      return Mp - (Mp - Fy * Sx) * (3.57 * calcTerm1 * calcTerm2 - 4.0);
     } else if (flangeClass === 'slender') {
-      const be = 1.92 * tf * (1/calcTerm1) * (1 - 0.38 / lambdaf * (1/calcTerm1));
+      const be = 1.92 * tf * (1/calcTerm2) * (1 - 0.38 / calcTerm1 * (1/calcTerm2));
 
       let Se = 0;
       if (be >= b) {
