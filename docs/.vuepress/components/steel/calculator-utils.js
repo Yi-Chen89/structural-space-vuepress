@@ -183,6 +183,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_2_2': 0,
       'Mn_3_2': 0,
       'Mn_7_1': 0,
+      'Mn_7_2': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -221,11 +222,15 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, FLB, WLB, LTB
 
       const { Fy, E } = astmSpecProp;
-      const { Zx, Sx, Iy, ry, J } = shapeData;
+      const { Ht, b, tdes, Ix, Zx, Sx, Iy, ry, J } = shapeData;
+      const { 'b/tdes': lambdaf, 'h/tdes': lambdaw } = shapeSlenderRatio;
 
       // F7.1 Yielding
       const Mp = F7_1Yielding(Fy, Zx);
       result['Mn_7_1'] = Mp;
+
+      // F7.2 Flange Local Buckling
+      result['Mn_7_2'] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, lambdaf, flange);
     }
 
     return result;
@@ -331,4 +336,33 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
 // F7.1 Yielding
 function F7_1Yielding(Fy, Zx) {
   return Fy * Zx;
+}
+
+// F7.2 Flange Local Buckling
+function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, lambdaf, flangeClass) {
+  if (flangeClass === 'compact') {
+    return 0;
+  } else {
+    const calcTerm1 = Math.sqrt(Fy / E);
+
+    if (flangeClass === 'noncompact') {
+      return Mp - (Mp - Fy * Sx) * (3.57 * lambdaf * calcTerm1 - 4.0);
+    } else if (flangeClass === 'slender') {
+      const be = 1.92 * tf * (1/calcTerm1) * (1 - 0.38 / lambdaf * (1/calcTerm1));
+
+      let Se = 0;
+      if (be >= b) {
+        Se = Sx;
+      } else {
+        // Simple and conservative approach to calculate effective I and S
+        // removing ineffective width from top and bottom flanges
+        const bineff = b - be;
+        const Ieff = Ix - 2 * (bineff * tf**3 / 12 + bineff * tf * ((H - tf) / 2)**2);
+        Se = Ieff / (H / 2);
+      }
+      return Fy * Se;
+    } else {
+      return 0;
+    }
+  }
 }

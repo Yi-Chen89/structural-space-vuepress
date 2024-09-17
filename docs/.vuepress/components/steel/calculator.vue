@@ -56,9 +56,9 @@
     <br>
     {{ selectedShapeMajorFlexureCapacity }}
     <br>
-    {{ selectedShapeSlenderRatio }}
+    <!-- {{ selectedShapeSlenderRatio }} -->
     <br>
-    {{ selectedShapeTypeFlexureSlenderLimitRatio }}
+    <!-- {{ selectedShapeTypeFlexureSlenderLimitRatio }} -->
 
   </div>
 </template>
