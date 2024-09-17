@@ -37,7 +37,7 @@
 - ✅ F7.1 Yielding
 - ✅ F7.2 Flange Local Buckling
 - ✅ F7.3 Web Local Buckling
-- F7.4 Lateral-Torsional Buckling
+- ✅ F7.4 Lateral-Torsional Buckling
 
 #### F8 Round HSS
 - F8.1 Yielding
