@@ -16,7 +16,7 @@ export function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     } else if (['L'].includes(shapeType)) {
       // Table B4.1a Case 3
       lambdarf = 0.45 * sqrtEonFy;
-    } else if (['HSS Rect.'].includes(shapeType)) {
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // Table B4.1a Case 6
       lambdarf = 1.40 * sqrtEonFy;
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
@@ -33,7 +33,7 @@ export function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       // Table B4.1a Case 4
       lambdarw = 0.75 * sqrtEonFy;
-    } else if (['HSS Rect.'].includes(shapeType)) {
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // Table B4.1a Case 6
       lambdarw = 1.40 * sqrtEonFy;
     }
@@ -99,7 +99,7 @@ export function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
       // Table B4.1b Case 12
       lambdapf = 0.54 * sqrtEonFy;
       lambdarf = 0.91 * sqrtEonFy;
-    } else if (['HSS Rect.'].includes(shapeType)) {
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // Table B4.1b Case 17
       lambdapf = 1.12 * sqrtEonFy;
       lambdarf = 1.40 * sqrtEonFy;
@@ -122,7 +122,7 @@ export function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
       // Table B4.1b Case 14
       lambdapw = 0.84 * sqrtEonFy;
       lambdarw = 1.52 * sqrtEonFy;
-    } else if (['HSS Rect.'].includes(shapeType)) {
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // Table B4.1b Case 19
       lambdapw = 2.42 * sqrtEonFy;
       lambdarw = 5.70 * sqrtEonFy;
@@ -219,7 +219,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F3.2 Compression Flange Local Buckling
       result['Mn_3_2'] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
-    } else if (['HSS Rect.'].includes(shapeType)) {
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // F7
       // limit state: Y, FLB, WLB, LTB
 
@@ -237,7 +237,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       result['Mn_7_3'] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
 
       // F7.4 Lateral-Torsional Buckling
-      result['Mn_7_4'] = F7_4LateralTorsionalBuckling(Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
+      // F7.4 does not apply to square sections
+      if (shapeType === 'HSS Rect.') {
+        result['Mn_7_4'] = F7_4LateralTorsionalBuckling(Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
+      }
     }
 
     return result;
@@ -257,7 +260,7 @@ function slenderRatioFetcher(shapeType, shapeSlenderRatio) {
     return [shapeSlenderRatio['b/t'], 0];
   } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
     return [shapeSlenderRatio['bf/2tf'], shapeSlenderRatio['D/t']];
-  } else if (['HSS Rect.'].includes(shapeType)) {
+  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
     return [shapeSlenderRatio['b/tdes'], shapeSlenderRatio['h/tdes']];
   } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
     return [shapeSlenderRatio['D/t'], 0];

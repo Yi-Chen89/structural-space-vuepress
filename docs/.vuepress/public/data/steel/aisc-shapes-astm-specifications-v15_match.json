@@ -169,6 +169,20 @@
       "A1065 Gr. 50W"
     ]
   },
+  "HSS Square": {
+    "ASTM_Designation_preferred": "A500 Gr. C Rect.",
+    "ASTM_Designation_applicable": [
+      "A500 Gr. B Rect.",
+      "A501 Gr. A",
+      "A501 Gr. B",
+      "A1085 Gr. A",
+      "A618 Gr. Ia, Ib & II",
+      "A618 Gr. III",
+      "A1065 Gr. 50",
+      "A847",
+      "A1065 Gr. 50W"
+    ]
+  },
   "HSS Round": {
     "ASTM_Designation_preferred": "A500 Gr. C Round",
     "ASTM_Designation_applicable": [

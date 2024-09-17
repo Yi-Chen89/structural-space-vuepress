@@ -41,7 +41,12 @@ export function shapeTypeFetcher(unit, shape) {
     if (shapeTyoe === 'HSS') {
       const countX = shape.split('X').length - 1;
       if (countX === 2) {
-        return 'HSS Rect.';
+        const { Ht, B } = shapeData;
+        if (Ht !== B) {
+          return 'HSS Rect.';
+        } else {
+          return 'HSS Square';
+        }
       } else if (countX === 1) {
         return 'HSS Round';
       } else {
@@ -123,7 +128,7 @@ export function shapeSlenderRatioFetcher(unit, shape, shapeType) {
       'bf/2tf': shapeData['bf/2tf'],
       'D/t': shapeData['D/t'],
     };
-  } else if (['HSS Rect.'].includes(shapeType)) {
+  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
     return {
       'b/tdes': shapeData['b/tdes'],
       'h/tdes': shapeData['h/tdes'],
