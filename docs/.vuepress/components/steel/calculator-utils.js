@@ -185,6 +185,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_7_1': 0,
       'Mn_7_2': 0,
       'Mn_7_3': 0,
+      'Mn_7_4': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -223,8 +224,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, FLB, WLB, LTB
 
       const { Fy, E } = astmSpecProp;
-      const { Ht, h, b, tdes, Ix, Zx, Sx, Iy, ry, J } = shapeData;
-      // const { 'b/tdes': lambdaf, 'h/tdes': lambdaw } = shapeSlenderRatio;
+      const { A, Ht, h, b, tdes, Ix, Zx, Sx, ry, J } = shapeData;
 
       // F7.1 Yielding
       const Mp = F7_1Yielding(Fy, Zx);
@@ -235,6 +235,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F7.3 Web Local Buckling
       result['Mn_7_3'] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
+
+      // F7.4 Lateral-Torsional Buckling
+      result['Mn_7_4'] = F7_4LateralTorsionalBuckling(Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
     }
 
     return result;
@@ -312,10 +315,10 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
 
     // Mn
     if (Lb <= Lr) {
-      // when Lp < Lb ≤ Lr
+      // (b) when Lp < Lb ≤ Lr
       return Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
     } else {
-      // when Lb > Lr
+      // (c) when Lb > Lr
       const calcTerm3 = (Lb / rts)**2;
       const Fcr = (Cb * Math.PI**2 * E / calcTerm3) * Math.sqrt(1 + 0.078 * calcTerm2 * calcTerm3);
       return Fcr * Sx;
@@ -407,6 +410,31 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
       return Math.min(Mn_1, Mn_2);
     } else {
       return 0;
+    }
+  }
+}
+
+// F7.4 Lateral-Torsional Buckling
+function F7_4LateralTorsionalBuckling(Mp, Fy, E, Ag, Sx, ry, J, Lb, Cb) {
+  const calcTerm1 = Math.sqrt(J * Ag);
+
+  // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
+  const Lp = 0.13 * E * ry * calcTerm1 / Mp;
+
+  if (Lb <= Lp) {
+    // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
+    return 0;
+  } else {
+    // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
+    const Lr = 2 * E * ry * calcTerm1 / (0.7 * Fy * Sx);
+
+    // Mn
+    if (Lb <= Lr) {
+      // (b) when Lp < Lb ≤ Lr
+      return Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
+    } else {
+      // (c) when Lb > Lr
+      return 2 * E * Cb * calcTerm1 / (Lb / ry);
     }
   }
 }
