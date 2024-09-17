@@ -184,6 +184,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_3_2': 0,
       'Mn_7_1': 0,
       'Mn_7_2': 0,
+      'Mn_7_3': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -222,7 +223,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, FLB, WLB, LTB
 
       const { Fy, E } = astmSpecProp;
-      const { Ht, b, tdes, Ix, Zx, Sx, Iy, ry, J } = shapeData;
+      const { Ht, h, b, tdes, Ix, Zx, Sx, Iy, ry, J } = shapeData;
       // const { 'b/tdes': lambdaf, 'h/tdes': lambdaw } = shapeSlenderRatio;
 
       // F7.1 Yielding
@@ -231,6 +232,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F7.2 Flange Local Buckling
       result['Mn_7_2'] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
+
+      // F7.3 Web Local Buckling
+      result['Mn_7_3'] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
     }
 
     return result;
@@ -362,6 +366,45 @@ function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, flangeClass) {
         Se = Ieff / (H / 2);
       }
       return Fy * Se;
+    } else {
+      return 0;
+    }
+  }
+}
+
+// F7.3 Web Local Buckling
+function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
+  if (webClass === 'compact') {
+    return 0;
+  } else {
+    const calcTerm1 = h / tw;
+    const calcTerm2 = Math.sqrt(Fy / E);
+
+    if (webClass === 'noncompact') {
+      return Mp - (Mp - Fy * Sx) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
+    } else if (webClass === 'slender') {
+      const aw = 2 * h * tw / (b * tf);
+
+      // bending strength reduction factor
+      let Rpg = 1 - aw / (1200 + 300 * aw) * (h / tw - 5.7 * (1/calcTerm2));
+      // less than or equal to 1.0
+      Rpg = Math.min(Rpg, 1.0);
+
+      // (1) compression flange yielding
+      const Mn_1 = Rpg * Fy * Sx;
+
+      // (2) compression flange local buckling
+      const kc = 4.0;
+      const Fcr = 0.9 * E * kc / (b / tf)**2;
+
+      let Mn_2 = 0;
+      if (Fcr > Fy) {
+        Mn_2 = Mn_1;
+      } else {
+        Mn_2 = Rpg * Fcr * Sx;
+      }
+
+      return Math.min(Mn_1, Mn_2);
     } else {
       return 0;
     }
