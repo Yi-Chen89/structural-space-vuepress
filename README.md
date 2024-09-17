@@ -35,7 +35,7 @@
 
 #### F7 Square and Rectangular HSS and Box Sections
 - ✅ F7.1 Yielding
-- F7.2 Flange Local Buckling
+- ✅ F7.2 Flange Local Buckling
 - F7.3 Web Local Buckling
 - F7.4 Lateral-Torsional Buckling
 
