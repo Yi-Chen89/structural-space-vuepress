@@ -187,6 +187,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_7_3': 0,
       'Mn_7_4': 0,
       'Mn_8_1': 0,
+      'Mn_8_2': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -251,11 +252,14 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       const { 'D/t': lambda } = shapeSlenderRatio;
 
       if (lambda < 0.45 * E * Fy) {
-        const { Zx } = shapeData;
+        const { Zx, Sx } = shapeData;
 
         // F8.1 Yielding
         const Mp = F8_1Yielding(Fy, Zx);
         result['Mn_8_1'] = Mp;
+
+        // F8.2 Local Buckling
+        result['Mn_8_2'] = F8_2LocalBuckling(Fy, E, Sx, lambda, flange);
       }
     }
     return result;
@@ -460,4 +464,18 @@ function F7_4LateralTorsionalBuckling(Mp, Fy, E, Ag, Sx, ry, J, Lb, Cb) {
 // F8.1 Yielding
 function F8_1Yielding(Fy, Zx) {
   return Fy * Zx;
+}
+
+// F8.2 Local Buckling
+function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
+  if (wallClass === 'compact') {
+    return 0;
+  } else if (wallClass === 'noncompact') {
+    return (0.021 * E / lambda + Fy) * Sx;
+  } else if (wallClass === 'slender') {
+    const Fcr = 0.33 * E / lambda;
+    return Fcr * Sx;
+  } else {
+    return 0;
+  }
 }
