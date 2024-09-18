@@ -186,6 +186,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_7_2': 0,
       'Mn_7_3': 0,
       'Mn_7_4': 0,
+      'Mn_8_1': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -241,8 +242,22 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       if (shapeType === 'HSS Rect.') {
         result['Mn_7_4'] = F7_4LateralTorsionalBuckling(Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
       }
-    }
+    } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
+      // F8
+      // limit state: Y, LB
+      // F8 only applies to round HSS with D/t < 0.45E/Fy
 
+      const { Fy, E } = astmSpecProp;
+      const { 'D/t': lambda } = shapeSlenderRatio;
+
+      if (lambda < 0.45 * E * Fy) {
+        const { Zx } = shapeData;
+
+        // F8.1 Yielding
+        const Mp = F8_1Yielding(Fy, Zx);
+        result['Mn_8_1'] = Mp;
+      }
+    }
     return result;
   } else {
     return null;
@@ -440,4 +455,9 @@ function F7_4LateralTorsionalBuckling(Mp, Fy, E, Ag, Sx, ry, J, Lb, Cb) {
       return 2 * E * Cb * calcTerm1 / (Lb / ry);
     }
   }
+}
+
+// F8.1 Yielding
+function F8_1Yielding(Fy, Zx) {
+  return Fy * Zx;
 }
