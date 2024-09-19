@@ -190,6 +190,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_8_2': 0,
       'Mn_9_1+': 0,
       'Mn_9_1-': 0,
+      'Mn_9_2+': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -268,7 +269,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, LTB, FLB, WLB
 
       const { Fy, E } = astmSpecProp;
-      const { Zx, Sx } = shapeData;
+      const { d, Zx, Sx, Iy, ry, J } = shapeData;
 
       // F9.1 Yielding
       // F9.1 (a) for tee stems and web legs in tension, sagging
@@ -278,6 +279,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       //      (c) for double angles with web legs in compression, hogging
       const Mp_neg = F9_1YieldingHogging(shapeType, Fy, Sx);
       result['Mn_9_1-'] = Mp_neg;
+
+      // F9.2 Lateral-Torsional Buckling
+      // F9.2 (a) for tee stems and web legs in tension, sagging
+      result['Mn_9_2+'] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
     }
     return result;
   } else {
@@ -518,5 +523,41 @@ function F9_1YieldingHogging(shapeType, Fy, Sx) {
     return 1.5 * My;
   } else {
     return 0;
+  }
+}
+
+// F9.2 Lateral-Torsional Buckling
+// F9.2 (a) for tee stems and web legs in tension, sagging
+function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry, J_, Lb) {
+  // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
+  const Lp = 1.76 * ry * Math.sqrt(E / Fy);
+
+  if (Lb <= Lp) {
+    // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
+    return 0;
+  } else {
+    let J = 0;
+    if (['WT', 'MT', 'ST'].includes(shapeType)) {
+      J = J_;
+    } else if (['2L'].includes(shapeType)) {
+      J = 0;  // helper function is needed here to find J for 2L
+    }
+
+
+    // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
+    const Lr = 1.95 * (E / Fy) * Math.sqrt(Iy * J) / Sx * Math.sqrt(2.36 * (Fy / E) * d * Sx / J + 1);
+
+    const My = Fy * Sx;
+
+    // Mn
+    if (Lb <= Lr) {
+      // (b) when Lp < Lb ≤ Lr
+      return Mp - (Mp - My) * (Lb - Lp) / (Lr - Lp);
+    } else {
+      // (c) when Lb > Lr
+      const B = 2.3 * (d / Lb) * Math.sqrt(Iy / J);
+      const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
+      return Mcr;
+    }
   }
 }
