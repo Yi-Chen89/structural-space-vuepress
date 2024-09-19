@@ -188,6 +188,8 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_7_4': 0,
       'Mn_8_1': 0,
       'Mn_8_2': 0,
+      'Mn_9_1+': 0,
+      'Mn_9_1-': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -261,6 +263,17 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
         // F8.2 Local Buckling
         result['Mn_8_2'] = F8_2LocalBuckling(Fy, E, Sx, lambda, flange);
       }
+    } else if (['WT', 'MT', 'ST', '2L'].includes(shapeType)) {
+      // F9
+      // limit state: Y, LTB, FLB, WLB
+
+      const { Fy, E } = astmSpecProp;
+      const { Zx, Sx } = shapeData;
+
+      // F9.1 Yielding
+      // F9.1 (a) for tee stems and web legs in tension, sagging
+      const Mp_pos = F9_1YieldingSagging(Fy, Zx, Sx);
+      result['Mn_9_1+'] = Mp_pos;
     }
     return result;
   } else {
@@ -477,5 +490,17 @@ function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
     return Fcr * Sx;
   } else {
     return 0;
+  }
+}
+
+// F9.1 Yielding
+// F9.1 (a) for tee stems and web legs in tension, sagging
+function F9_1YieldingSagging(Fy, Zx, Sx) {
+  const My = Fy * Sx;
+  const Mp = Fy * Zx;
+  if (Mp <= 1.6 * My) {
+    return Mp;
+  } else {
+    return 1.6 * My;
   }
 }
