@@ -274,6 +274,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F9.1 (a) for tee stems and web legs in tension, sagging
       const Mp_pos = F9_1YieldingSagging(Fy, Zx, Sx);
       result['Mn_9_1+'] = Mp_pos;
+      // F9.1 (b) for tee stems in compression, hogging
+      //      (c) for double angles with web legs in compression, hogging
+      const Mp_neg = F9_1YieldingHogging(shapeType, Fy, Sx);
+      result['Mn_9_1-'] = Mp_neg;
     }
     return result;
   } else {
@@ -502,5 +506,17 @@ function F9_1YieldingSagging(Fy, Zx, Sx) {
     return Mp;
   } else {
     return 1.6 * My;
+  }
+}
+// F9.1 (b) for tee stems in compression, hogging
+//      (c) for double angles with web legs in compression, hogging
+function F9_1YieldingHogging(shapeType, Fy, Sx) {
+  const My = Fy * Sx;
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    return My;
+  } else if (['2L'].includes(shapeType)) {
+    return 1.5 * My;
+  } else {
+    return 0;
   }
 }
