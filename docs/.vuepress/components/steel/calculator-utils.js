@@ -192,6 +192,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_9_1-': 0,
       'Mn_9_2+': 0,
       'Mn_9_2-': 0,
+      'Mn_9_3+': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -270,7 +271,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, LTB, FLB, WLB
 
       const { Fy, E } = astmSpecProp;
-      const { d, Zx, Sx, Iy, ry, J } = shapeData;
+      const { d, y, Ix, Zx, Sx, Iy, ry, J } = shapeData;
+      const { 'bf/2tf': lambdaf, 'D/t': lambdaw } = shapeSlenderRatio;
+      const { lambdapf, lambdarf } = shapeTypeSlenderLimitRatio;
 
       // F9.1 Yielding
       // F9.1 (a) for tee stems and web legs in tension, sagging
@@ -286,6 +289,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       result['Mn_9_2+'] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
       // F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
       result['Mn_9_2-'] = F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb);
+
+      // F9.3 Flange Local Buckling of Tees and Double-Angle Legs
+      // only sagging
+      result['Mn_9_3+'] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
     }
     return result;
   } else {
@@ -599,6 +606,36 @@ function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J_, Lb
     } else {
       return 0;
     }
+  } else {
+    return 0;
+  }
+}
+
+// F9.3 Flange Local Buckling of Tees and Double-Angle Legs
+function F9_3FlangeLocalBuckling(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flangeClass) {
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    if (flangeClass === 'compact') {
+      return 0;
+    } else {
+      // elastic section modulus referred to compression flange, in.3 (mm3)
+      const Sxc = Ix / y;
+
+      if (flangeClass === 'noncompact') {
+        const My = Fy * Sx;
+        const Mn = Mp - (Mp - 0.7 * Fy * Sxc) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
+        if (Mn <= 1.6 * My) {
+          return Mn;
+        } else {
+          return 1.6 * My;
+        }
+      } else if (flangeClass === 'slender') {
+        return 0.7 * E * Sxc / lambdaf**2;
+      } else {
+        return 0;
+      }
+    }
+  } else if (['2L'].includes(shapeType)) {
+    return 0;                               // call function F10_3
   } else {
     return 0;
   }
