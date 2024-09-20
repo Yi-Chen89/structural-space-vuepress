@@ -191,6 +191,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_9_1+': 0,
       'Mn_9_1-': 0,
       'Mn_9_2+': 0,
+      'Mn_9_2-': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -283,6 +284,8 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F9.2 Lateral-Torsional Buckling
       // F9.2 (a) for tee stems and web legs in tension, sagging
       result['Mn_9_2+'] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
+      // F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
+      result['Mn_9_2-'] = F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb);
     }
     return result;
   } else {
@@ -543,7 +546,6 @@ function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry
       J = 0;  // helper function is needed here to find J for 2L
     }
 
-
     // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
     const Lr = 1.95 * (E / Fy) * Math.sqrt(Iy * J) / Sx * Math.sqrt(2.36 * (Fy / E) * d * Sx / J + 1);
 
@@ -559,5 +561,45 @@ function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry
       const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
       return Mcr;
     }
+  }
+}
+// F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
+// F9.2 (b) does NOT have explicit criteria for whether LTB applies
+function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J_, Lb) {
+  if (Lb > 0) {
+    const My = Fy * Sx;
+
+    let J = 0;
+    if (['WT', 'MT', 'ST'].includes(shapeType)) {
+      J = J_;
+    } else if (['2L'].includes(shapeType)) {
+      J = 0;  // helper function is needed here to find J for 2L
+    }
+
+    const B = -2.3 * (d / Lb) * Math.sqrt(Iy / J);
+    const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
+    
+    if (['WT', 'MT', 'ST'].includes(shapeType)) {
+      if (Mcr <= My) {
+        return Mcr;
+      } else {
+        return My;
+      }
+    } else if (['2L'].includes(shapeType)) {
+      if (My / Mcr <= 1.0) {
+        const Mn = (1.92 - 1.17 * Math.sqrt(My / Mcr)) * My;
+        if (Mn <= 1.5 * My) {
+          return Mn;
+        } else {
+          return 1.5 * My;
+        }
+      } else {
+        return (0.92 - 0.17 * Mcr / My) * Mcr;
+      }
+    } else {
+      return 0;
+    }
+  } else {
+    return 0;
   }
 }
