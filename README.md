@@ -50,7 +50,7 @@
 - ✅ F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
 
 #### F10 Single Angles​
-- F10.1 Yielding
+- ✅ F10.1 Yielding
 - F10.2 Lateral-Torsional Buckling
 - F10.3 Leg Local Buckling
 
