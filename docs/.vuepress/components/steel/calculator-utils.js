@@ -193,6 +193,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_9_2+': 0,
       'Mn_9_2-': 0,
       'Mn_9_3+': 0,
+      'Mn_9_4-': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -293,6 +294,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F9.3 Flange Local Buckling of Tees and Double-Angle Legs
       // only sagging
       result['Mn_9_3+'] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
+
+      // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
+      // only hogging
+      result['Mn_9_4-'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
     }
     return result;
   } else {
@@ -634,6 +639,26 @@ function F9_3FlangeLocalBuckling(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf, lambd
         return 0;
       }
     }
+  } else if (['2L'].includes(shapeType)) {
+    return 0;                               // call function F10_3
+  } else {
+    return 0;
+  }
+}
+
+// F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
+function F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw) {
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    const calcTerm1 = Math.sqrt(E / Fy);
+    let Fcr = 0;
+    if (lambdaw <= 0.84 * calcTerm1) {
+      Fcr = Fy;
+    } else if (lambdaw <= 1.52 * calcTerm1) {
+      Fcr = (1.43 - 0.515 * lambdaw / calcTerm1) * Fy;
+    } else {
+      Fcr = 1.52 * E / lambdaw**2;
+    }
+    return Fcr * Sx;
   } else if (['2L'].includes(shapeType)) {
     return 0;                               // call function F10_3
   } else {
