@@ -194,6 +194,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_9_2-': 0,
       'Mn_9_3+': 0,
       'Mn_9_4-': 0,
+      'Mn_10_1': 0,
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -298,6 +299,16 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
       // only hogging
       result['Mn_9_4-'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
+    } else if (['L'].includes(shapeType)) {
+      // F10
+      // limit state: Y, LTB, LLB
+
+      const { Fy, E } = astmSpecProp;
+      const { Sx } = shapeData;
+
+      // F10.1 Yielding
+      const Mp = F10_1Yielding(Fy, Sx);
+      result['Mn_10_1'] = Mp;
     }
     return result;
   } else {
@@ -664,4 +675,10 @@ function F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw) {
   } else {
     return 0;
   }
+}
+
+// F10.1 Yielding
+function F10_1Yielding(Fy, Sx) {
+  const My = Fy * Sx;
+  return 1.5 * My;
 }
