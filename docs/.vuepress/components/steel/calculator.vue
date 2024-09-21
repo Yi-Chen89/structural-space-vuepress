@@ -1,73 +1,109 @@
 <template>
   <div>
+    <div>
+      <h2>Input</h2>
 
-    <div v-if="shapeTypeSelectionDisplay" class="select-container">
-      <label for="descShapeType">Select shape type:&emsp;</label>
-      <select id="descShapeType" v-model="selectedDescShapeType" class="select">
-        <option v-for="descShapeType in descShapeTypeList" :key="descShapeType" :value="descShapeType">
-          {{ descShapeType }}
-        </option>
-      </select>
+      <div v-if="shapeTypeSelectionDisplay" class="select-container">
+        <label for="descShapeType">Select Shape Type:&emsp;</label>
+        <select id="descShapeType" v-model="selectedDescShapeType" class="select">
+          <option v-for="descShapeType in descShapeTypeList" :key="descShapeType" :value="descShapeType">
+            {{ descShapeType }}
+          </option>
+        </select>
+      </div>
+
+      <div v-if="shapeSelectionDisplay" class="select-container">
+        <label for="shape">Select Shape:&emsp;</label>
+        <select id="shape" v-model="selectedShape" class="select">
+          <option v-for="shape in shapeList" :key="shape" :value="shape">
+            {{ shape }}
+          </option>
+        </select>
+      </div>
+
+      <div v-if="gradeSelectionDisplay" class="select-container">
+        <label for="grade">Select Grade:&emsp;</label>
+        <select id="grade" v-model="selectedGrade" class="select">
+          <option :key="selectedShapeTypeASTMSpecPreferredDesig" :value="selectedShapeTypeASTMSpecPreferredKey">
+            {{ selectedShapeTypeASTMSpecPreferredDesig }}
+          </option>
+          <option
+            v-for="(Desig, index) in selectedShapeTypeASTMSpecApplicableDesigs"
+            :key="selectedShapeTypeASTMSpecApplicableDesigs[index]"
+            :value="selectedShapeTypeASTMSpecApplicableKeys[index]"
+          >
+            {{ Desig }}
+          </option>
+        </select>
+      </div>
+
+      <h3>For Flexure</h3>
+
+      <div v-if="unbracedLengthInputDisplay" class="input-container">
+        <label for="unbracedLength">Enter Unbraced Length (<em>L<sub>b</sub></em>):&emsp;</label>
+        <input type="number" id="unbracedLength" v-model="enteredUnbracedLength" class="input-number-short" @input="unbracedLengthInputValidator">
+        <span><em>ft</em></span>
+        <p v-if="unbracedLengthInputError" class="error-message">{{ unbracedLengthInputError }}</p>
+      </div>
+
+      <div v-if="ltbModFactorInputDisplay" class="input-container">
+        <label for="ltbModFactor">Enter LTB Modification Factor (<em>C<sub>b</sub></em>):&emsp;</label>
+        <input type="number" id="ltbModFactor" v-model="enteredLTBModFactor" class="input-number-short" @input="ltbModFactorInputValidator">
+        <p v-if="ltbModFactorInputError" class="error-message">{{ ltbModFactorInputError }}</p>
+      </div>
     </div>
 
-    <div v-if="shapeSelectionDisplay" class="select-container">
-      <label for="shape">Select shape:&emsp;</label>
-      <select id="shape" v-model="selectedShape" class="select">
-        <option v-for="shape in shapeList" :key="shape" :value="shape">
-          {{ shape }}
-        </option>
-      </select>
+    <div v-if="true">
+      <h2>Shape Dimension and Property</h2>
+      <h4>{{ selectedShape }}</h4>
+      {{ selectedShapeType }}
+      <br>
+      {{ selectedShapeData }}
     </div>
 
-    <div v-if="gradeSelectionDisplay" class="select-container">
-      <label for="grade">Select grade:&emsp;</label>
-      <select id="grade" v-model="selectedGrade" class="select">
-        <option :key="selectedShapeTypeASTMSpecPreferredDesig" :value="selectedShapeTypeASTMSpecPreferredKey">
-          {{ selectedShapeTypeASTMSpecPreferredDesig }}
-        </option>
-        <option
-          v-for="(Desig, index) in selectedShapeTypeASTMSpecApplicableDesigs"
-          :key="selectedShapeTypeASTMSpecApplicableDesigs[index]"
-          :value="selectedShapeTypeASTMSpecApplicableKeys[index]"
-        >
-          {{ Desig }}
-        </option>
-      </select>
+    <div v-if="true">
+      <h2>Steel Property</h2>
+      <h4>{{ selectedGrade }}</h4>
+      {{ selectedASTMSpecProp }}
     </div>
 
-    <div v-if="unbracedLengthInputDisplay" class="input-container">
-      <label for="unbracedLength">Enter unbraced length, <em>L<sub>b</sub></em>:&emsp;</label>
-      <input type="number" id="unbracedLength" v-model="enteredUnbracedLength" class="input-number-short" @input="unbracedLengthInputValidator">
-      <span><em>ft</em></span>
-      <p v-if="unbracedLengthInputError" class="error-message">{{ unbracedLengthInputError }}</p>
+    <div v-if="true">
+      <h2>Element Slenderness Class</h2>
+      {{ selectedShapeSlenderRatio }}
+      <h3>Subject to Axial Compression</h3>
+      {{ selectedShapeAxialSlenderClass }}
+      <br>
+      {{ selectedShapeTypeAxialSlenderLimitRatio }}
+      <h3>Subject to Flexure</h3>
+      {{ selectedShapeFlexureSlenderClass }}
+      <br>
+      {{ selectedShapeTypeFlexureSlenderLimitRatio }}
     </div>
 
-    <div v-if="ltbModFactorInputDisplay" class="input-container">
-      <label for="ltbModFactor">Enter LTB modification factor, <em>C<sub>b</sub></em>:&emsp;</label>
-      <input type="number" id="ltbModFactor" v-model="enteredLTBModFactor" class="input-number-short" @input="ltbModFactorInputValidator">
-      <p v-if="ltbModFactorInputError" class="error-message">{{ ltbModFactorInputError }}</p>
+    <div v-if="false">
+      <h2>Tensile Strength</h2>
     </div>
 
+    <div v-if="false">
+      <h2>Compressive Strength</h2>
+    </div>
 
-    {{ selectedShapeType }}
-    <br>
-    {{ selectedGrade }}
-    <br>
-    {{ selectedASTMSpecProp }}
-    <br>
-    {{ selectedShapeAxialSlenderClass }}
-    <br>
-    {{ selectedShapeFlexureSlenderClass }}
-    <br>
-    {{ validatedUnbracedLength }}
-    <br>
-    {{ validatedLTBModFactor }}
-    <br>
-    {{ selectedShapeMajorFlexureCapacity }}
-    <br>
-    <!-- {{ selectedShapeSlenderRatio }} -->
-    <br>
-    <!-- {{ selectedShapeTypeFlexureSlenderLimitRatio }} -->
+    <div v-if="true">
+      <h2>Flexural Strength</h2>
+      
+      <div v-if="true">
+        <h3>Major Axis</h3>
+        {{ selectedShapeMajorFlexureCapacity }}
+      </div>
+
+      <div v-if="false">
+        <h3>Minor Axis</h3>
+      </div>
+    </div>
+
+    <div v-if="false">
+      <h2>Shear Strength</h2>
+    </div>
 
   </div>
 </template>
@@ -250,6 +286,12 @@
     },
 
     watch: {
+      selectedDescShapeType(newDescShapeType) {
+        if (!this.shapeList.includes(this.selectedShape)) {
+          this.selectedShape = null;
+        }
+      },
+
       selectedShape(newShape) {
         this.selectedGrade = this.selectedShapeTypeASTMSpecPreferredKey;
       },
