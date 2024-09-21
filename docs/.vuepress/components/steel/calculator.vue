@@ -1,6 +1,15 @@
 <template>
   <div>
 
+    <div v-if="shapeTypeSelectionDisplay" class="select-container">
+      <label for="descShapeType">Select shape type:&emsp;</label>
+      <select id="descShapeType" v-model="selectedDescShapeType" class="select">
+        <option v-for="descShapeType in descShapeTypeList" :key="descShapeType" :value="descShapeType">
+          {{ descShapeType }}
+        </option>
+      </select>
+    </div>
+
     <div v-if="shapeSelectionDisplay" class="select-container">
       <label for="shape">Select shape:&emsp;</label>
       <select id="shape" v-model="selectedShape" class="select">
@@ -64,6 +73,7 @@
 </template>
 
 <script>
+  import { descShapeTypeListFecher } from './utils';
   import { shapeListFecher } from './utils';
   import { shapeDataFetcher } from './utils';
   import { shapeTypeFetcher } from './utils';
@@ -89,7 +99,7 @@
       return {
         unit: 0,   // 0 for US units, 1 for metric units
 
-
+        selectedDescShapeType: 'All',
         selectedShape: null,
         selectedGrade: null,
         enteredUnbracedLength: 0,
@@ -97,7 +107,7 @@
 
 
         // display variable
-        shapeSelectionDisplay: true,
+        shapeTypeSelectionDisplay: true,
 
         // error variable
         unbracedLengthInputError: '',
@@ -109,8 +119,12 @@
     computed: {
       // input field variable
 
+      descShapeTypeList() {
+        return descShapeTypeListFecher();
+      },
+
       shapeList() {
-        return shapeListFecher(this.unit);
+        return shapeListFecher(this.unit, this.selectedDescShapeType);
       },
 
       selectedShapeTypeASTMSpecPreferredKey() {
@@ -146,6 +160,10 @@
 
       // valid variable
 
+      selecteddescShapeTypeValid() {
+        return selectionValidator(this.selectedDescShapeType);
+      },
+
       selectedShapeValid() {
         return selectionValidator(this.selectedShape);
       },
@@ -156,6 +174,10 @@
 
 
       // display variable
+
+      shapeSelectionDisplay() {
+        return this.selecteddescShapeTypeValid;
+      },
 
       gradeSelectionDisplay() {
         return this.selectedShapeValid;

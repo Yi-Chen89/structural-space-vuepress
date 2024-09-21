@@ -1,18 +1,35 @@
 import aiscShapeDataV15US from '../../public/data/steel/aisc-shapes-database-v15.0_us.json';
 import aiscShapeDataV15Metric from '../../public/data/steel/aisc-shapes-database-v15.0_metric.json';
+import aiscShapeTypeV15 from '../../public/data/steel/aisc-shape-type-v15.json';
 import aiscShapeASTMSpecV15Match from '../../public/data/steel/aisc-shapes-astm-specifications-v15_match.json';
 import aiscShapeASTMSpecV15Prop from '../../public/data/steel/aisc-shapes-astm-specifications-v15_property.json';
-
 
 // import aiscShapeTypeDescription from '../../public/data/steel/aisc-shape-type-description.json';
 
 
-export function shapeListFecher(unit) {
-  // find dataset
-  const dataset = datasetFinder(unit);
+export function descShapeTypeListFecher() {
+  // dataset
+  const dataset = aiscShapeTypeV15;
 
   if (dataset) {
     return Object.keys(dataset);
+  } else {
+    return null;
+  }
+}
+
+export function shapeListFecher(unit, descShapeType) {
+  // find dataset
+  const dataset = datasetFinder(unit);
+
+  // find shape type list
+  const shapeTypeList = shapeTypeListFecher(descShapeType);
+  
+  if (dataset) {
+    return Object.keys(dataset).filter(key => {
+      const shapeType = shapeTypeFetcher(unit, key);
+      return shapeTypeList.includes(shapeType);
+    });
   } else {
     return null;
   }
@@ -62,8 +79,11 @@ export function shapeTypeFetcher(unit, shape) {
 
 
 export function shapeASTMSpecListFetcher(shapeType) {
-  if (shapeType && shapeType in aiscShapeASTMSpecV15Match) {
-    return aiscShapeASTMSpecV15Match[shapeType];
+  // dataset
+  const dataset = aiscShapeASTMSpecV15Match;
+
+  if (shapeType && shapeType in dataset) {
+    return dataset[shapeType];
   } else {
     return null;
   }
@@ -156,6 +176,17 @@ export function shapeSlenderRatioFetcher(unit, shape, shapeType) {
 
 
 // helper function
+function shapeTypeListFecher(descShapeType) {
+  // dataset
+  const dataset = aiscShapeTypeV15;
+
+  if (descShapeType && descShapeType in dataset) {
+    return dataset[descShapeType];
+  } else {
+    return null;
+  }
+}
+
 function datasetFinder(unit) {
   // determine dataset based on unit
   // unit: 0 for US units, 1 for metric units
@@ -164,6 +195,6 @@ function datasetFinder(unit) {
   } else if (unit === 1) {
     return aiscShapeDataV15Metric;
   } else {
-    return null
+    return null;
   }
 }
