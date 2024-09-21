@@ -3,11 +3,11 @@ name: Deploy Site
 
 on:
   # run workflow when there is a push to main branch
-  # push:
-    # branches:
-      # - main
+  push:
+    branches:
+      - main
   # run workflow manually
-  workflow_dispatch:
+  # workflow_dispatch:
 
 permissions:
   contents: write
