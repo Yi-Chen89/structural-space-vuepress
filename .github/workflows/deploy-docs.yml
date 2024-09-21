@@ -3,11 +3,11 @@ name: Deploy Site
 
 on:
   # run workflow when there is a push to main branch
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   # run workflow manually
-  # workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,10 +23,8 @@ jobs:
           # if your docs needs submodules, uncomment the following line
           # submodules: true
 
-
-
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
@@ -35,11 +33,12 @@ jobs:
         run: npm ci
 
       - name: Build Docs
-        env:
-          NODE_OPTIONS: --max_old_space_size=8192
-        run: |-
-          npm run docs:build
-          > docs/.vuepress/dist/.nojekyll
+        # env:
+        #   NODE_OPTIONS: --max_old_space_size=8192
+        # run: |-
+        #   npm run docs:build
+        #   > docs/.vuepress/dist/.nojekyll
+        run: npm run docs:build
 
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@v4
