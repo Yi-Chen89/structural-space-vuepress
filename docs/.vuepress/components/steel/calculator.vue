@@ -105,6 +105,11 @@
       <h2>Shear Strength</h2>
     </div>
 
+    <footer>
+      <hr>
+      Steel Construction Manual 15th Edition
+      <hr>
+    </footer>
   </div>
 </template>
 
