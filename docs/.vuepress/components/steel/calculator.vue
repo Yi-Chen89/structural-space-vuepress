@@ -58,7 +58,32 @@
 
       <div><strong>{{ selectedShape }}</strong></div>
 
-      {{ selectedShapeType }}
+      <div>
+        <div>Weight</div>
+        <table>
+          <tbody>
+            <tr v-for="(value, key) in selectedShapeWeight" :key="key">
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+              <td>lb/ft</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div>Dimension</div>
+        <table>
+          <tbody>
+            <tr v-for="(value, key) in selectedShapeDimension" :key="key">
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+              <td>in</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <br>
       {{ selectedShapeData }}
     </div>
@@ -146,6 +171,9 @@
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
   import { nonnegativeNumberInputValidator } from '../utils/validators.js';
+
+  import { shapeWeightFilterer } from './utils/data-filterers.js';
+  import { shapeDimensionFilterer } from './utils/data-filterers.js';
   
   
   export default {
@@ -216,6 +244,14 @@
 
       selectedGradeDesig() {
         return astmSpecDesigFetcher(this.selectedGrade);
+      },
+
+      selectedShapeWeight() {
+        return shapeWeightFilterer(this.selectedShapeData);
+      },
+
+      selectedShapeDimension() {
+        return shapeDimensionFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
 
