@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div v-if="true">
+    <div v-if="shapeDataDisplay">
       <h2>Shape Dimension and Property</h2>
       <h4>{{ selectedShape }}</h4>
       {{ selectedShapeType }}
@@ -61,13 +61,24 @@
       {{ selectedShapeData }}
     </div>
 
-    <div v-if="true">
+    <div v-if="gradeDataDisplay">
       <h2>Steel Property</h2>
-      <h4>{{ selectedGrade }}</h4>
-      {{ selectedASTMSpecProp }}
+
+      <div><strong>{{ selectedGradeDesig }}</strong></div>
+
+      <table>
+        <tbody>
+          <tr v-for="(value, key) in selectedASTMSpecProp" :key="key">
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+            <td>ksi</td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
 
-    <div v-if="true">
+    <div v-if="slenderClassDisplay">
       <h2>Element Slenderness Class</h2>
       {{ selectedShapeSlenderRatio }}
       <h3>Subject to Axial Compression</h3>
@@ -80,15 +91,15 @@
       {{ selectedShapeTypeFlexureSlenderLimitRatio }}
     </div>
 
-    <div v-if="false">
+    <div v-if="tensionCalcDisplay">
       <h2>Tensile Strength</h2>
     </div>
 
-    <div v-if="false">
+    <div v-if="compressionCalcDisplay">
       <h2>Compressive Strength</h2>
     </div>
 
-    <div v-if="true">
+    <div v-if="flexureCalcDisplay">
       <h2>Flexural Strength</h2>
       
       <div v-if="true">
@@ -101,7 +112,7 @@
       </div>
     </div>
 
-    <div v-if="false">
+    <div v-if="shearCalcDisplay">
       <h2>Shear Strength</h2>
     </div>
 
@@ -199,9 +210,16 @@
       },
 
 
+      // rendering variable
+
+      selectedGradeDesig() {
+        return astmSpecDesigFetcher(this.selectedGrade);
+      },
+
+
       // valid variable
 
-      selecteddescShapeTypeValid() {
+      selectedDescShapeTypeValid() {
         return selectionValidator(this.selectedDescShapeType);
       },
 
@@ -214,10 +232,10 @@
       },
 
 
-      // display variable
+      // input display variable
 
       shapeSelectionDisplay() {
-        return this.selecteddescShapeTypeValid;
+        return this.selectedDescShapeTypeValid;
       },
 
       gradeSelectionDisplay() {
@@ -230,6 +248,37 @@
 
       ltbModFactorInputDisplay() {
         return this.selectedGradeValid;
+      },
+
+
+      // output display variable
+
+      shapeDataDisplay() {
+        return this.selectedShapeValid;
+      },
+
+      gradeDataDisplay() {
+        return this.selectedGradeValid;
+      },
+
+      slenderClassDisplay() {
+        return this.selectedShapeValid && this.selectedGradeValid;
+      },
+
+      tensionCalcDisplay() {
+        return false;
+      },
+
+      compressionCalcDisplay() {
+        return false;
+      },
+
+      flexureCalcDisplay() {
+        return true;
+      },
+
+      shearCalcDisplay() {
+        return false;
       },
 
 
