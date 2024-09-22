@@ -55,7 +55,9 @@
 
     <div v-if="shapeDataDisplay">
       <h2>Shape Dimension and Property</h2>
-      <h4>{{ selectedShape }}</h4>
+
+      <div><strong>{{ selectedShape }}</strong></div>
+
       {{ selectedShapeType }}
       <br>
       {{ selectedShapeData }}
@@ -125,25 +127,25 @@
 </template>
 
 <script>
-  import { descShapeTypeListFecher } from './utils';
-  import { shapeListFecher } from './utils';
-  import { shapeDataFetcher } from './utils';
-  import { shapeTypeFetcher } from './utils';
-  import { shapeASTMSpecListFetcher } from './utils';
-  import { astmSpecDesigFetcher } from './utils';
-  import { astmSpecPropFetcher } from './utils';
-  import { shapeSlenderRatioFetcher } from './utils';
+  import { descShapeTypeListFetcher } from './utils/data-fetchers.js';
+  import { shapeListFetcher } from './utils/data-fetchers.js';
+  import { shapeDataFetcher } from './utils/data-fetchers.js';
+  import { shapeTypeFetcher } from './utils/data-fetchers.js';
+  import { shapeASTMSpecListFetcher } from './utils/data-fetchers.js';
+  import { astmSpecDesigFetcher } from './utils/data-fetchers.js';
+  import { astmSpecPropFetcher } from './utils/data-fetchers.js';
+  import { shapeSlenderRatioFetcher } from './utils/data-fetchers.js';
 
-  import { axialSlenderLimitRatioCalculator } from './calculator-utils';
-  import { axialSlenderClassifier } from './calculator-utils';
-  import { flexureSlenderLimitRatioCalculator } from './calculator-utils';
-  import { flexureSlenderClassifier } from './calculator-utils';
-  import { majorFlexureCalculator } from './calculator-utils';
+  import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
+  import { axialSlenderClassifier } from './utils/slender-calculators.js';
+  import { flexureSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
+  import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
+  import { majorFlexureCalculator } from './utils/flexure-calculators.js';
 
-  import { selectionValidator } from '../validation.js';
-  import { positiveNumberInputValidator } from '../validation.js';
-  import { nonnegativeNumberInputValidator } from '../validation.js';
+  import { selectionValidator } from '../utils/validators.js';
+  import { positiveNumberInputValidator } from '../utils/validators.js';
+  import { nonnegativeNumberInputValidator } from '../utils/validators.js';
   
   
   export default {
@@ -172,11 +174,11 @@
       // input field variable
 
       descShapeTypeList() {
-        return descShapeTypeListFecher();
+        return descShapeTypeListFetcher();
       },
 
       shapeList() {
-        return shapeListFecher(this.unit, this.selectedDescShapeType);
+        return shapeListFetcher(this.unit, this.selectedDescShapeType);
       },
 
       selectedShapeTypeASTMSpecPreferredKey() {

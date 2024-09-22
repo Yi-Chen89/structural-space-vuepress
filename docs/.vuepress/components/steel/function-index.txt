@@ -1,0 +1,50 @@
+utils/data-fetchers.js
+ |
+ |- descShapeTypeListFetcher()
+ |- shapeListFetcher()
+ |- shapeDataFetcher()
+ |- shapeTypeFetcher()
+ |- shapeASTMSpecListFetcher()
+ |- astmSpecDesigFetcher()
+ |- astmSpecPropFetcher()
+ |- shapeSlenderRatioFetcher()
+ |
+ |  helper
+ |- datasetFinder()
+ |- shapeTypeListFecher()
+
+
+utils/slender-calculators.js
+ |
+ |- axialSlenderLimitRatioCalculator()
+ |- axialSlenderClassifier()
+ |- flexureSlenderLimitRatioCalculator()
+ |- flexureSlenderClassifier()
+ |
+ |  helper
+ |- slenderRatioParser()
+ |- axialElementClassifier()
+ |- flexureElementClassifier()
+
+
+utils/flexure-calculators.js
+ |
+ |- majorFlexureCalculator()
+ |
+ |  helper
+ |- F2_1Yielding()
+ |- F2_2LateralTorsionalBuckling()
+ |- F3_2CompressionFlangeLocalBuckling()
+ |- F7_1Yielding()
+ |- F7_2FlangeLocalBuckling()
+ |- F7_3WebLocalBuckling()
+ |- F7_4LateralTorsionalBuckling()
+ |- F8_1Yielding()
+ |- F8_2LocalBuckling()
+ |- F9_1YieldingSagging()
+ |- F9_1YieldingHogging()
+ |- F9_2LateralTorsionalBucklingSagging()
+ |- F9_2LateralTorsionalBucklingHogging()
+ |- F9_3FlangeLocalBuckling()
+ |- F9_4WebLocalBuckling()
+ |- F10_1Yielding()

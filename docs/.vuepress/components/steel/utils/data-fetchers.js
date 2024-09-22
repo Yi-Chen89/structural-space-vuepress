@@ -1,13 +1,13 @@
-import aiscShapeDataV15US from '../../public/data/steel/aisc-shapes-database-v15.0_us.json';
-import aiscShapeDataV15Metric from '../../public/data/steel/aisc-shapes-database-v15.0_metric.json';
-import aiscShapeTypeV15 from '../../public/data/steel/aisc-shape-type-v15.json';
-import aiscShapeASTMSpecV15Match from '../../public/data/steel/aisc-shapes-astm-specifications-v15_match.json';
-import aiscShapeASTMSpecV15Prop from '../../public/data/steel/aisc-shapes-astm-specifications-v15_property.json';
+import aiscShapeDataV15US from '../../../public/data/steel/aisc-shapes-database-v15.0_us.json';
+import aiscShapeDataV15Metric from '../../../public/data/steel/aisc-shapes-database-v15.0_metric.json';
+import aiscShapeTypeV15 from '../../../public/data/steel/aisc-shape-type-v15.json';
+import aiscShapeASTMSpecV15Match from '../../../public/data/steel/aisc-shapes-astm-specifications-v15_match.json';
+import aiscShapeASTMSpecV15Prop from '../../../public/data/steel/aisc-shapes-astm-specifications-v15_property.json';
 
 // import aiscShapeTypeDescription from '../../public/data/steel/aisc-shape-type-description.json';
 
 
-export function descShapeTypeListFecher() {
+export function descShapeTypeListFetcher() {
   // dataset
   const dataset = aiscShapeTypeV15;
 
@@ -18,7 +18,7 @@ export function descShapeTypeListFecher() {
   }
 }
 
-export function shapeListFecher(unit, descShapeType) {
+export function shapeListFetcher(unit, descShapeType) {
   // find dataset
   const dataset = datasetFinder(unit);
 
@@ -35,19 +35,16 @@ export function shapeListFecher(unit, descShapeType) {
   }
 }
 
-
 export function shapeDataFetcher(unit, shape) {
   // find dataset
   const dataset = datasetFinder(unit);
 
-  // fetch data
   if (dataset && shape in dataset) {
     return dataset[shape];
   } else {
     return null;
   }
 }
-
 
 export function shapeTypeFetcher(unit, shape) {
   // fetch data
@@ -77,7 +74,6 @@ export function shapeTypeFetcher(unit, shape) {
   }
 }
 
-
 export function shapeASTMSpecListFetcher(shapeType) {
   // dataset
   const dataset = aiscShapeASTMSpecV15Match;
@@ -89,15 +85,10 @@ export function shapeASTMSpecListFetcher(shapeType) {
   }
 }
 
-
-
-
-
 export function astmSpecDesigFetcher(astmSpecKey) {
   // dataset
   const dataset = aiscShapeASTMSpecV15Prop;
   
-  // fetch data
   if (dataset && astmSpecKey in dataset) {
     return dataset[astmSpecKey]['ASTM_Designation'];
   } else {
@@ -105,12 +96,10 @@ export function astmSpecDesigFetcher(astmSpecKey) {
   }
 }
 
-
 export function astmSpecPropFetcher(astmSpecKey) {
   // dataset
   const dataset = aiscShapeASTMSpecV15Prop;
 
-  // fetch data
   if (dataset && astmSpecKey in dataset) {
     const data = dataset[astmSpecKey]
     return {
@@ -123,7 +112,6 @@ export function astmSpecPropFetcher(astmSpecKey) {
     return null;
   }
 }
-
 
 export function shapeSlenderRatioFetcher(unit, shape, shapeType) {
   // fetch data
@@ -162,9 +150,6 @@ export function shapeSlenderRatioFetcher(unit, shape, shapeType) {
   }
 }
 
-
-
-
 // export function shapeTypeDescriptionFetcher(shapeType) {
 //   if (shapeType && shapeType in aiscShapeTypeDescription) {
 //     return aiscShapeTypeDescription[shapeType];
@@ -174,18 +159,7 @@ export function shapeSlenderRatioFetcher(unit, shape, shapeType) {
 // }
 
 
-
-// helper function
-function shapeTypeListFecher(descShapeType) {
-  // dataset
-  const dataset = aiscShapeTypeV15;
-
-  if (descShapeType && descShapeType in dataset) {
-    return dataset[descShapeType];
-  } else {
-    return null;
-  }
-}
+// Helper Function
 
 function datasetFinder(unit) {
   // determine dataset based on unit
@@ -194,6 +168,17 @@ function datasetFinder(unit) {
     return aiscShapeDataV15US;
   } else if (unit === 1) {
     return aiscShapeDataV15Metric;
+  } else {
+    return null;
+  }
+}
+
+function shapeTypeListFecher(descShapeType) {
+  // dataset
+  const dataset = aiscShapeTypeV15;
+
+  if (descShapeType && descShapeType in dataset) {
+    return dataset[descShapeType];
   } else {
     return null;
   }
