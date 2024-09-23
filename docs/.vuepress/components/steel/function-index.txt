@@ -7,11 +7,20 @@ utils/data-fetchers.js
  |- shapeASTMSpecListFetcher()
  |- astmSpecDesigFetcher()
  |- astmSpecPropFetcher()
- |- shapeSlenderRatioFetcher()
  |
  |  helper
  |- datasetFinder()
  |- shapeTypeListFecher()
+
+
+utils/data-filterers.js
+ |
+ |- shapeWeightFilterer()
+ |- shapeDimensionFilterer()
+ |- shapeSlenderRatioFilterer()
+ |
+ |  helper
+ |- dictFilterer()
 
 
 utils/slender-calculators.js

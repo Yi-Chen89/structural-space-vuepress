@@ -113,43 +113,6 @@ export function astmSpecPropFetcher(astmSpecKey) {
   }
 }
 
-export function shapeSlenderRatioFetcher(unit, shape, shapeType) {
-  // fetch data
-  const shapeData = shapeDataFetcher(unit, shape)
-
-  if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-    return {
-      'bf/2tf': shapeData['bf/2tf'],
-      'h/tw': shapeData['h/tw'],
-    };
-  } else if (['C', 'MC'].includes(shapeType)) {
-    return {
-      'b/t': shapeData['b/t'],
-      'h/tw': shapeData['h/tw'],
-    };
-  } else if (['L', '2L'].includes(shapeType)) {
-    return {
-      'b/t': shapeData['b/t'],
-    };
-  } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    return {
-      'bf/2tf': shapeData['bf/2tf'],
-      'D/t': shapeData['D/t'],
-    };
-  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
-    return {
-      'b/tdes': shapeData['b/tdes'],
-      'h/tdes': shapeData['h/tdes'],
-    };
-  } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
-    return {
-      'D/t': shapeData['D/t'],
-    };
-  } else {
-    return null;
-  }
-}
-
 // export function shapeTypeDescriptionFetcher(shapeType) {
 //   if (shapeType && shapeType in aiscShapeTypeDescription) {
 //     return aiscShapeTypeDescription[shapeType];

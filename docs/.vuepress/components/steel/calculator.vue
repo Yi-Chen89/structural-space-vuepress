@@ -107,7 +107,16 @@
 
     <div v-if="slenderClassDisplay">
       <h2>Element Slenderness Class</h2>
-      {{ selectedShapeSlenderRatio }}
+
+      <table>
+        <tbody>
+          <tr v-for="(value, key) in selectedShapeSlenderRatio" :key="key">
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+          </tr>
+        </tbody>
+      </table>
+
       <h3>Subject to Axial Compression</h3>
       {{ selectedShapeAxialSlenderClass }}
       <br>
@@ -159,7 +168,6 @@
   import { shapeASTMSpecListFetcher } from './utils/data-fetchers.js';
   import { astmSpecDesigFetcher } from './utils/data-fetchers.js';
   import { astmSpecPropFetcher } from './utils/data-fetchers.js';
-  import { shapeSlenderRatioFetcher } from './utils/data-fetchers.js';
 
   import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
   import { axialSlenderClassifier } from './utils/slender-calculators.js';
@@ -174,6 +182,7 @@
 
   import { shapeWeightFilterer } from './utils/data-filterers.js';
   import { shapeDimensionFilterer } from './utils/data-filterers.js';
+  import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
   
   
   export default {
@@ -336,7 +345,7 @@
       },
 
       selectedShapeSlenderRatio() {
-        return shapeSlenderRatioFetcher(this.unit, this.selectedShape, this.selectedShapeType);
+        return shapeSlenderRatioFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
       selectedShapeTypeAxialSlenderLimitRatio() {

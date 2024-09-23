@@ -21,6 +21,27 @@ export function shapeDimensionFilterer(shapeData, shapeType) {
   return dictFilterer(shapeData, keys);
 }
 
+export function shapeSlenderRatioFilterer(shapeData, shapeType) {
+  let keys = null;
+  if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
+    keys = ['bf/2tf', 'h/tw'];
+  } else if (['C', 'MC'].includes(shapeType)) {
+    keys = ['b/t', 'h/tw'];
+  } else if (['L', '2L'].includes(shapeType)) {
+    keys = ['b/t'];
+  } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    keys = ['bf/2tf', 'D/t'];
+  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
+    keys = ['b/tdes', 'h/tdes'];
+  } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
+    keys = ['D/t'];
+  } else {
+    keys = [];
+  }
+
+  return dictFilterer(shapeData, keys);
+}
+
 
 // Helper Function
 
