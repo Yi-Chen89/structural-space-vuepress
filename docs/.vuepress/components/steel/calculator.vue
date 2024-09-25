@@ -62,10 +62,10 @@
         <div>Weight</div>
         <table>
           <tbody>
-            <tr v-for="(value, key) in selectedShapeWeight" :key="key">
-              <td>{{ key }}</td>
-              <td>{{ value }}</td>
-              <td>lb/ft</td>
+            <tr v-for="(value, key) in selectedShapeWeightRenderData" :key="key">
+              <td v-html="value.notation"  :title="value.description"></td>
+              <td>{{ value.value }}</td>
+              <td v-html="value.unit"></td>
             </tr>
           </tbody>
         </table>
@@ -75,16 +75,28 @@
         <div>Dimension</div>
         <table>
           <tbody>
-            <tr v-for="(value, key) in selectedShapeDimension" :key="key">
-              <td>{{ key }}</td>
-              <td>{{ value }}</td>
-              <td>in</td>
+            <tr v-for="(value, key) in selectedShapeDimensionRenderData" :key="key">
+              <td v-html="value.notation"  :title="value.description"></td>
+              <td>{{ value.value }}</td>
+              <td v-html="value.unit"></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <br>
+      <div>
+        <div>Property</div>
+        <table>
+          <tbody>
+            <tr v-for="(value, key) in selectedShapePropertyRenderData" :key="key">
+              <td v-html="value.notation"  :title="value.description"></td>
+              <td>{{ value.value }}</td>
+              <td v-html="value.unit"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       {{ selectedShapeData }}
     </div>
 
@@ -108,14 +120,17 @@
     <div v-if="slenderClassDisplay">
       <h2>Element Slenderness Class</h2>
 
-      <table>
-        <tbody>
-          <tr v-for="(value, key) in selectedShapeSlenderRatio" :key="key">
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <div>Slenderness Ratio</div>
+        <table>
+          <tbody>
+            <tr v-for="(value, key) in selectedShapeSlenderRatioRenderData" :key="key">
+              <td v-html="value.notation"  :title="value.description"></td>
+              <td>{{ value.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <h3>Subject to Axial Compression</h3>
       {{ selectedShapeAxialSlenderClass }}
@@ -180,9 +195,11 @@
   import { positiveNumberInputValidator } from '../utils/validators.js';
   import { nonnegativeNumberInputValidator } from '../utils/validators.js';
 
-  import { shapeWeightFilterer } from './utils/data-filterers.js';
-  import { shapeDimensionFilterer } from './utils/data-filterers.js';
+  import { shapeWeightRenderDataFilterer } from './utils/data-filterers.js';
+  import { shapeDimensionRenderDataFilterer } from './utils/data-filterers.js';
   import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
+  import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
+  import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
   
   
   export default {
@@ -255,12 +272,20 @@
         return astmSpecDesigFetcher(this.selectedGrade);
       },
 
-      selectedShapeWeight() {
-        return shapeWeightFilterer(this.selectedShapeData);
+      selectedShapeWeightRenderData() {
+        return shapeWeightRenderDataFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
-      selectedShapeDimension() {
-        return shapeDimensionFilterer(this.selectedShapeData, this.selectedShapeType);
+      selectedShapeDimensionRenderData() {
+        return shapeDimensionRenderDataFilterer(this.selectedShapeData, this.selectedShapeType);
+      },
+
+      selectedShapePropertyRenderData() {
+        return shapePropertyRenderDataFilterer(this.selectedShapeData, this.selectedShapeType);
+      },
+
+      selectedShapeSlenderRatioRenderData() {
+        return shapeSlenderRatioRenderDataFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
 

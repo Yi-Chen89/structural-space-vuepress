@@ -1,58 +1,137 @@
-export function shapeWeightFilterer(shapeData) {
-  const keys = ['W'];
+import aiscShapeDataCategory from '../../../public/data/steel/aisc-shapes-data-category.json';
 
+
+export function shapeWeightFilterer(shapeData, shapeType) {
+  const keys = filterKeysFinder(shapeType, 'weight');
+  
   return dictFilterer(shapeData, keys);
+}
+
+export function shapeWeightRenderDataFilterer(shapeData, shapeType) {
+  const infoDict = infoDictFinder(shapeType, 'weight')
+  const valueDict = shapeWeightFilterer(shapeData, shapeType);
+
+  for (let key in valueDict) {
+    if (infoDict[key]) {
+      infoDict[key]["value"] = valueDict[key];
+    }
+  }
+
+  return infoDict;
 }
 
 export function shapeDimensionFilterer(shapeData, shapeType) {
-  let keys = null;
-  if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
-    keys = ['d', 'bf', 'tw', 'tf'];
-  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
-    keys = ['Ht', 'B', 'tdes'];
-  } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
-    keys = ['OD', 'tdes'];
-  } else if (['L', '2L'].includes(shapeType)) {
-    keys = ['d', 'b', 't'];
-  } else {
-    keys = [];
-  }
+  const keys = filterKeysFinder(shapeType, 'dimension');
 
   return dictFilterer(shapeData, keys);
 }
 
-export function shapeSlenderRatioFilterer(shapeData, shapeType) {
-  let keys = null;
-  if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-    keys = ['bf/2tf', 'h/tw'];
-  } else if (['C', 'MC'].includes(shapeType)) {
-    keys = ['b/t', 'h/tw'];
-  } else if (['L', '2L'].includes(shapeType)) {
-    keys = ['b/t'];
-  } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    keys = ['bf/2tf', 'D/t'];
-  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
-    keys = ['b/tdes', 'h/tdes'];
-  } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
-    keys = ['D/t'];
-  } else {
-    keys = [];
+export function shapeDimensionRenderDataFilterer(shapeData, shapeType) {
+  const infoDict = infoDictFinder(shapeType, 'dimension')
+  const valueDict = shapeDimensionFilterer(shapeData, shapeType);
+
+  for (let key in valueDict) {
+    if (infoDict[key]) {
+      infoDict[key]["value"] = valueDict[key];
+    }
   }
 
+  return infoDict;
+}
+
+export function shapeSlenderRatioFilterer(shapeData, shapeType) {
+  const keys = filterKeysFinder(shapeType, 'slenderness_ratio');
+
   return dictFilterer(shapeData, keys);
+}
+
+export function shapeSlenderRatioRenderDataFilterer(shapeData, shapeType) {
+  const infoDict = infoDictFinder(shapeType, 'slenderness_ratio')
+  const valueDict = shapeSlenderRatioFilterer(shapeData, shapeType);
+
+  for (let key in valueDict) {
+    if (infoDict[key]) {
+      infoDict[key]["value"] = valueDict[key];
+    }
+  }
+
+  return infoDict;
+}
+
+export function shapePropertyFilterer(shapeData, shapeType) {
+  const keys = filterKeysFinder(shapeType, 'property');
+
+  return dictFilterer(shapeData, keys);
+}
+
+export function shapePropertyRenderDataFilterer(shapeData, shapeType) {
+  const infoDict = infoDictFinder(shapeType, 'property')
+  const valueDict = shapePropertyFilterer(shapeData, shapeType);
+
+  for (let key in valueDict) {
+    if (infoDict[key]) {
+      infoDict[key]["value"] = valueDict[key];
+    }
+  }
+
+  return infoDict;
 }
 
 
 // Helper Function
 
-function dictFilterer(dict, keysToKeep) {
-  // create new dict with only keys in keyList
-  const filteredDict = {};
-  keysToKeep.forEach(key => {
-    if (key in dict) {
-      filteredDict[key] = dict[key];
+function filterKeysFinder(shapeType, category) {
+  // dataset
+  const dataset = aiscShapeDataCategory;
+
+  if (dataset && category in dataset) {
+    const dict = dataset[category];
+
+    if (category === 'weight') {
+      return Object.keys(dict);
     }
-  });
-  
-  return filteredDict;
+
+    if (shapeType in dict) {
+      return Object.keys(dict[shapeType]);
+    }
+
+    return null;
+  } else {
+    return null;
+  }
+}
+
+function dictFilterer(dict, keysToKeep) {
+  if (dict && keysToKeep) {
+    const filteredDict = {};
+    keysToKeep.forEach(key => {
+      if (key in dict) {
+        filteredDict[key] = dict[key];
+      }
+    });
+    return filteredDict; 
+  } else {
+    return null;
+  }
+}
+
+function infoDictFinder(shapeType, category) {
+  // dataset
+  const dataset = aiscShapeDataCategory;
+
+  if (dataset && category in dataset) {
+    const dict = dataset[category];
+
+    if (category === 'weight') {
+      return JSON.parse(JSON.stringify(dict));
+    }
+
+    if (shapeType in dict) {
+      return JSON.parse(JSON.stringify(dict[shapeType]));
+    }
+
+    return null;
+  } else {
+    return null;
+  }
 }
