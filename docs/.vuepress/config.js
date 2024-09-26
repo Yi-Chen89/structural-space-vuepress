@@ -84,8 +84,6 @@ export default defineUserConfig({
   }),
 
   plugins: [
-    backToTopPlugin(),
-    mediumZoomPlugin({}),
     registerComponentsPlugin({
       componentsDir: path.resolve(__dirname, './components'),
     }),
