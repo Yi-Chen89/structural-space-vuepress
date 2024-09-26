@@ -2,8 +2,6 @@ import { defaultTheme } from '@vuepress/theme-default'
 import { defineUserConfig } from 'vuepress/cli'
 import { viteBundler } from '@vuepress/bundler-vite'
 
-import { backToTopPlugin } from '@vuepress/plugin-back-to-top'
-import { mediumZoomPlugin } from '@vuepress/plugin-medium-zoom'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 
 import { getDirname, path } from 'vuepress/utils'
@@ -15,6 +13,8 @@ export default defineUserConfig({
 
   title: 'Structural Space',
   description: 'A Site for Structural Design',
+
+  base: '/structural-space-vuepress/',
 
   theme: defaultTheme({
     logo: 'https://vuejs.press/images/hero.png',

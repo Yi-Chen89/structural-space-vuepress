@@ -1,4 +1,4 @@
-export const siteData = JSON.parse("{\"base\":\"/\",\"lang\":\"en-US\",\"title\":\"Structural Space\",\"description\":\"A Site for Structural Design\",\"head\":[],\"locales\":{}}")
+export const siteData = JSON.parse("{\"base\":\"/structural-space-vuepress/\",\"lang\":\"en-US\",\"title\":\"Structural Space\",\"description\":\"A Site for Structural Design\",\"head\":[],\"locales\":{}}")
 
 if (import.meta.webpackHot) {
   import.meta.webpackHot.accept()
