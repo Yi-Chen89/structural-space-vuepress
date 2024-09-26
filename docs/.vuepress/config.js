@@ -87,6 +87,9 @@ export default defineUserConfig({
     registerComponentsPlugin({
       componentsDir: path.resolve(__dirname, './components'),
     }),
+    googleAnalyticsPlugin({
+      id: 'G-R88JJMTX06',
+    }),
   ],
 
   bundler: viteBundler(),
