@@ -113,6 +113,40 @@ export function astmSpecPropFetcher(astmSpecKey) {
   }
 }
 
+export function astmSpecPropRenderDataFetcher(astmSpecKey) {
+  const infoDict = {
+    "Fy": {
+      "notation": "F<sub>y</sub>",
+      "unit": "ksi",
+      "description": "specified minimum yield stress"
+    },
+    "Fu": {
+      "notation": "F<sub>u</sub>",
+      "unit": "ksi",
+      "description": "specified minimum tensile strength"
+    },
+    "E": {
+      "notation": "E",
+      "unit": "ksi",
+      "description": "modulus of elasticity of steel"
+    },
+    "G": {
+      "notation": "G",
+      "unit": "ksi",
+      "description": "shear modulus of elasticity of steel"
+    }
+  };
+  const valueDict = astmSpecPropFetcher(astmSpecKey);
+
+  for (let key in valueDict) {
+    if (infoDict[key]) {
+      infoDict[key]["value"] = valueDict[key];
+    }
+  }
+
+  return infoDict;
+}
+
 // export function shapeTypeDescriptionFetcher(shapeType) {
 //   if (shapeType && shapeType in aiscShapeTypeDescription) {
 //     return aiscShapeTypeDescription[shapeType];

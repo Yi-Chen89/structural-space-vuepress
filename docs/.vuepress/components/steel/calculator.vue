@@ -58,6 +58,8 @@
 
       <div><strong>{{ selectedShape }}</strong></div>
 
+      <br>
+
       <div>
         <div>Weight</div>
         <table>
@@ -107,14 +109,13 @@
 
       <table>
         <tbody>
-          <tr v-for="(value, key) in selectedASTMSpecProp" :key="key">
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-            <td>ksi</td>
+          <tr v-for="(value, key) in selectedASTMSpecPropRenderData" :key="key">
+            <td v-html="value.notation"  :title="value.description"></td>
+            <td>{{ value.value }}</td>
+            <td v-html="value.unit"></td>
           </tr>
         </tbody>
       </table>
-
     </div>
 
     <div v-if="slenderClassDisplay">
@@ -183,6 +184,7 @@
   import { shapeASTMSpecListFetcher } from './utils/data-fetchers.js';
   import { astmSpecDesigFetcher } from './utils/data-fetchers.js';
   import { astmSpecPropFetcher } from './utils/data-fetchers.js';
+  import { astmSpecPropRenderDataFetcher } from './utils/data-fetchers.js';
 
   import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
   import { axialSlenderClassifier } from './utils/slender-calculators.js';
@@ -286,6 +288,10 @@
 
       selectedShapeSlenderRatioRenderData() {
         return shapeSlenderRatioRenderDataFilterer(this.selectedShapeData, this.selectedShapeType);
+      },
+
+      selectedASTMSpecPropRenderData() {
+        return astmSpecPropRenderDataFetcher(this.selectedGrade);
       },
 
 
