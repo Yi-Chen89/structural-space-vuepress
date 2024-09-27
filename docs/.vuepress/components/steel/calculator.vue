@@ -64,10 +64,10 @@
         <div>Weight</div>
         <table>
           <tbody>
-            <tr v-for="(value, key) in selectedShapeWeightRenderData" :key="key">
-              <td v-html="value.notation"  :title="value.description"></td>
-              <td>{{ value.value }}</td>
-              <td v-html="value.unit"></td>
+            <tr v-for="(item, key) in selectedShapeWeightRenderData" :key="key">
+              <td v-html="item.notation"  :title="item.description"></td>
+              <td>{{ item.value }}</td>
+              <td v-html="item.unit"></td>
             </tr>
           </tbody>
         </table>
@@ -77,10 +77,10 @@
         <div>Dimension</div>
         <table>
           <tbody>
-            <tr v-for="(value, key) in selectedShapeDimensionRenderData" :key="key">
-              <td v-html="value.notation"  :title="value.description"></td>
-              <td>{{ value.value }}</td>
-              <td v-html="value.unit"></td>
+            <tr v-for="(item, key) in selectedShapeDimensionRenderData" :key="key">
+              <td v-html="item.notation"  :title="item.description"></td>
+              <td>{{ item.value }}</td>
+              <td v-html="item.unit"></td>
             </tr>
           </tbody>
         </table>
@@ -90,10 +90,10 @@
         <div>Property</div>
         <table>
           <tbody>
-            <tr v-for="(value, key) in selectedShapePropertyRenderData" :key="key">
-              <td v-html="value.notation"  :title="value.description"></td>
-              <td>{{ value.value }}</td>
-              <td v-html="value.unit"></td>
+            <tr v-for="(item, key) in selectedShapePropertyRenderData" :key="key">
+              <td v-html="item.notation"  :title="item.description"></td>
+              <td>{{ item.value }}</td>
+              <td v-html="item.unit"></td>
             </tr>
           </tbody>
         </table>
@@ -109,10 +109,10 @@
 
       <table>
         <tbody>
-          <tr v-for="(value, key) in selectedASTMSpecPropRenderData" :key="key">
-            <td v-html="value.notation"  :title="value.description"></td>
-            <td>{{ value.value }}</td>
-            <td v-html="value.unit"></td>
+          <tr v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
+            <td v-html="item.notation"  :title="item.description"></td>
+            <td>{{ item.value }}</td>
+            <td v-html="item.unit"></td>
           </tr>
         </tbody>
       </table>
@@ -125,9 +125,9 @@
         <div>Slenderness Ratio</div>
         <table>
           <tbody>
-            <tr v-for="(value, key) in selectedShapeSlenderRatioRenderData" :key="key">
-              <td v-html="value.notation"  :title="value.description"></td>
-              <td>{{ value.value }}</td>
+            <tr v-for="(item, key) in selectedShapeSlenderRatioRenderData" :key="key">
+              <td v-html="item.notation"  :title="item.description"></td>
+              <td>{{ item.value }}</td>
             </tr>
           </tbody>
         </table>
@@ -156,7 +156,13 @@
       
       <div v-if="true">
         <h3>Major Axis</h3>
-        {{ selectedShapeMajorFlexureCapacity }}
+        <div>
+          <ul>
+            <li v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
+              {{ key }}: {{ item.value }}
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div v-if="false">
@@ -202,6 +208,7 @@
   import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
+  import { resultRenderDataFilterer } from './utils/data-filterers.js';
   
   
   export default {
@@ -292,6 +299,10 @@
 
       selectedASTMSpecPropRenderData() {
         return astmSpecPropRenderDataFetcher(this.selectedGrade);
+      },
+
+      selectedShapeMajorFlexureCapacityRenderData() {
+        return resultRenderDataFilterer(this.selectedShapeMajorFlexureCapacity);
       },
 
 

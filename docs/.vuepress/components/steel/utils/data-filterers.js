@@ -77,6 +77,16 @@ export function shapePropertyRenderDataFilterer(shapeData, shapeType) {
   return infoDict;
 }
 
+export function resultRenderDataFilterer(result) {
+  if (result) {
+    return Object.fromEntries(
+      Object.entries(result).filter(([key, value]) => value['isApplicable'])
+    );
+  } else {
+    return null;
+  }
+}
+
 
 // Helper Function
 
