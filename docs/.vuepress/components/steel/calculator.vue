@@ -159,12 +159,19 @@
         <div>
           <ul>
             <li v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
-              {{ key }}: {{ item.value }}
+              {{ key }} = {{ item.value }} k-in
             </li>
           </ul>
         </div>
+        <div>
+          <p><strong>Governing Flexural Capacity</strong></p>
+          <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacityRenderData" :key="key">
+            <div>{{ key }} = {{ item.value.toFixed(1) }} k-in</div>
+            <div>{{ key }} = {{ (item.value / 12).toFixed(1) }} k-ft</div>
+          </div>
+        </div>
       </div>
-
+      
       <div v-if="false">
         <h3>Minor Axis</h3>
       </div>
@@ -198,6 +205,7 @@
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
+  import { criticalResultProcessor } from './utils/flexure-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
@@ -303,6 +311,10 @@
 
       selectedShapeMajorFlexureCapacityRenderData() {
         return resultRenderDataFilterer(this.selectedShapeMajorFlexureCapacity);
+      },
+
+      selectedShapeMajorFlexureCriticalCapacityRenderData() {
+        return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity);
       },
 
 

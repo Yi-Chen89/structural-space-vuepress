@@ -160,6 +160,27 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
   }
 }
 
+export function criticalResultProcessor(result) {
+  if (result) {
+    const resultAsList = Object.entries(result);
+
+    // filter out objects with value = 0 or isApplicable is false
+    const filteredResultAsList = resultAsList.filter(([key, item]) => item['isApplicable'] && item['value'] !== 0);
+
+    if (filteredResultAsList.length > 0) {
+      const [key, item] = filteredResultAsList.reduce((smallest, current) =>
+        current[1]['value'] < smallest[1]['value'] ? current : smallest
+      );
+
+      return { [key]: item };
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
+
 
 // Helper Function
 
