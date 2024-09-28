@@ -1,0 +1,61 @@
+{
+  "tension": {},
+  "compression": {},
+  "flexure": {
+    "Mn_2_1": {
+      "section": "F2.1",
+      "title": "Yielding",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_2_2": {
+      "section": "F2.2",
+      "title": "Lateral-Torsional Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_3_2": {
+      "section": "F3.2",
+      "title": "Compression Flange Local Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_7_1": {
+      "section": "F7.1",
+      "title": "Yielding",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_7_2": {
+      "section": "F7.2",
+      "title": "Flange Local Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_7_3": {
+      "section": "F7.3",
+      "title": "Web Local Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_7_4": {
+      "section": "F7.4",
+      "title": "Lateral-Torsional Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_8_1": {
+      "section": "F8.1",
+      "title": "Yielding",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_8_2": {
+      "section": "F8.2",
+      "title": "Local Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    }
+  },
+  "shear": {}
+}

@@ -157,17 +157,23 @@
       <div v-if="true">
         <h3>Major Axis</h3>
         <div>
-          <ul>
-            <li v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
-              {{ key }} = {{ item.value }} k-in
-            </li>
-          </ul>
+          <div v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
+            <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+            <p>
+              <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }}
+            </p>
+          </div>
         </div>
+
         <div>
-          <p><strong>Governing Flexural Capacity</strong></p>
           <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacityRenderData" :key="key">
-            <div>{{ key }} = {{ item.value.toFixed(1) }} k-in</div>
-            <div>{{ key }} = {{ (item.value / 12).toFixed(1) }} k-ft</div>
+            <p><strong>Governing Flexural Capacity ({{ item.section }})</strong></p>
+            <p>
+              <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }}
+            </p>
+            <p>
+              <span v-html="item.notation"></span> = {{ (item.value / 12).toFixed(1) }} k-ft
+            </p>
           </div>
         </div>
       </div>
@@ -218,6 +224,8 @@
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
   import { resultRenderDataFilterer } from './utils/data-filterers.js';
   
+  import { resultRenderDataConstructor } from './utils/render-data-constructors.js';
+
   
   export default {
     data() {
@@ -310,11 +318,11 @@
       },
 
       selectedShapeMajorFlexureCapacityRenderData() {
-        return resultRenderDataFilterer(this.selectedShapeMajorFlexureCapacity);
+        return resultRenderDataConstructor(this.selectedShapeMajorFlexureCapacity, 'flexure');
       },
 
       selectedShapeMajorFlexureCriticalCapacityRenderData() {
-        return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity);
+        return resultRenderDataConstructor(this.selectedShapeMajorFlexureCriticalCapacity, 'flexure');
       },
 
 
@@ -436,6 +444,10 @@
 
       selectedShapeMajorFlexureCapacity() {
         return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
+      },
+
+      selectedShapeMajorFlexureCriticalCapacity() {
+        return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity);
       },
 
     },
