@@ -194,6 +194,9 @@
             <p>
               <span v-html="item.notation"></span> = {{ (item.value / 12).toFixed(1) }} k-ft
             </p>
+            <p><strong>
+              &phi;<sub>b</sub><span v-html="item.notation"></span> = {{ (0.9 * item.value / 12).toFixed(1) }} k-ft
+            </strong></p>
           </div>
         </div>
       </div>
