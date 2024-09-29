@@ -46,7 +46,7 @@ Symbol
 - ✅ F7.4 Lateral-Torsional Buckling
 
 #### F8 Round HSS
-- ✅ F8.1 Yielding
+- ✅✅ F8.1 Yielding
 - ✅ F8.2 Local Buckling
 
 #### F9 Tees and Double Angles Loaded in the Plane of Symmetry
