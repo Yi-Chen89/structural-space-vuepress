@@ -20,8 +20,8 @@ Symbol
 - ✅✅ F2.2 Lateral-Torsional Buckling
 
 #### F3 Doubly Symmetric I-Shaped Members with Compact Webs and Noncompact or Slender Flanges Bent about Their Major Axis
-- ✅ F3.1 Lateral-Torsional Buckling
-- ✅ F3.2 Compression Flange Local Buckling
+- ✅✅ F3.1 Lateral-Torsional Buckling
+- ✅✅ F3.2 Compression Flange Local Buckling
 
 #### F4 Other I-Shaped Members with Compact or Noncompact Webs Bent about Their Major Axis
 - F4.1 Compression Flange Yielding
