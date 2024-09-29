@@ -52,16 +52,21 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
-      const Mp = F2_1Yielding(Fy, Zx);
+      const [Mp, html_2_1] = F2_1Yielding(Fy, Zx);
       result['Mn_2_1']['value'] = Mp;
+      result['Mn_2_1']['html'] = html_2_1;
 
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2']['isApplicable'] = true;
-      result['Mn_2_2']['value'] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
+      const [Mn_2_2, html_2_2] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
+      result['Mn_2_2']['value'] = Mn_2_2;
+      result['Mn_2_2']['html'] = html_2_2;
 
       // F3.2 Compression Flange Local Buckling
       result['Mn_3_2']['isApplicable'] = true;
-      result['Mn_3_2']['value'] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
+      const [Mn_3_2, html_3_2] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
+      result['Mn_3_2']['value'] = Mn_3_2;
+      result['Mn_3_2']['html'] = html_3_2;
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // F7
@@ -264,14 +269,31 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
 
 // F3.2 Compression Flange Local Buckling
 function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flangeClass) {
+  let Mn = 0;
+  let html = '';
+
   if (flangeClass === 'noncompact') {
-    return Mp - (Mp - 0.7 * Fy * Sx) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
+    Mn = Mp - (Mp - 0.7 * Fy * Sx) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
+    html += `<p>For sections with noncompact flanges</p>
+             <p>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(1)} k-in</p>`;
+    return [Mn, html];
+
   } else if (flangeClass === 'slender') {
+    html += `<p>For sections with slender flanges</p>`;
+
     let kc = 4 / Math.sqrt(lambdaw);
+    const kc_ = 'k<sub>c</sub>';
+    html += `<p>Coefficient for slender unstiffened elements (0.35 &le; ${kc_} &le; 0.76)</p>
+             <p>${kc_} = 4 / &radic;(${h_} / ${tw_}) = ${kc.toFixed(2)}</p>`;
     kc = Math.max(0.35, Math.min(kc, 0.76));
-    return 0.9 * E * kc * Sx / lambdaf**2;
+    html += `<p>${kc_} = ${kc.toFixed(2)}</p>`;
+
+    Mn = 0.9 * E * kc * Sx / lambdaf**2;
+    html += `${Mn_} = 0.9 ${E_} ${kc_} ${Sx_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(1)} k-in`;
+    return [Mn, html];
+
   } else {
-    return 0;
+    return [Mn, html];
   }
 }
 
@@ -617,3 +639,8 @@ const Fcr_ = 'F<sub>cr</sub>';
 
 const Mp_ = 'M<sub>p</sub>';
 const Mn_ = 'M<sub>n</sub>';
+
+
+const lambdaf_ = '&lambda;<sub>f</sub>';
+const lambdapf_ = '&lambda;<sub>pf</sub>';
+const lambdarf_ = '&lambda;<sub>rf</sub>';
