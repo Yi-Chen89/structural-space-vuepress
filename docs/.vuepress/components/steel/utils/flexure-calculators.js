@@ -76,8 +76,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F7.1 Yielding
       result['Mn_7_1']['isApplicable'] = true;
-      const Mp = F7_1Yielding(Fy, Zx);
+      const [Mp, html_7_1] = F7_1Yielding(Fy, Zx);
       result['Mn_7_1']['value'] = Mp;
+      result['Mn_7_1']['html'] = html_7_1;
 
       // F7.2 Flange Local Buckling
       result['Mn_7_2']['isApplicable'] = true;
@@ -307,7 +308,9 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
 
 // F7.1 Yielding
 function F7_1Yielding(Fy, Zx) {
-  return Fy * Zx;
+  const Mp = Fy * Zx;
+  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in</p>`;
+  return [Mp, html];
 }
 
 // F7.2 Flange Local Buckling
