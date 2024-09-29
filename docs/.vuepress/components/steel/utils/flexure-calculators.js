@@ -6,22 +6,22 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
     const { flange, web } = slenderClass;
 
     let result = {
-      'Mn_2_1': {'isApplicable': false, 'value': 0},
-      'Mn_2_2': {'isApplicable': false, 'value': 0},
-      'Mn_3_2': {'isApplicable': false, 'value': 0},
-      'Mn_7_1': {'isApplicable': false, 'value': 0},
-      'Mn_7_2': {'isApplicable': false, 'value': 0},
-      'Mn_7_3': {'isApplicable': false, 'value': 0},
-      'Mn_7_4': {'isApplicable': false, 'value': 0},
-      'Mn_8_1': {'isApplicable': false, 'value': 0},
-      'Mn_8_2': {'isApplicable': false, 'value': 0},
-      'Mn_9_1+': {'isApplicable': false, 'value': 0},
-      'Mn_9_1-': {'isApplicable': false, 'value': 0},
-      'Mn_9_2+': {'isApplicable': false, 'value': 0},
-      'Mn_9_2-': {'isApplicable': false, 'value': 0},
-      'Mn_9_3+': {'isApplicable': false, 'value': 0},
-      'Mn_9_4-': {'isApplicable': false, 'value': 0},
-      'Mn_10_1': {'isApplicable': false, 'value': 0},
+      'Mn_2_1': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_2_2': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_3_2': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_7_1': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_7_2': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_7_3': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_7_4': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_8_1': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_8_2': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_9_1+': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_9_1-': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_9_2+': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_9_2-': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_9_3+': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_9_4-': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_10_1': {'isApplicable': false, 'value': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -32,12 +32,15 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
-      const Mp = F2_1Yielding(Fy, Zx);
+      const [Mp, html_2_1] = F2_1Yielding(Fy, Zx);
       result['Mn_2_1']['value'] = Mp;
+      result['Mn_2_1']['html'] = html_2_1;
 
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2']['isApplicable'] = true;
-      result['Mn_2_2']['value'] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
+      const [Mn_2_2, html_2_2] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
+      result['Mn_2_2']['value'] = Mn_2_2;
+      result['Mn_2_2']['html'] = html_2_2;
 
     } else if (['W', 'M', 'S', 'HP'].includes(shapeType) && ['noncompact', 'slender'].includes(flange) && web === 'compact') {
       // F3
@@ -188,42 +191,71 @@ export function criticalResultProcessor(result) {
 
 // F2.1 Yielding
 function F2_1Yielding(Fy, Zx) {
-  return Fy * Zx;
+  const Mp = Fy * Zx;
+  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in</p>`;
+  return [Mp, html];
 }
 
 // F2.2 Lateral-Torsional Buckling
 function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb) {
+  let Mn = 0;
+  let html = '';
+
   // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
   const Lp = 1.76 * ry * Math.sqrt(E / Fy);
-
-  let Lr = 0;
+  html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
+           <p>${Lp_} = 1.76 ${ry_} &radic;(${E_} / ${Fy_}) = ${Lp.toFixed(1)} in.</p>`;
 
   if (Lb <= Lp) {
     // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
-    return 0;
+    html += `<p>${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</p>`;
+    return [Mn, html];
+
   } else {
     // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
+    html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>`;
+
     const calcTerm1 = E / (0.7 * Fy);
 
     let c = 0;
     if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
       c = 1;
+      html += `For doubly symmetric I-shapes, c = 1`;
     } else if (['C', 'MC'].includes(shapeType)) {
       c = (ho / 2) * Math.sqrt(Iy / Cw);
+      html += `For channels, c = ${ho_} / 2 &radic;(${Iy_} / ${Cw_}) = ${c.toFixed(1)}`;
     }
+
     const calcTerm2 = (J * c) / (Sx * ho);
+    const calcTerm2_ = `${J_}c / ${Sx_}${ho_}`;
 
-    Lr = 1.95 * rts * calcTerm1 * Math.sqrt(calcTerm2 + Math.sqrt(calcTerm2**2 + 6.76 * (1 / calcTerm1)**2));
+    const Lr = 1.95 * rts * calcTerm1 * Math.sqrt(calcTerm2 + Math.sqrt(calcTerm2**2 + 6.76 * (1 / calcTerm1)**2));
+    html += `<p>${Lr_} = 1.95 ${rts_} (${E_} / 0.7${Fy_}) &radic;(${calcTerm2_} + &radic;((${calcTerm2_})<sup>2</sup> + 6.76 (0.7${Fy_} / ${E_})<sup>2</sup>)) = ${Lr.toFixed(1)} in.</p>`;
 
-    // Mn
     if (Lb <= Lr) {
       // (b) when Lp < Lb ≤ Lr
-      return Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
+      html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
+
+      Mn = Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
+      html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+      Mn = Math.min(Mn, Mp);
+      return [Mn, html];
+
     } else {
       // (c) when Lb > Lr
+      html += `<p>${Lb_} &gt; ${Lr_}</p>`;
+
       const calcTerm3 = (Lb / rts)**2;
+      const calcTerm3_ = `(${Lb_} / ${rts_})<sup>2</sup>`;
+
       const Fcr = (Cb * Math.PI**2 * E / calcTerm3) * Math.sqrt(1 + 0.078 * calcTerm2 * calcTerm3);
-      return Fcr * Sx;
+      html += `<p>Critical stress</p>
+               <p>${Fcr_} = ${Cb_}&pi;<sup>2</sup>${E_} / ${calcTerm3_} &radic;(1 + 0.078 (${calcTerm2_}) ${calcTerm3_}) = ${Fcr.toFixed(1)} ksi</p>`;
+
+      Mn = Fcr * Sx;
+      html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+      Mn = Math.min(Mn, Mp);
+      return [Mn, html];
     }
   }
 }
@@ -533,3 +565,55 @@ function F10_1Yielding(Fy, Sx) {
 // F11 Rectangular Bars and Rounds
 
 // F12 Unsymmetrical Shapes
+
+
+// html notation
+
+const Fy_ = 'F<sub>y</sub>';
+const Fu_ = 'F<sub>u</sub>';
+const E_ = 'E';
+const G_ = 'G';
+
+
+const W_ = 'W';
+const A_ = 'A';
+const d_ = 'd';
+const Ht_ = 'Ht';
+const h_ = 'h';
+const OD_ = 'OD';
+const bf_ = 'b<sub>f</sub>';
+const B_ = 'B';
+const b_ = 'b';
+const ID_ = 'ID';
+const tw_ = 't<sub>w</sub>';
+const tf_ = 't<sub>f</sub>';
+const t_ = 't';
+const tdes_ = 't<sub>des</sub>';
+const Ix_ = 'I<sub>x</sub>';
+const Zx_ = 'Z<sub>x</sub>';
+const Sx_ = 'S<sub>x</sub>';
+const rx_ = 'r<sub>x</sub>';
+const Iy_ = 'I<sub>y</sub>';
+const Zy_ = 'Z<sub>y</sub>';
+const Sy_ = 'S<sub>y</sub>';
+const ry_ = 'r<sub>y</sub>';
+const Iz_ = 'I<sub>z</sub>';
+const rz_ = 'r<sub>z</sub>';
+const Sz_ = 'S<sub>z</sub>';
+const J_ = 'J';
+const Cw_ = 'C<sub>w</sub>';
+const C_ = 'C';
+const rts_ = 'r<sub>ts</sub>';
+const ho_ = 'h<sub>o</sub>';
+
+
+const Lb_ = 'L<sub>b</sub>';
+const Lp_ = 'L<sub>p</sub>';
+const Lr_ = 'L<sub>r</sub>';
+
+const Cb_ = 'C<sub>b</sub>';
+
+const Fcr_ = 'F<sub>cr</sub>';
+
+const Mp_ = 'M<sub>p</sub>';
+const Mn_ = 'M<sub>n</sub>';
