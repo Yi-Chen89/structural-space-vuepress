@@ -89,11 +89,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       result['Mn_7_3']['value'] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
 
       // F7.4 Lateral-Torsional Buckling
-      // F7.4 does not apply to square sections
-      if (shapeType === 'HSS Rect.') {
-        result['Mn_7_4']['isApplicable'] = true;
-        result['Mn_7_4']['value'] = F7_4LateralTorsionalBuckling(Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
-      }
+      result['Mn_7_4']['isApplicable'] = true;
+      const [Mn_7_4, html_7_4] = F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
+      result['Mn_7_4']['value'] = Mn_7_4;
+      result['Mn_7_4']['html'] = html_7_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
       // F8
@@ -384,27 +383,57 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
 }
 
 // F7.4 Lateral-Torsional Buckling
-function F7_4LateralTorsionalBuckling(Mp, Fy, E, Ag, Sx, ry, J, Lb, Cb) {
-  const calcTerm1 = Math.sqrt(J * Ag);
+function F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, Ag, Sx, ry, J, Lb, Cb) {
+  let Mn = 0;
+  let html = '';
 
-  // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
-  const Lp = 0.13 * E * ry * calcTerm1 / Mp;
+  if (shapeType === 'HSS Rect.') {
+    const calcTerm1 = Math.sqrt(J * Ag);
+    const calcTerm1_ = `&radic;(${J_}${A_})`;
 
-  if (Lb <= Lp) {
-    // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
-    return 0;
-  } else {
-    // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
-    const Lr = 2 * E * ry * calcTerm1 / (0.7 * Fy * Sx);
+    // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
+    const Lp = 0.13 * E * ry * calcTerm1 / Mp;
+    html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
+            <p>${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in.</p>`;
 
-    // Mn
-    if (Lb <= Lr) {
-      // (b) when Lp < Lb ≤ Lr
-      return Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
+    if (Lb <= Lp) {
+      // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
+      html += `<p>${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</p>`;
+      return [Mn, html];
+
     } else {
-      // (c) when Lb > Lr
-      return 2 * E * Cb * calcTerm1 / (Lb / ry);
+      // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
+      const Lr = 2 * E * ry * calcTerm1 / (0.7 * Fy * Sx);
+      html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>
+              <p>${Lr_} = 2 ${E_} ${ry_} ${calcTerm1_} / (0.7${Fy_}${Sx_}) = ${Lr.toFixed(1)} in.</p>`;
+
+      if (Lb <= Lr) {
+        // (b) when Lp < Lb ≤ Lr
+        html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
+
+        Mn = Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
+        html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+        Mn = Math.min(Mn, Mp);
+        return [Mn, html];
+
+      } else {
+        // (c) when Lb > Lr
+        html += `<p>${Lb_} &gt; ${Lr_}</p>`;
+
+        Mn = 2 * E * Cb * calcTerm1 / (Lb / ry);
+        html += `<p>${Mn_} = 2 ${E_} ${Cb_} ${calcTerm1_} / (${Lb_} / ${ry_}) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+        Mn = Math.min(Mn, Mp);
+        return [Mn, html];
+      }
     }
+
+  } else if (shapeType === 'HSS Square') {
+    // LTB does not apply to square sections
+    html += `<p>Lateral-torsional buckling does not apply to square sections</p>`;
+    return [Mn, html];
+
+  } else {
+    return [Mn, html];
   }
 }
 
