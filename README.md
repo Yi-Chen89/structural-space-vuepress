@@ -1,7 +1,13 @@
 # Structural Space
 
-- database v15
-- A360-16
+Reference
+- AISC Shapes Database v15.0
+- ANSI/AISC 360-16
+
+Symbol
+- ✅ section completed with exceptions
+- ✅✅ section completed fully
+- ✅✅✅ section completed and tested
 
 ### Chapter D Design of Members for Tension
 
@@ -10,8 +16,8 @@
 ### Chapter F Design of Members for Flexure
 
 #### F2 Doubly Symmetric Compact I-Shaped Members and Channels Bent about Their Major Axis
-- ✅ F2.1 Yielding
-- ✅ F2.2 Lateral-Torsional Buckling
+- ✅✅ F2.1 Yielding
+- ✅✅ F2.2 Lateral-Torsional Buckling
 
 #### F3 Doubly Symmetric I-Shaped Members with Compact Webs and Noncompact or Slender Flanges Bent about Their Major Axis
 - ✅ F3.1 Lateral-Torsional Buckling
