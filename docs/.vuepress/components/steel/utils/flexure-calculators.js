@@ -107,8 +107,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
         // F8.1 Yielding
         result['Mn_8_1']['isApplicable'] = true;
-        const Mp = F8_1Yielding(Fy, Zx);
+        const [Mp, html_8_1] = F8_1Yielding(Fy, Zx);
         result['Mn_8_1']['value'] = Mp;
+        result['Mn_8_1']['html'] = html_8_1;
 
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
@@ -411,7 +412,9 @@ function F7_4LateralTorsionalBuckling(Mp, Fy, E, Ag, Sx, ry, J, Lb, Cb) {
 
 // F8.1 Yielding
 function F8_1Yielding(Fy, Zx) {
-  return Fy * Zx;
+  const Mp = Fy * Zx;
+  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in</p>`;
+  return [Mp, html];
 }
 
 // F8.2 Local Buckling
