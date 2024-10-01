@@ -86,7 +86,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F7.3 Web Local Buckling
       result['Mn_7_3']['isApplicable'] = true;
-      result['Mn_7_3']['value'] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
+      const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
+      result['Mn_7_3']['value'] = Mn_7_3;
+      result['Mn_7_3']['html'] = html_7_3;
 
       // F7.4 Lateral-Torsional Buckling
       result['Mn_7_4']['isApplicable'] = true;
@@ -345,39 +347,68 @@ function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, flangeClass) {
 
 // F7.3 Web Local Buckling
 function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
+  let Mn = 0;
+  let html = '';
+
   if (webClass === 'compact') {
-    return 0;
+    html += `<p>For sections with compact webs, web local buckling does not apply</p>`;
+    return [Mn, html];
+
   } else {
     const calcTerm1 = h / tw;
+    const calcTerm1_ = `${h_} / ${tw_}`;
+
     const calcTerm2 = Math.sqrt(Fy / E);
+    const calcTerm2_ = `&radic;(${Fy_} / ${E_})`;
 
     if (webClass === 'noncompact') {
-      return Mp - (Mp - Fy * Sx) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
+      Mn = Mp - (Mp - Fy * Sx) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
+      html += `<p>For sections with noncompact webs</p>
+               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+      Mn = Math.min(Mn, Mp);
+      return [Mn, html];
+
     } else if (webClass === 'slender') {
+      html += `<p>For sections with slender webs</p>
+               <p>Bending strength reduction factor</p>`;
+
       const aw = 2 * h * tw / (b * tf);
+      html += `<p>${aw_} = 2${h_}${tw_} / (${b_}${tf_}) = ${aw.toFixed(2)}</p>`;
 
       // bending strength reduction factor
       let Rpg = 1 - aw / (1200 + 300 * aw) * (h / tw - 5.7 * (1/calcTerm2));
-      // less than or equal to 1.0
+      html += `<p>${Rpg_} = 1 - ${aw_} / (1200 + 300${aw_}) (${calcTerm1_} - 5.7&radic;(${E_} / ${Fy_})) = ${Rpg.toFixed(2)} &le; 1.0</p>`;
+
+      // Rpg less than or equal to 1.0
       Rpg = Math.min(Rpg, 1.0);
+      html += `<p>${Rpg_} = ${Rpg.toFixed(2)}</p>`;
 
       // (1) compression flange yielding
       const Mn_1 = Rpg * Fy * Sx;
+      html += `<p>Compression flange yielding</p>
+               <p>${Mn_} = ${Rpg_} ${Fy_} ${Sx_} = ${Mn_1.toFixed(1)} k-in</p>`;
 
       // (2) compression flange local buckling
       const kc = 4.0;
       const Fcr = 0.9 * E * kc / (b / tf)**2;
 
-      let Mn_2 = 0;
-      if (Fcr > Fy) {
-        Mn_2 = Mn_1;
-      } else {
-        Mn_2 = Rpg * Fcr * Sx;
-      }
+      const Mn_2 = Rpg * Fcr * Sx;
+      html += `<p>Compression flange local buckling</p>
+               <p>${kc_} = ${kc.toFixed(1)}</p>
+               <p>${Fcr_} = 0.9 ${E_} ${kc_} / (${b_} / ${tf_})<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>
+               <p>${Mn_} = ${Rpg_} ${Fcr_} ${Sx_} = ${Mn_2.toFixed(1)} k-in</p>`;
 
-      return Math.min(Mn_1, Mn_2);
+      if (Mn_1 <= Mn_2) {
+        Mn = Mn_1;
+        html += `<p>Compression flange yielding governs</p>`;
+      } else {
+        Mn = Mn_2;
+        html += `<p>Compression flange yielding governs</p>`;
+      }
+      return [Mn, html];
+
     } else {
-      return 0;
+      return [Mn, html];
     }
   }
 }
@@ -679,3 +710,9 @@ const Mn_ = 'M<sub>n</sub>';
 const lambdaf_ = '&lambda;<sub>f</sub>';
 const lambdapf_ = '&lambda;<sub>pf</sub>';
 const lambdarf_ = '&lambda;<sub>rf</sub>';
+
+const Rpg_ = 'R<sub>pg</sub>';
+
+const aw_ = 'a<sub>w</sub>';
+
+const kc_ = 'k<sub>c</sub>';

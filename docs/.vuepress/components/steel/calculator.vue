@@ -193,10 +193,7 @@
             <p><strong>Governing Flexural Capacity ({{ item.section }})</strong></p>
             <div style="margin-left: 1em;">
               <p>
-                <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p>
-                <span v-html="item.notation"></span> = {{ (item.value / 12).toFixed(1) }} k-ft
+                <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }} = {{ (item.value / 12).toFixed(1) }} k-ft
               </p>
               <p><strong>
                 &phi;<sub>b</sub><span v-html="item.notation"></span> = {{ (0.9 * item.value / 12).toFixed(1) }} k-ft
