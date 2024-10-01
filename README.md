@@ -1,8 +1,24 @@
 # Structural Space
 
-Reference
+## Reference Code
+
+Steel Construction Manual 15th Edition
 - AISC Shapes Database v15.0
 - ANSI/AISC 360-16
+
+## Applicability
+
+### I-Shaped (W, M, S, HP) (preferred material)
+- Flange is compact or noncompact
+- Web is compact
+- Applicable section is F2 or F3
+
+### Channel (C, MC) (preferred material)
+- Flange is compact
+- Web is compact
+- Applicable section is F2
+
+## Progress
 
 Symbol
 - ✅ section completed with exceptions
