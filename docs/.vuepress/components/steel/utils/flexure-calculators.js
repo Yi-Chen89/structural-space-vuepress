@@ -114,7 +114,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
-        result['Mn_8_2']['value'] = F8_2LocalBuckling(Fy, E, Sx, lambda, flange);
+        const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sx, lambda, flange);
+        result['Mn_8_2']['value'] = Mn_8_2;
+        result['Mn_8_2']['html'] = html_8_2;
       }
 
     } else if (['WT', 'MT', 'ST', '2L'].includes(shapeType)) {
@@ -479,15 +481,29 @@ function F8_1Yielding(Fy, Zx) {
 
 // F8.2 Local Buckling
 function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
+  let Mn = 0;
+  let html = '';
+
   if (wallClass === 'compact') {
-    return 0;
+    html += `<p>For sections with compact walls, local buckling does not apply</p>`;
+    return [Mn, html];
+
   } else if (wallClass === 'noncompact') {
-    return (0.021 * E / lambda + Fy) * Sx;
+    Mn = (0.021 * E / lambda + Fy) * Sx;
+    html += `<p>For sections with noncompact walls</p>
+             <p>${Mn_} = (0.021 ${E_} / (${OD_} / ${tdes_}) + ${Fy_}) ${Sx_} = ${Mn.toFixed(1)} k-in</p>`;
+    return [Mn, html];
+
   } else if (wallClass === 'slender') {
     const Fcr = 0.33 * E / lambda;
-    return Fcr * Sx;
+    html += `<p>For sections with slender walls</p>
+             <p>${Fcr_} = 0.33 ${E_} / (${OD_} / ${tdes_}) = ${Fcr.toFixed(1)} ksi</p>`;
+    Mn = Fcr * Sx;
+    html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(1)} k-in</p>`;
+    return [Mn, html];
+
   } else {
-    return 0;
+    return [Mn, html];
   }
 }
 
