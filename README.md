@@ -18,6 +18,11 @@ Steel Construction Manual 15th Edition
 - Web is compact
 - Applicable section is F2
 
+### Rectangular Hollow Section (Rectangular HSS, Square HSS) (preferred material)
+- Flange is compact or noncompact or slender
+- Web is compact or noncompact
+- Applicable section is F7
+
 ### Circular Hollow Section (Round HSS, PIPE) (preferred material)
 - Wall is compact or noncompact (< 0.45 E / Fy)
 - Applicable section is F8
@@ -61,7 +66,7 @@ Symbol
 
 #### F7 Square and Rectangular HSS and Box Sections
 - ✅✅ F7.1 Yielding
-- ✅ F7.2 Flange Local Buckling
+- ✅✅ F7.2 Flange Local Buckling
 - ✅✅ F7.3 Web Local Buckling
 - ✅✅ F7.4 Lateral-Torsional Buckling
 
