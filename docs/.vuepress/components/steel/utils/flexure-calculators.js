@@ -82,7 +82,9 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F7.2 Flange Local Buckling
       result['Mn_7_2']['isApplicable'] = true;
-      result['Mn_7_2']['value'] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
+      const [Mn_7_2, html_7_2] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
+      result['Mn_7_2']['value'] = Mn_7_2;
+      result['Mn_7_2']['html'] = html_7_2;
 
       // F7.3 Web Local Buckling
       result['Mn_7_3']['isApplicable'] = true;
@@ -319,30 +321,62 @@ function F7_1Yielding(Fy, Zx) {
 
 // F7.2 Flange Local Buckling
 function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, flangeClass) {
+  let Mn = 0;
+  let html = '';
+
   if (flangeClass === 'compact') {
-    return 0;
+    html += `<p>For sections with compact flanges, flange local buckling does not apply</p>`;
+    return [Mn, html];
+
   } else {
     const calcTerm1 = b / tf;
-    const calcTerm2 = Math.sqrt(Fy / E);
+    const calcTerm1_ = `${b_} / ${tf_}`;
+
+    const calcTerm2 = Math.sqrt(E / Fy);
+    const calcTerm2_ = `&radic;(${E_} / ${Fy_})`;
 
     if (flangeClass === 'noncompact') {
-      return Mp - (Mp - Fy * Sx) * (3.57 * calcTerm1 * calcTerm2 - 4.0);
+      Mn = Mp - (Mp - Fy * Sx) * (3.57 * calcTerm1 * (1/calcTerm2) - 4.0);
+      html += `<p>For sections with noncompact flanges</p>
+               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (3.57 ${calcTerm1_} &radic;(${Fy_} / ${E_}) - 4.0) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+      Mn = Math.min(Mn, Mp);
+      return [Mn, html];
+
     } else if (flangeClass === 'slender') {
-      const be = 1.92 * tf * (1/calcTerm2) * (1 - 0.38 / calcTerm1 * (1/calcTerm2));
+      html += `<p>For sections with slender flanges</p>
+               <p>Effective width of the compression flange</p>`;
+      const be = 1.92 * tf * calcTerm2 * (1 - 0.38 / calcTerm1 * calcTerm2);
+      html += `<p>${be_} = 1.92 ${tf_} ${calcTerm2_} (1 - 0.38 / ${calcTerm1_} ${calcTerm2_}) = ${be.toFixed(2)} in. &le; ${b_}</p>`;
 
       let Se = 0;
       if (be >= b) {
         Se = Sx;
+        html += `<p>${be_} = ${b_} = ${b} in.</p>
+                 <p>${Se_} = ${Sx_} = ${Sx} in.<sup>3</sup></p>`;
+        
       } else {
+        html += `<p>${be_} = ${be.toFixed(2)} in.</p>`;
         // Simple and conservative approach to calculate effective I and S
         // removing ineffective width from top and bottom flanges
         const bineff = b - be;
+        const bineff_ = `b<sub>ineff</sub>`;
+        html += `<p>Ineffective width of the compression flange</p>
+                 <p>${bineff_} = ${b_} - ${be_} = ${bineff.toFixed(2)} in.</p>
+                 <p>Use <span title="exact calculation is to only remove ineffective width from the compression flange">simplified approach</span> to calculate ${Se_} (remove ineffective width symmetrically from both top and bottom flanges)</p>`;
+
         const Ieff = Ix - 2 * (bineff * tf**3 / 12 + bineff * tf * ((H - tf) / 2)**2);
+        const Ieff_ = `I<sub>eff</sub>`;
+        html += `<p>${Ieff_} = ${Ix_} - 2 (${bineff_} ${tf_}<sup>3</sup> / 12 + ${bineff_} ${tf_} ((${Ht_} - ${tf_}) / 2)<sup>2</sup>) = ${Ieff.toFixed(2)} in.<sup>4</sup></p>`;
         Se = Ieff / (H / 2);
+        html += `<p>${Se_} = ${Ieff_} / (${Ht_} / 2) = ${Se.toFixed(2)} in.<sup>3</sup></p>`;
       }
-      return Fy * Se;
+
+      Mn = Fy * Se;
+      html += `<p>${Mn_} = ${Fy_} ${Se_} = ${Mn.toFixed(1)} k-in</p>`;
+      return [Mn, html];
+
     } else {
-      return 0;
+      return [Mn, html];
     }
   }
 }
@@ -732,3 +766,6 @@ const Rpg_ = 'R<sub>pg</sub>';
 const aw_ = 'a<sub>w</sub>';
 
 const kc_ = 'k<sub>c</sub>';
+
+const be_ = 'b<sub>e</sub>';
+const Se_ = 'S<sub>e</sub>';
