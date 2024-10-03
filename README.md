@@ -18,6 +18,10 @@ Steel Construction Manual 15th Edition
 - Web is compact
 - Applicable section is F2
 
+### Circular Hollow Section (Round HSS, PIPE) (preferred material)
+- Wall is compact or noncompact (< 0.45 E / Fy)
+- Applicable section is F8
+
 ## Progress
 
 Symbol
