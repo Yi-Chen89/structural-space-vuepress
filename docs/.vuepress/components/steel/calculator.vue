@@ -178,7 +178,7 @@
 
         <div>
           <div v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
-            <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+            <p v-if="item.title"><strong>{{ item.section }} {{ item.title }}</strong></p>
             <div style="margin-left: 1em;">
               <div v-html="item.html"></div>
               <p v-if="item.value">

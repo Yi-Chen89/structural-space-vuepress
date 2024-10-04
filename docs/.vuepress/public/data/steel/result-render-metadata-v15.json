@@ -55,6 +55,18 @@
       "title": "Local Buckling",
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
+    },
+    "Mn_9_1+": {
+      "section": "F9.1",
+      "title": "Yielding",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_9_1-": {
+      "section": "F9.1",
+      "title": "",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
     }
   },
   "shear": {}

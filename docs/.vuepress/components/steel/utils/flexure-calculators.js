@@ -132,31 +132,33 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F9.1 Yielding
       // F9.1 (a) for tee stems and web legs in tension, sagging
       result['Mn_9_1+']['isApplicable'] = true;
-      const Mp_pos = F9_1YieldingSagging(Fy, Zx, Sx);
+      const [Mp_pos, html_9_1_pos] = F9_1YieldingSagging(shapeType, Fy, Zx, Sx);
       result['Mn_9_1+']['value'] = Mp_pos;
+      result['Mn_9_1+']['html'] = html_9_1_pos;
       // F9.1 (b) for tee stems in compression, hogging
       //      (c) for double angles with web legs in compression, hogging
       result['Mn_9_1-']['isApplicable'] = true;
-      const Mp_neg = F9_1YieldingHogging(shapeType, Fy, Sx);
+      const [Mp_neg, html_9_1_neg] = F9_1YieldingHogging(shapeType, Fy, Sx);
       result['Mn_9_1-']['value'] = Mp_neg;
+      result['Mn_9_1-']['html'] = html_9_1_neg;
 
       // F9.2 Lateral-Torsional Buckling
       // F9.2 (a) for tee stems and web legs in tension, sagging
-      result['Mn_9_2+']['isApplicable'] = true;
-      result['Mn_9_2+']['value'] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
-      // F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
-      result['Mn_9_2-']['isApplicable'] = true;
-      result['Mn_9_2-']['value'] = F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb);
+      // result['Mn_9_2+']['isApplicable'] = true;
+      // result['Mn_9_2+']['value'] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
+      // // F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
+      // result['Mn_9_2-']['isApplicable'] = true;
+      // result['Mn_9_2-']['value'] = F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb);
 
-      // F9.3 Flange Local Buckling of Tees and Double-Angle Legs
-      // only sagging
-      result['Mn_9_3+']['isApplicable'] = true;
-      result['Mn_9_3+']['value'] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
+      // // F9.3 Flange Local Buckling of Tees and Double-Angle Legs
+      // // only sagging
+      // result['Mn_9_3+']['isApplicable'] = true;
+      // result['Mn_9_3+']['value'] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
 
-      // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
-      // only hogging
-      result['Mn_9_4-']['isApplicable'] = true;
-      result['Mn_9_4-']['value'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
+      // // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
+      // // only hogging
+      // result['Mn_9_4-']['isApplicable'] = true;
+      // result['Mn_9_4-']['value'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
 
     } else if (['L'].includes(shapeType)) {
       // F10
@@ -545,25 +547,51 @@ function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
 
 // F9.1 Yielding
 // F9.1 (a) for tee stems and web legs in tension, sagging
-function F9_1YieldingSagging(Fy, Zx, Sx) {
-  const My = Fy * Sx;
-  const Mp = Fy * Zx;
-  if (Mp <= 1.6 * My) {
-    return Mp;
-  } else {
-    return 1.6 * My;
+function F9_1YieldingSagging(shapeType, Fy, Zx, Sx) {
+  let Mp = 0;
+  let html = '';
+
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    html += `<p>For tee stems in tension (sagging)</p>`;
+  } else if (['2L'].includes(shapeType)) {
+    html += `<p>For double angles with web legs in tension (sagging)</p>`;
   }
+
+  const My = Fy * Sx;
+  html += `<p>Yield moment</p>
+           <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+
+  Mp = Fy * Zx;
+  html += `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in &le; 1.6 ${My_}</p>`;
+  Mp = Math.min(Mp, 1.6 * My);
+  return [Mp, html];
 }
 // F9.1 (b) for tee stems in compression, hogging
 //      (c) for double angles with web legs in compression, hogging
 function F9_1YieldingHogging(shapeType, Fy, Sx) {
-  const My = Fy * Sx;
+  let Mp = 0;
+  let html = '';
+
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    return My;
+    html += `<p>For tee stems in compression (hogging)</p>`;
   } else if (['2L'].includes(shapeType)) {
-    return 1.5 * My;
+    html += `<p>For double angles with web legs in compression (hogging)</p>`;
+  }
+
+  const My = Fy * Sx;
+
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    Mp = My;
+    html += `<p>${Mp_} = ${My_} = ${Mp.toFixed(1)} k-in</p>`;
+    return [Mp, html];
+
+  } else if (['2L'].includes(shapeType)) {
+    Mp = 1.5 * My;
+    html += `<p>${Mp_} = 1.5 ${My_} = ${Mp.toFixed(1)} k-in</p>`;
+    return [Mp, html];
+
   } else {
-    return 0;
+    return [Mp, html];
   }
 }
 
@@ -769,3 +797,5 @@ const kc_ = 'k<sub>c</sub>';
 
 const be_ = 'b<sub>e</sub>';
 const Se_ = 'S<sub>e</sub>';
+
+const My_ = 'M<sub>y</sub>';
