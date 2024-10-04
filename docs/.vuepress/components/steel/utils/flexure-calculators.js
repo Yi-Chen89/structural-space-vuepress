@@ -6,22 +6,20 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
     const { flange, web } = slenderClass;
 
     let result = {
-      'Mn_2_1': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_2_2': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_3_2': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_7_1': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_7_2': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_7_3': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_7_4': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_8_1': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_8_2': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_9_1+': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_9_1-': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_9_2+': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_9_2-': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_9_3+': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_9_4-': {'isApplicable': false, 'value': 0, 'html': null},
-      'Mn_10_1': {'isApplicable': false, 'value': 0, 'html': null},
+      'Mn_2_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_2_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_3_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_3': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_4': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_8_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_8_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_9_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_9_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_9_3+': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_9_4-': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_10_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -33,13 +31,13 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
       const [Mp, html_2_1] = F2_1Yielding(Fy, Zx);
-      result['Mn_2_1']['value'] = Mp;
+      result['Mn_2_1']['values'][0] = Mp;
       result['Mn_2_1']['html'] = html_2_1;
 
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2']['isApplicable'] = true;
       const [Mn_2_2, html_2_2] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
-      result['Mn_2_2']['value'] = Mn_2_2;
+      result['Mn_2_2']['values'][0] = Mn_2_2;
       result['Mn_2_2']['html'] = html_2_2;
 
     } else if (['W', 'M', 'S', 'HP'].includes(shapeType) && ['noncompact', 'slender'].includes(flange) && web === 'compact') {
@@ -53,19 +51,19 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
       const [Mp, html_2_1] = F2_1Yielding(Fy, Zx);
-      result['Mn_2_1']['value'] = Mp;
+      result['Mn_2_1']['values'][0] = Mp;
       result['Mn_2_1']['html'] = html_2_1;
 
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2']['isApplicable'] = true;
       const [Mn_2_2, html_2_2] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
-      result['Mn_2_2']['value'] = Mn_2_2;
+      result['Mn_2_2']['values'][0] = Mn_2_2;
       result['Mn_2_2']['html'] = html_2_2;
 
       // F3.2 Compression Flange Local Buckling
       result['Mn_3_2']['isApplicable'] = true;
       const [Mn_3_2, html_3_2] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
-      result['Mn_3_2']['value'] = Mn_3_2;
+      result['Mn_3_2']['values'][0] = Mn_3_2;
       result['Mn_3_2']['html'] = html_3_2;
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
@@ -77,25 +75,25 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F7.1 Yielding
       result['Mn_7_1']['isApplicable'] = true;
       const [Mp, html_7_1] = F7_1Yielding(Fy, Zx);
-      result['Mn_7_1']['value'] = Mp;
+      result['Mn_7_1']['values'][0] = Mp;
       result['Mn_7_1']['html'] = html_7_1;
 
       // F7.2 Flange Local Buckling
       result['Mn_7_2']['isApplicable'] = true;
       const [Mn_7_2, html_7_2] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
-      result['Mn_7_2']['value'] = Mn_7_2;
+      result['Mn_7_2']['values'][0] = Mn_7_2;
       result['Mn_7_2']['html'] = html_7_2;
 
       // F7.3 Web Local Buckling
       result['Mn_7_3']['isApplicable'] = true;
       const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
-      result['Mn_7_3']['value'] = Mn_7_3;
+      result['Mn_7_3']['values'][0] = Mn_7_3;
       result['Mn_7_3']['html'] = html_7_3;
 
       // F7.4 Lateral-Torsional Buckling
       result['Mn_7_4']['isApplicable'] = true;
       const [Mn_7_4, html_7_4] = F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
-      result['Mn_7_4']['value'] = Mn_7_4;
+      result['Mn_7_4']['values'][0] = Mn_7_4;
       result['Mn_7_4']['html'] = html_7_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
@@ -111,13 +109,13 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
         // F8.1 Yielding
         result['Mn_8_1']['isApplicable'] = true;
         const [Mp, html_8_1] = F8_1Yielding(Fy, Zx);
-        result['Mn_8_1']['value'] = Mp;
+        result['Mn_8_1']['values'][0] = Mp;
         result['Mn_8_1']['html'] = html_8_1;
 
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
         const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sx, lambda, flange);
-        result['Mn_8_2']['value'] = Mn_8_2;
+        result['Mn_8_2']['values'][0] = Mn_8_2;
         result['Mn_8_2']['html'] = html_8_2;
       }
 
@@ -130,17 +128,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       const { lambdapf, lambdarf } = shapeTypeSlenderLimitRatio;
 
       // F9.1 Yielding
-      // F9.1 (a) for tee stems and web legs in tension, sagging
-      result['Mn_9_1+']['isApplicable'] = true;
-      const [Mp_pos, html_9_1_pos] = F9_1YieldingSagging(shapeType, Fy, Zx, Sx);
-      result['Mn_9_1+']['value'] = Mp_pos;
-      result['Mn_9_1+']['html'] = html_9_1_pos;
-      // F9.1 (b) for tee stems in compression, hogging
-      //      (c) for double angles with web legs in compression, hogging
-      result['Mn_9_1-']['isApplicable'] = true;
-      const [Mp_neg, html_9_1_neg] = F9_1YieldingHogging(shapeType, Fy, Sx);
-      result['Mn_9_1-']['value'] = Mp_neg;
-      result['Mn_9_1-']['html'] = html_9_1_neg;
+      result['Mn_9_1']['isApplicable'] = true;
+      const [Mp_pos, Mp_neg, html_9_1] = F9_1Yielding(shapeType, Fy, Zx, Sx);
+      result['Mn_9_1']['values'] = [Mp_pos, Mp_neg];
+      result['Mn_9_1']['html'] = html_9_1;
 
       // F9.2 Lateral-Torsional Buckling
       // F9.2 (a) for tee stems and web legs in tension, sagging
@@ -169,7 +160,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // F10.1 Yielding
       result['Mn_10_1']['isApplicable'] = true;
       const Mp = F10_1Yielding(Fy, Sx);
-      result['Mn_10_1']['value'] = Mp;
+      result['Mn_10_1']['values'] = Mp;
     }
     return result;
   } else {
@@ -181,18 +172,31 @@ export function criticalResultProcessor(result) {
   if (result) {
     const resultAsList = Object.entries(result);
 
-    // filter out objects with value = 0 or isApplicable is false
-    const filteredResultAsList = resultAsList.filter(([key, item]) => item['isApplicable'] && item['value'] !== 0);
+    // filter out objects where isApplicable is false or all values are 0
+    const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['values'].some(value => value !== 0));
 
     if (filteredResultAsList.length > 0) {
-      const [key, item] = filteredResultAsList.reduce((smallest, current) =>
-        current[1]['value'] < smallest[1]['value'] ? current : smallest
-      );
+      const criticalKeys = [null, null];
+      const criticalResults = [0, 0];
 
-      return { [key]: item };
+      filteredResultAsList.forEach(([key, item]) => {
+        const values = item['values'];
+
+        values.forEach((value, index) => {
+          const currentCriticalResult = criticalResults[index];
+
+          if (value !== 0 && (currentCriticalResult === 0 || value < currentCriticalResult)) {
+            criticalKeys[index] = key;
+            criticalResults[index] = value;
+          }
+        });
+      });
+      return [criticalKeys, criticalResults];
+
     } else {
       return null;
     }
+
   } else {
     return null;
   }
@@ -206,7 +210,8 @@ export function criticalResultProcessor(result) {
 // F2.1 Yielding
 function F2_1Yielding(Fy, Zx) {
   const Mp = Fy * Zx;
-  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in</p>`;
+  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</p>
+                <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
   return [Mp, html];
 }
 
@@ -234,10 +239,10 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
     let c = 0;
     if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
       c = 1;
-      html += `For doubly symmetric I-shapes, c = 1`;
+      html += `<p>For doubly symmetric I-shapes, c = 1</p>`;
     } else if (['C', 'MC'].includes(shapeType)) {
       c = (ho / 2) * Math.sqrt(Iy / Cw);
-      html += `For channels, c = ${ho_} / 2 &radic;(${Iy_} / ${Cw_}) = ${c.toFixed(1)}`;
+      html += `<p>For channels, c = ${ho_} / 2 &radic;(${Iy_} / ${Cw_}) = ${c.toFixed(2)}</p>`;
     }
 
     const calcTerm2 = (J * c) / (Sx * ho);
@@ -251,8 +256,9 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
       html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
 
       Mn = Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
-      html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+      html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
       Mn = Math.min(Mn, Mp);
+      html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
 
     } else {
@@ -264,11 +270,12 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
 
       const Fcr = (Cb * Math.PI**2 * E / calcTerm3) * Math.sqrt(1 + 0.078 * calcTerm2 * calcTerm3);
       html += `<p>Critical stress</p>
-               <p>${Fcr_} = ${Cb_}&pi;<sup>2</sup>${E_} / ${calcTerm3_} &radic;(1 + 0.078 (${calcTerm2_}) ${calcTerm3_}) = ${Fcr.toFixed(1)} ksi</p>`;
+               <p>${Fcr_} = ${Cb_}&pi;<sup>2</sup>${E_} / ${calcTerm3_} &radic;(1 + 0.078 (${calcTerm2_}) ${calcTerm3_}) = ${Fcr.toFixed(2)} ksi</p>`;
 
       Mn = Fcr * Sx;
-      html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+      html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
       Mn = Math.min(Mn, Mp);
+      html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
     }
   }
@@ -284,7 +291,8 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
   if (flangeClass === 'noncompact') {
     Mn = Mp - (Mp - 0.7 * Fy * Sx) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
     html += `<p>For sections with noncompact flanges</p>
-             <p>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(1)} k-in</p>`;
+             <p>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
     return [Mn, html];
 
   } else if (flangeClass === 'slender') {
@@ -298,7 +306,8 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
     html += `<p>${kc_} = ${kc.toFixed(2)}</p>`;
 
     Mn = 0.9 * E * kc * Sx / lambdaf**2;
-    html += `${Mn_} = 0.9 ${E_} ${kc_} ${Sx_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(1)} k-in`;
+    html += `<p>${Mn_} = 0.9 ${E_} ${kc_} ${Sx_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
     return [Mn, html];
 
   } else {
@@ -317,7 +326,8 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
 // F7.1 Yielding
 function F7_1Yielding(Fy, Zx) {
   const Mp = Fy * Zx;
-  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in</p>`;
+  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</p>
+                <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
   return [Mp, html];
 }
 
@@ -340,8 +350,9 @@ function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, flangeClass) {
     if (flangeClass === 'noncompact') {
       Mn = Mp - (Mp - Fy * Sx) * (3.57 * calcTerm1 * (1/calcTerm2) - 4.0);
       html += `<p>For sections with noncompact flanges</p>
-               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (3.57 ${calcTerm1_} &radic;(${Fy_} / ${E_}) - 4.0) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (3.57 ${calcTerm1_} &radic;(${Fy_} / ${E_}) - 4.0) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
       Mn = Math.min(Mn, Mp);
+      html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
 
     } else if (flangeClass === 'slender') {
@@ -374,7 +385,8 @@ function F7_2FlangeLocalBuckling(Mp, Fy, E, H, b, tf, Ix, Sx, flangeClass) {
       }
 
       Mn = Fy * Se;
-      html += `<p>${Mn_} = ${Fy_} ${Se_} = ${Mn.toFixed(1)} k-in</p>`;
+      html += `<p>${Mn_} = ${Fy_} ${Se_} = ${Mn.toFixed(2)} k-in</p>
+               <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
 
     } else {
@@ -402,8 +414,9 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
     if (webClass === 'noncompact') {
       Mn = Mp - (Mp - Fy * Sx) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
       html += `<p>For sections with noncompact webs</p>
-               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
       Mn = Math.min(Mn, Mp);
+      html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
 
     } else if (webClass === 'slender') {
@@ -424,7 +437,7 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
       // (1) compression flange yielding
       const Mn_1 = Rpg * Fy * Sx;
       html += `<p>Compression flange yielding</p>
-               <p>${Mn_} = ${Rpg_} ${Fy_} ${Sx_} = ${Mn_1.toFixed(1)} k-in</p>`;
+               <p>${Mn_} = ${Rpg_} ${Fy_} ${Sx_} = ${Mn_1.toFixed(2)} k-in</p>`;
 
       // (2) compression flange local buckling
       const kc = 4.0;
@@ -434,7 +447,7 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
       html += `<p>Compression flange local buckling</p>
                <p>${kc_} = ${kc.toFixed(1)}</p>
                <p>${Fcr_} = 0.9 ${E_} ${kc_} / (${b_} / ${tf_})<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>
-               <p>${Mn_} = ${Rpg_} ${Fcr_} ${Sx_} = ${Mn_2.toFixed(1)} k-in</p>`;
+               <p>${Mn_} = ${Rpg_} ${Fcr_} ${Sx_} = ${Mn_2.toFixed(2)} k-in</p>`;
 
       if (Mn_1 <= Mn_2) {
         Mn = Mn_1;
@@ -443,6 +456,7 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
         Mn = Mn_2;
         html += `<p>Compression flange yielding governs</p>`;
       }
+      html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
 
     } else {
@@ -481,8 +495,9 @@ function F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, Ag, Sx, ry, J, Lb, C
         html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
 
         Mn = Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
-        html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+        html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
         Mn = Math.min(Mn, Mp);
+        html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
         return [Mn, html];
 
       } else {
@@ -490,8 +505,9 @@ function F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, Ag, Sx, ry, J, Lb, C
         html += `<p>${Lb_} &gt; ${Lr_}</p>`;
 
         Mn = 2 * E * Cb * calcTerm1 / (Lb / ry);
-        html += `<p>${Mn_} = 2 ${E_} ${Cb_} ${calcTerm1_} / (${Lb_} / ${ry_}) = ${Mn.toFixed(1)} k-in &le; ${Mp_}</p>`;
+        html += `<p>${Mn_} = 2 ${E_} ${Cb_} ${calcTerm1_} / (${Lb_} / ${ry_}) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
         Mn = Math.min(Mn, Mp);
+        html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
         return [Mn, html];
       }
     }
@@ -511,7 +527,8 @@ function F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, Ag, Sx, ry, J, Lb, C
 // F8.1 Yielding
 function F8_1Yielding(Fy, Zx) {
   const Mp = Fy * Zx;
-  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in</p>`;
+  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</p>
+                <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
   return [Mp, html];
 }
 
@@ -527,15 +544,17 @@ function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
   } else if (wallClass === 'noncompact') {
     Mn = (0.021 * E / lambda + Fy) * Sx;
     html += `<p>For sections with noncompact walls</p>
-             <p>${Mn_} = (0.021 ${E_} / (${OD_} / ${tdes_}) + ${Fy_}) ${Sx_} = ${Mn.toFixed(1)} k-in</p>`;
+             <p>${Mn_} = (0.021 ${E_} / (${OD_} / ${tdes_}) + ${Fy_}) ${Sx_} = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
     return [Mn, html];
 
   } else if (wallClass === 'slender') {
     const Fcr = 0.33 * E / lambda;
     html += `<p>For sections with slender walls</p>
-             <p>${Fcr_} = 0.33 ${E_} / (${OD_} / ${tdes_}) = ${Fcr.toFixed(1)} ksi</p>`;
+             <p>${Fcr_} = 0.33 ${E_} / (${OD_} / ${tdes_}) = ${Fcr.toFixed(2)} ksi</p>`;
     Mn = Fcr * Sx;
-    html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(1)} k-in</p>`;
+    html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
     return [Mn, html];
 
   } else {
@@ -546,6 +565,16 @@ function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
 // F9 Tees and Double Angles Loaded in the Plane of Symmetry
 
 // F9.1 Yielding
+function F9_1Yielding(shapeType, Fy, Zx, Sx) {
+  let Mp_pos = 0;
+  let Mp_neg = 0;
+  let html_pos = '';
+  let html_neg = '';
+
+  [Mp_pos, html_pos] = F9_1YieldingSagging(shapeType, Fy, Zx, Sx);
+  [Mp_neg, html_neg] = F9_1YieldingHogging(shapeType, Fy, Sx);
+  return [Mp_pos, Mp_neg, html_pos + html_neg];
+}
 // F9.1 (a) for tee stems and web legs in tension, sagging
 function F9_1YieldingSagging(shapeType, Fy, Zx, Sx) {
   let Mp = 0;
@@ -562,8 +591,9 @@ function F9_1YieldingSagging(shapeType, Fy, Zx, Sx) {
            <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
 
   Mp = Fy * Zx;
-  html += `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(1)} k-in &le; 1.6 ${My_}</p>`;
+  html += `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in &le; 1.6 ${My_}</p>`;
   Mp = Math.min(Mp, 1.6 * My);
+  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
   return [Mp, html];
 }
 // F9.1 (b) for tee stems in compression, hogging
@@ -579,15 +609,19 @@ function F9_1YieldingHogging(shapeType, Fy, Sx) {
   }
 
   const My = Fy * Sx;
+  html += `<p>Yield moment</p>
+           <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
     Mp = My;
-    html += `<p>${Mp_} = ${My_} = ${Mp.toFixed(1)} k-in</p>`;
+    html += `<p>${Mp_} = ${My_} = ${Mp.toFixed(2)} k-in</p>
+             <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
     return [Mp, html];
 
   } else if (['2L'].includes(shapeType)) {
     Mp = 1.5 * My;
-    html += `<p>${Mp_} = 1.5 ${My_} = ${Mp.toFixed(1)} k-in</p>`;
+    html += `<p>${Mp_} = 1.5 ${My_} = ${Mp.toFixed(2)} k-in</p>
+             <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
     return [Mp, html];
 
   } else {

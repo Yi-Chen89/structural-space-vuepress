@@ -175,28 +175,28 @@
       
       <div v-if="true">
         <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
-
         <div>
           <div v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
             <p v-if="item.title"><strong>{{ item.section }} {{ item.title }}</strong></p>
             <div style="margin-left: 1em;">
               <div v-html="item.html"></div>
-              <p v-if="item.value">
+              <!-- <p v-if="item.value">
                 <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }}
-              </p>
+              </p> -->
             </div>
           </div>
         </div>
 
         <div>
-          <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacityRenderData" :key="key">
-            <p><strong>Governing Flexural Capacity ({{ item.section }})</strong></p>
+          <p><strong>Governing Limit State</strong></p>
+          <div v-for="data in selectedShapeMajorFlexureCriticalCapacityRenderData">
             <div style="margin-left: 1em;">
+              <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
               <p>
-                <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }} = {{ (item.value / 12).toFixed(1) }} k-ft
+                M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
               </p>
               <p><strong>
-                &phi;<sub>b</sub><span v-html="item.notation"></span> = {{ (0.9 * item.value / 12).toFixed(1) }} k-ft
+                &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
               </strong></p>
             </div>
           </div>
@@ -253,6 +253,7 @@
   import { resultRenderDataFilterer } from './utils/data-filterers.js';
   
   import { resultRenderDataConstructor } from './utils/render-data-constructors.js';
+  import { criticalResultRenderDataConstructor } from './utils/render-data-constructors.js';
 
   
   export default {
@@ -350,7 +351,7 @@
       },
 
       selectedShapeMajorFlexureCriticalCapacityRenderData() {
-        return resultRenderDataConstructor(this.selectedShapeMajorFlexureCriticalCapacity, 'flexure');
+        return criticalResultRenderDataConstructor(this.selectedShapeMajorFlexureCriticalCapacity, 'flexure');
       },
 
 

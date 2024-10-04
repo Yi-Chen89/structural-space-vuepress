@@ -18,3 +18,38 @@ export function resultRenderDataConstructor(result, category) {
     return null;
   }
 }
+
+export function criticalResultRenderDataConstructor(criticalResult, category) {
+  const resultMetadata = resultRenderMetadata;
+
+  if (criticalResult && category && category in resultMetadata) {
+    const results = [];
+
+    const momentSign = ['Sagging', 'Hogging'];
+    
+    const criticalKeys = criticalResult[0];
+    const criticalResults = criticalResult[1];
+
+    criticalKeys.forEach((value, index) => {
+      if (criticalKeys[index]) {
+        const metadata = resultMetadata[category][criticalKeys[index]];
+
+        results.push({
+          'value': criticalResults[index],
+          'section': metadata['section'],
+          'notation': metadata['notation'],
+          'unit': metadata['unit'],
+          'sign': momentSign[index],
+        });
+      }
+    });
+
+    if (results.length === 1) {
+      results[0]['sign'] = '';
+    }
+    return results;
+
+  } else {
+    return null;
+  }
+}

@@ -5,7 +5,7 @@
     "Mn_2_1": {
       "section": "F2.1",
       "title": "Yielding",
-      "notation": "M<sub>n</sub>",
+      "notation": "M<sub>p</sub>",
       "unit": "k-in"
     },
     "Mn_2_2": {
@@ -23,7 +23,7 @@
     "Mn_7_1": {
       "section": "F7.1",
       "title": "Yielding",
-      "notation": "M<sub>n</sub>",
+      "notation": "M<sub>p</sub>",
       "unit": "k-in"
     },
     "Mn_7_2": {
@@ -47,7 +47,7 @@
     "Mn_8_1": {
       "section": "F8.1",
       "title": "Yielding",
-      "notation": "M<sub>n</sub>",
+      "notation": "M<sub>p</sub>",
       "unit": "k-in"
     },
     "Mn_8_2": {
@@ -56,14 +56,26 @@
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
     },
-    "Mn_9_1+": {
+    "Mn_9_1": {
       "section": "F9.1",
       "title": "Yielding",
+      "notation": "M<sub>p</sub>",
+      "unit": "k-in"
+    },
+    "Mn_9_2": {
+      "section": "F9.2",
+      "title": "Lateral-Torsional Buckling",
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
     },
-    "Mn_9_1-": {
-      "section": "F9.1",
+    "Mn_9_3": {
+      "section": "F9.3",
+      "title": "",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Mn_9_4": {
+      "section": "F9.4",
       "title": "",
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
