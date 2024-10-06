@@ -172,7 +172,7 @@
 
     <div v-if="flexureCalcDisplay">
       <h2>Flexural Strength</h2>
-      <div>{{ selectedShapeMajorFlexureCapacityRenderData }}</div>
+      
       <div v-if="true">
         <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
         <div>

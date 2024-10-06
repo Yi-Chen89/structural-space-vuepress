@@ -18,7 +18,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       'Mn_9_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_9_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_9_3': {'isApplicable': false, 'values': [0, 0], 'html': null},
-      'Mn_9_4-': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_9_4': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_10_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
     };
 
@@ -148,8 +148,10 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
       // only hogging
-      // result['Mn_9_4-']['isApplicable'] = true;
-      // result['Mn_9_4-']['values'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
+      result['Mn_9_4']['isApplicable'] = true;
+      const [Mn_9_4_pos, Mn_9_4_neg, html_9_4] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw, web);
+      result['Mn_9_4']['values'] = [Mn_9_4_pos, Mn_9_4_neg];
+      result['Mn_9_4']['html'] = html_9_4;
 
     } else if (['L'].includes(shapeType)) {
       // F10
@@ -769,7 +771,7 @@ function F9_3FlangeLocalBuckling(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf, lambd
   let html_pos = '';
   let html_neg = '';
 
-  [Mn_pos, html_pos] = F9_3FlangeLocalBucklingSagging(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flangeClass)
+  [Mn_pos, html_pos] = F9_3FlangeLocalBucklingSagging(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flangeClass);
   return [Mn_pos, Mn_neg, html_pos + html_neg];
 }
 // F9.3 only applies for tee stems and web legs in tension (sagging)
@@ -826,22 +828,56 @@ function F9_3FlangeLocalBucklingSagging(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf
 }
 
 // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
-function F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw) {
+function F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw, webClass) {
+  let Mn_pos = 0;
+  let Mn_neg = 0;
+  let html_pos = '';
+  let html_neg = '';
+
+  [Mn_neg, html_neg] = F9_4WebLocalBucklingHogging(shapeType, Fy, E, Sx, lambdaw, webClass);
+  return [Mn_pos, Mn_neg, html_pos + html_neg];
+}
+// F9.4 only applies for tee stems and web legs in compression (hogging)
+function F9_4WebLocalBucklingHogging(shapeType, Fy, E, Sx, lambdaw, webClass) {
+  let Mn = 0;
+  let html = '';
+
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    html += `<p><strong>For tee stems in compression (hogging)</strong></p>`;
+
     const calcTerm1 = Math.sqrt(E / Fy);
+    const calcTerm1_ = `&radic;(${E_} / ${Fy_})`;
+
     let Fcr = 0;
-    if (lambdaw <= 0.84 * calcTerm1) {
+    if (webClass === 'compact') {
+      // (1) when lambdaw ≤ 0.84 sqrt(E / Fy), compact
+      html += `<p>For sections with compact stems</p>`;
       Fcr = Fy;
-    } else if (lambdaw <= 1.52 * calcTerm1) {
+      html += `<p>${Fcr_} = ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+
+    } else if (webClass === 'noncompact') {
+      // (2) when 0.84 sqrt(E / Fy) < lambdaw ≤ 1.52 sqrt(E / Fy), noncompact
+      html += `<p>For sections with noncompact stems</p>`;
       Fcr = (1.43 - 0.515 * lambdaw / calcTerm1) * Fy;
-    } else {
+      html += `<p>${Fcr_} = (1.43 - 0.515 ${lambdaw_} &radic;(${Fy_} / ${E_})) ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+
+    } else if (webClass === 'slender') {
+      // (3) when lambdaw > 1.52 sqrt(E / Fy), slender
+      html += `<p>For sections with slender stems</p>`;
       Fcr = 1.52 * E / lambdaw**2;
+      html += `<p>${Fcr_} = 1.52 ${E_} / ${lambdaw_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>`;
     }
-    return Fcr * Sx;
+
+    Mn = Fcr * Sx;
+    html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+    return [Mn, html];
+
   } else if (['2L'].includes(shapeType)) {
-    return 0;                               // call function F10_3
+    return [Mn, html];                               // call function F10_3
+
   } else {
-    return 0;
+    return [Mn, html];
   }
 }
 
@@ -914,6 +950,8 @@ const Mn_ = 'M<sub>n</sub>';
 const lambdaf_ = '&lambda;<sub>f</sub>';
 const lambdapf_ = '&lambda;<sub>pf</sub>';
 const lambdarf_ = '&lambda;<sub>rf</sub>';
+const lambdaw_ = '&lambda;<sub>w</sub>';
+
 
 const Rpg_ = 'R<sub>pg</sub>';
 
