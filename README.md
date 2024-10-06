@@ -76,7 +76,7 @@ Symbol
 
 #### F9 Tees and Double Angles Loaded in the Plane of Symmetry
 - ✅✅ F9.1 Yielding
-- ✅ F9.2 Lateral-Torsional Buckling
+- ✅✅ F9.2 Lateral-Torsional Buckling
 - ✅ F9.3 Flange Local Buckling of Tees and Double-Angle Legs
 - ✅ F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
 
