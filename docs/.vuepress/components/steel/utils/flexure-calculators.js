@@ -134,22 +134,20 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       result['Mn_9_1']['html'] = html_9_1;
 
       // F9.2 Lateral-Torsional Buckling
-      // F9.2 (a) for tee stems and web legs in tension, sagging
-      // result['Mn_9_2+']['isApplicable'] = true;
-      // result['Mn_9_2+']['value'] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
-      // // F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
-      // result['Mn_9_2-']['isApplicable'] = true;
-      // result['Mn_9_2-']['value'] = F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb);
+      result['Mn_9_2']['isApplicable'] = true;
+      const [Mn_9_2_pos, Mn_9_2_neg, html_9_2] = F9_2LateralTorsionalBuckling(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
+      result['Mn_9_2']['values'] = [Mn_9_2_pos, Mn_9_2_neg];
+      result['Mn_9_2']['html'] = html_9_2;
 
       // // F9.3 Flange Local Buckling of Tees and Double-Angle Legs
       // // only sagging
       // result['Mn_9_3+']['isApplicable'] = true;
-      // result['Mn_9_3+']['value'] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
+      // result['Mn_9_3+']['values'] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
 
       // // F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
       // // only hogging
       // result['Mn_9_4-']['isApplicable'] = true;
-      // result['Mn_9_4-']['value'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
+      // result['Mn_9_4-']['values'] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw);
 
     } else if (['L'].includes(shapeType)) {
       // F10
@@ -477,7 +475,7 @@ function F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, Ag, Sx, ry, J, Lb, C
     // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
     const Lp = 0.13 * E * ry * calcTerm1 / Mp;
     html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
-            <p>${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
+             <p>${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
 
     if (Lb <= Lp) {
       // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
@@ -630,77 +628,135 @@ function F9_1YieldingHogging(shapeType, Fy, Sx) {
 }
 
 // F9.2 Lateral-Torsional Buckling
+function F9_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, d, Sx, Iy, ry, J, Lb) {
+  let Mn_pos = 0;
+  let Mn_neg = 0;
+  let html_pos = '';
+  let html_neg = '';
+
+  [Mn_pos, html_pos] = F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry, J, Lb);
+  [Mn_neg, html_neg] = F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb);
+  return [Mn_pos, Mn_neg, html_pos + html_neg];
+}
 // F9.2 (a) for tee stems and web legs in tension, sagging
-function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry, J_, Lb) {
+function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry, J, Lb) {
+  let Mn = 0;
+  let html = '';
+
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    html += `<p>For tee stems in tension (sagging)</p>`;
+  } else if (['2L'].includes(shapeType)) {
+    html += `<p>For double angles with web legs in tension (sagging)</p>`;
+  }
+
   // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
   const Lp = 1.76 * ry * Math.sqrt(E / Fy);
+  html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
+           <p>${Lp_} = 1.76 ${ry_} &radic;(${E_} / ${Fy_}) = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
 
   if (Lb <= Lp) {
     // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
-    return 0;
+    html += `<p>${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</p>`;
+    return [Mn, html];
+
   } else {
-    let J = 0;
-    if (['WT', 'MT', 'ST'].includes(shapeType)) {
-      J = J_;
-    } else if (['2L'].includes(shapeType)) {
-      J = 0;  // helper function is needed here to find J for 2L
-    }
+    // let J = 0;
+    // if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    //   J = J;
+    // } else if (['2L'].includes(shapeType)) {
+    //   J = 0;  // helper function is needed here to find J for 2L
+    // }
 
     // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
     const Lr = 1.95 * (E / Fy) * Math.sqrt(Iy * J) / Sx * Math.sqrt(2.36 * (Fy / E) * d * Sx / J + 1);
-
-    const My = Fy * Sx;
+    html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>
+             <p>${Lr_} = 1.95 (${E_} / ${Fy_}) &radic;(${Iy_} ${J_}) / ${Sx_} &radic;(2.36 (${Fy_} / ${E_}) ${d_}${Sx_} / ${J_} + 1) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
 
     // Mn
     if (Lb <= Lr) {
       // (b) when Lp < Lb ≤ Lr
-      return Mp - (Mp - My) * (Lb - Lp) / (Lr - Lp);
+      html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
+
+      const My = Fy * Sx;
+      html += `<p>Yield moment</p>
+               <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+
+      Mn = Mp - (Mp - My) * (Lb - Lp) / (Lr - Lp);
+      html += `<p>${Mn_} = ${Mp_} - (${Mp_} - ${My_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_}) = ${Mn.toFixed(2)} k-in</p>
+               <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+      return [Mn, html];
+
     } else {
       // (c) when Lb > Lr
+      html += `<p>${Lb_} &gt; ${Lr_}</p>`;
+
       const B = 2.3 * (d / Lb) * Math.sqrt(Iy / J);
+      html += `<p>${B_} = 2.3 (${d_} / ${Lb_}) &radic;(${Iy_} / ${J_}) = ${B.toFixed(2)}</p>`;
+
       const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
-      return Mcr;
+      html += `<p>${Mcr_} = 1.95 ${E_} / ${Lb_} &radic;(${Iy_} ${J_}) (${B_} + &radic;(1 + ${B_}<sup>2</sup>)) = ${Mcr.toFixed(2)} k-in</p>`;
+      Mn = Mcr;
+      html += `<p>${Mn_} = ${Mcr_} = ${Mn.toFixed(2)} k-in</p>
+               <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+      return [Mn, html];
     }
   }
 }
 // F9.2 (b) for stems and web legs in compression anywhere along the unbraced length, hogging
 // F9.2 (b) does NOT have explicit criteria for whether LTB applies
-function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J_, Lb) {
+function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb) {
+  let Mn = 0;
+  let html = '';
+
+  if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    html += `<p>For tee stems in compression (hogging)</p>`;
+  } else if (['2L'].includes(shapeType)) {
+    html += `<p>For double angles with web legs in compression (hogging)</p>`;
+  }
+
   if (Lb > 0) {
     const My = Fy * Sx;
+    html += `<p>Yield moment</p>
+             <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
 
-    let J = 0;
-    if (['WT', 'MT', 'ST'].includes(shapeType)) {
-      J = J_;
-    } else if (['2L'].includes(shapeType)) {
-      J = 0;  // helper function is needed here to find J for 2L
-    }
+    // let J = 0;
+    // if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    //   J = J_;
+    // } else if (['2L'].includes(shapeType)) {
+    //   J = 0;  // helper function is needed here to find J for 2L
+    // }
 
     const B = -2.3 * (d / Lb) * Math.sqrt(Iy / J);
+    html += `<p>${B_} = -2.3 (${d_} / ${Lb_}) &radic;(${Iy_} / ${J_}) = ${B.toFixed(2)}</p>`;
     const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
+    html += `<p>${Mcr_} = 1.95 ${E_} / ${Lb_} &radic;(${Iy_} ${J_}) (${B_} + &radic;(1 + ${B_}<sup>2</sup>)) = ${Mcr.toFixed(2)} k-in</p>`;
     
     if (['WT', 'MT', 'ST'].includes(shapeType)) {
-      if (Mcr <= My) {
-        return Mcr;
-      } else {
-        return My;
-      }
-    } else if (['2L'].includes(shapeType)) {
-      if (My / Mcr <= 1.0) {
-        const Mn = (1.92 - 1.17 * Math.sqrt(My / Mcr)) * My;
-        if (Mn <= 1.5 * My) {
-          return Mn;
-        } else {
-          return 1.5 * My;
-        }
-      } else {
-        return (0.92 - 0.17 * Mcr / My) * Mcr;
-      }
+      Mn = Mcr;
+      html += `<p>${Mn_} = ${Mcr_} = ${Mn.toFixed(2)} k-in &le; ${My_}</p>`;
+      Mn = Math.min(Mn, My);
+      html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+      return [Mn, html];
+    
+    // } else if (['2L'].includes(shapeType)) {
+    //   if (My / Mcr <= 1.0) {
+    //     const Mn = (1.92 - 1.17 * Math.sqrt(My / Mcr)) * My;
+    //     if (Mn <= 1.5 * My) {
+    //       return Mn;
+    //     } else {
+    //       return 1.5 * My;
+    //     }
+    //   } else {
+    //     return (0.92 - 0.17 * Mcr / My) * Mcr;
+    //   }
+
     } else {
-      return 0;
+      return [Mn, html];
     }
+
   } else {
-    return 0;
+    html += `<p>Section is continuously braced, lateral-torsional buckling does not apply</p>`;
+    return [Mn, html];
   }
 }
 
@@ -833,3 +889,5 @@ const be_ = 'b<sub>e</sub>';
 const Se_ = 'S<sub>e</sub>';
 
 const My_ = 'M<sub>y</sub>';
+
+const Mcr_ = 'M<sub>cr</sub>';
