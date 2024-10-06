@@ -70,13 +70,13 @@
     },
     "Mn_9_3": {
       "section": "F9.3",
-      "title": "",
+      "title": "Flange Local Buckling of Tees and Double-Angle Legs",
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
     },
     "Mn_9_4": {
       "section": "F9.4",
-      "title": "",
+      "title": "Local Buckling of Tee Stems and Double-Angle Web Legs",
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
     }
