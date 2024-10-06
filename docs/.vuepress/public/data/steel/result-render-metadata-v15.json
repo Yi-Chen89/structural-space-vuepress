@@ -79,6 +79,12 @@
       "title": "Local Buckling of Tee Stems and Double-Angle Web Legs",
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
+    },
+    "Mn_10_1": {
+      "section": "F10.1",
+      "title": "Yielding",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
     }
   },
   "shear": {}

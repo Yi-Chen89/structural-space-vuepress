@@ -161,10 +161,12 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
       // F10.1 Yielding
       result['Mn_10_1']['isApplicable'] = true;
-      const Mp = F10_1Yielding(Fy, Sx);
-      result['Mn_10_1']['values'] = Mp;
+      const [Mn_10_1, html_10_1] = F10_1Yielding(Fy, Sx);
+      result['Mn_10_1']['values'][0] = Mn_10_1;
+      result['Mn_10_1']['html'] = html_10_1;
     }
     return result;
+    
   } else {
     return null;
   }
@@ -886,7 +888,12 @@ function F9_4WebLocalBucklingHogging(shapeType, Fy, E, Sx, lambdaw, webClass) {
 // F10.1 Yielding
 function F10_1Yielding(Fy, Sx) {
   const My = Fy * Sx;
-  return 1.5 * My;
+  const Mn = 1.5 * My;
+  const html = `<p>Yield moment</p>
+                <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>
+                <p>${Mn_} = 1.5 ${My_} = ${Mn.toFixed(2)} k-in</p>
+                <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+  return [Mn, html];
 }
 
 // F11 Rectangular Bars and Rounds
