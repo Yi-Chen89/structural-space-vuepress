@@ -27,6 +27,11 @@ Steel Construction Manual 15th Edition
 - Wall is compact or noncompact (< 0.45 E / Fy)
 - Applicable section is F8
 
+### Tee (WT, MT, ST) (preferred material)
+- Flange is compact or noncompact
+- Stem is compact or noncompact
+- Applicable section is F9
+
 ## Progress
 
 Symbol
@@ -76,9 +81,9 @@ Symbol
 
 #### F9 Tees and Double Angles Loaded in the Plane of Symmetry
 - ✅✅ F9.1 Yielding
-- ✅✅ F9.2 Lateral-Torsional Buckling
-- ✅✅ F9.3 Flange Local Buckling of Tees and Double-Angle Legs
-- ✅ F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression
+- ✅✅ F9.2 Lateral-Torsional Buckling (not working for 2L)
+- ✅✅ F9.3 Flange Local Buckling of Tees and Double-Angle Legs (not working for 2L)
+- ✅✅ F9.4 Local Buckling of Tee Stems and Double-Angle Web Legs in Flexural Compression (not working for 2L)
 
 #### F10 Single Angles​
 - ✅ F10.1 Yielding
