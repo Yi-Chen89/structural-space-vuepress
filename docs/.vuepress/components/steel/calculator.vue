@@ -180,9 +180,6 @@
             <p><strong>{{ item.section }} {{ item.title }}</strong></p>
             <div style="margin-left: 1em;">
               <div v-html="item.html"></div>
-              <!-- <p v-if="item.value">
-                <span v-html="item.notation"></span> = {{ item.value.toFixed(1) }} {{ item.unit }}
-              </p> -->
             </div>
           </div>
         </div>
@@ -218,6 +215,14 @@
       <ul style="margin-top: 0;">
         <li>AISC Shapes Database v15.0</li>
         <li>ANSI/AISC 360-16</li>
+      </ul>
+      <div>Calculation is applicable for</div>
+      <ul style="margin-top: 0;">
+        <li>W, M, S, HP</li>
+        <li>C, MC</li>
+        <li>Rectangular HSS, Square HSS</li>
+        <li>Round HSS, PIPE</li>
+        <li>WT, MT, ST</li>
       </ul>
     </footer>
   </div>
