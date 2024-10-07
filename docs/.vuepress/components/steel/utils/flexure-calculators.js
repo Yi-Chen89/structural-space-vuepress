@@ -1,9 +1,26 @@
 // A360 Chapter F
 
-export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shapeSlenderRatio, shapeTypeSlenderLimitRatio, slenderClass, Lb, Cb) {
-  if (shapeData && shapeType && astmSpecProp && shapeSlenderRatio && shapeTypeSlenderLimitRatio && slenderClass && Cb) {
+export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lb, Cb) {
+  if (shapeData && shapeType && astmSpecProp && slenderClass && Cb) {
     const { Fy, E } = astmSpecProp;
-    const { flange, web } = slenderClass;
+    const { 
+      flange: {
+        ratio: { value: lambdaf },
+        limit: {
+          compact: { value: lambdapf },
+          noncompact: { value: lambdarf },
+        },
+        class: flange,
+      },
+      web: {
+        ratio: { value: lambdaw },
+        limit: {
+          compact: { value: lambdapw },
+          noncompact: { value: lambdarw },
+        },
+        class: web,
+      } 
+    } = slenderClass;
 
     let result = {
       'Mn_2_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
@@ -45,8 +62,6 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: LTB, FLB
 
       const { Zx, Sx, Iy, ry, J, Cw, rts, ho } = shapeData;
-      const { 'bf/2tf': lambdaf, 'h/tw': lambdaw } = shapeSlenderRatio;
-      const { lambdapf, lambdarf } = shapeTypeSlenderLimitRatio;
       
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
@@ -101,9 +116,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, LB
       // F8 only applies to round HSS with D/t < 0.45E/Fy
 
-      const { 'D/t': lambda } = shapeSlenderRatio;
-
-      if (lambda < 0.45 * E * Fy) {
+      if (lambdaf < 0.45 * E * Fy) {
         const { Zx, Sx } = shapeData;
 
         // F8.1 Yielding
@@ -114,7 +127,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
 
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
-        const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sx, lambda, flange);
+        const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sx, lambdaf, flange);
         result['Mn_8_2']['values'][0] = Mn_8_2;
         result['Mn_8_2']['html'] = html_8_2;
       }
@@ -124,8 +137,6 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       // limit state: Y, LTB, FLB, WLB
 
       const { d, y, Ix, Zx, Sx, Iy, ry, J } = shapeData;
-      const { 'bf/2tf': lambdaf, 'D/t': lambdaw } = shapeSlenderRatio;
-      const { lambdapf, lambdarf } = shapeTypeSlenderLimitRatio;
 
       // F9.1 Yielding
       result['Mn_9_1']['isApplicable'] = true;

@@ -169,7 +169,7 @@
       <h2>Compressive Strength</h2>
     </div>
 
-    <!-- <div v-if="flexureCalcDisplay">
+    <div v-if="flexureCalcDisplay">
       <h2>Flexural Strength</h2>
       
       <div v-if="true">
@@ -202,7 +202,7 @@
       <div v-if="false">
         <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
       </div>
-    </div> -->
+    </div>
 
     <div v-if="shearCalcDisplay">
       <h2>Shear Strength</h2>
@@ -239,7 +239,6 @@
 
   // import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
   // import { axialSlenderClassifier } from './utils/slender-calculators.js';
-  // import { flexureSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
@@ -451,20 +450,11 @@
         return shapeSlenderRatioFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
-      // selectedShapeTypeAxialSlenderLimitRatio() {
-      //   return axialSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
-      // },
-
       // selectedShapeAxialSlenderClass() {
       //   return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio);
       // },
 
-      // selectedShapeTypeFlexureSlenderLimitRatio() {
-      //   return flexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
-      // },
-
       selectedShapeFlexureSlenderClass() {
-        // return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio);
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
       },
 
@@ -485,7 +475,7 @@
       },
 
       selectedShapeMajorFlexureCapacity() {
-        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
+        return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
       },
 
       selectedShapeMajorFlexureCriticalCapacity() {

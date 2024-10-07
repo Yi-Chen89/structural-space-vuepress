@@ -78,56 +78,61 @@ export function axialSlenderClassifier(shapeType, shapeSlenderRatio, shapeTypeAx
 }
 
 export function flexureSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRatio) {
-  const result = {
-    'flange': {
-      'isApplicable': false,
-      'notation': null,
-      'ratio': {'notation': null, 'value': 0, 'html': null},
-      'limit': {'compact': {'notation': null, 'value': 0, 'html': null}, 'noncompact': {'notation': null, 'value': 0, 'html': null}},
-      'class': null,
-    },
-    'web': {
-      'isApplicable': false,
-      'notation': null,
-      'ratio': {'notation': null, 'value': 0, 'html': null},
-      'limit': {'compact': {'notation': null, 'value': 0, 'html': null}, 'noncompact': {'notation': null, 'value': 0, 'html': null}},
-      'class': null,
+  if (shapeType && astmSpecProp && shapeSlenderRatio) {
+    const result = {
+      'flange': {
+        'isApplicable': false,
+        'notation': null,
+        'ratio': {'notation': null, 'value': 0, 'html': null},
+        'limit': {'compact': {'notation': null, 'value': 0, 'html': null}, 'noncompact': {'notation': null, 'value': 0, 'html': null}},
+        'class': null,
+      },
+      'web': {
+        'isApplicable': false,
+        'notation': null,
+        'ratio': {'notation': null, 'value': 0, 'html': null},
+        'limit': {'compact': {'notation': null, 'value': 0, 'html': null}, 'noncompact': {'notation': null, 'value': 0, 'html': null}},
+        'class': null,
+      }
+    };
+
+    const ratio = slenderRatioParser(shapeType, shapeSlenderRatio);
+    ['flange', 'web'].forEach(key => {
+      result[key]['isApplicable'] = ratio[key]['isApplicable'];
+      result[key]['notation'] = ratio[key]['notation'];
+      result[key]['ratio']['notation'] = ratio[key]['ratio']['notation'];
+      result[key]['ratio']['value'] = ratio[key]['ratio']['value'];
+      result[key]['ratio']['html'] = ratio[key]['ratio']['html'];
+    });
+    const lambdaf = result['flange']['ratio']['value'];
+    const lambdaw = result['web']['ratio']['value'];
+
+    const limit = flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp);
+    ['flange', 'web'].forEach(key => {
+      result[key]['limit']['compact']['notation'] = limit[key]['limit']['compact']['notation'];
+      result[key]['limit']['compact']['value'] = limit[key]['limit']['compact']['value'];
+      result[key]['limit']['compact']['html'] = limit[key]['limit']['compact']['html'];
+      result[key]['limit']['noncompact']['notation'] = limit[key]['limit']['noncompact']['notation'];
+      result[key]['limit']['noncompact']['value'] = limit[key]['limit']['noncompact']['value'];
+      result[key]['limit']['noncompact']['html'] = limit[key]['limit']['noncompact']['html'];
+    });
+    const lambdapf = result['flange']['limit']['compact']['value'];
+    const lambdarf = result['flange']['limit']['noncompact']['value'];
+    const lambdapw = result['web']['limit']['compact']['value'];
+    const lambdarw = result['web']['limit']['noncompact']['value'];
+
+    if (result['flange']['isApplicable']) {
+      result['flange']['class'] = flexureElementClassifier(lambdaf, lambdapf, lambdarf);
     }
-  };
+    if (result['web']['isApplicable']) {
+      result['web']['class'] = flexureElementClassifier(lambdaw, lambdapw, lambdarw);
+    }
 
-  const ratio = slenderRatioParser(shapeType, shapeSlenderRatio);
-  ['flange', 'web'].forEach(key => {
-    result[key]['isApplicable'] = ratio[key]['isApplicable'];
-    result[key]['notation'] = ratio[key]['notation'];
-    result[key]['ratio']['notation'] = ratio[key]['ratio']['notation'];
-    result[key]['ratio']['value'] = ratio[key]['ratio']['value'];
-    result[key]['ratio']['html'] = ratio[key]['ratio']['html'];
-  });
-  const lambdaf = result['flange']['ratio']['value'];
-  const lambdaw = result['web']['ratio']['value'];
+    return result;
 
-  const limit = flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp);
-  ['flange', 'web'].forEach(key => {
-    result[key]['limit']['compact']['notation'] = limit[key]['limit']['compact']['notation'];
-    result[key]['limit']['compact']['value'] = limit[key]['limit']['compact']['value'];
-    result[key]['limit']['compact']['html'] = limit[key]['limit']['compact']['html'];
-    result[key]['limit']['noncompact']['notation'] = limit[key]['limit']['noncompact']['notation'];
-    result[key]['limit']['noncompact']['value'] = limit[key]['limit']['noncompact']['value'];
-    result[key]['limit']['noncompact']['html'] = limit[key]['limit']['noncompact']['html'];
-  });
-  const lambdapf = result['flange']['limit']['compact']['value'];
-  const lambdarf = result['flange']['limit']['noncompact']['value'];
-  const lambdapw = result['web']['limit']['compact']['value'];
-  const lambdarw = result['web']['limit']['noncompact']['value'];
-
-  if (result['flange']['isApplicable']) {
-    result['flange']['class'] = flexureElementClassifier(lambdaf, lambdapf, lambdarf);
+  } else {
+    return null;
   }
-  if (result['web']['isApplicable']) {
-    result['web']['class'] = flexureElementClassifier(lambdaw, lambdapw, lambdarw);
-  }
-
-  return result;
 }
 
 
