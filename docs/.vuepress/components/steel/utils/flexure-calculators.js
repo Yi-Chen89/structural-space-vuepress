@@ -166,7 +166,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, shape
       result['Mn_10_1']['html'] = html_10_1;
     }
     return result;
-    
+
   } else {
     return null;
   }
@@ -587,7 +587,7 @@ function F9_1YieldingSagging(shapeType, Fy, Zx, Sx) {
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
     html += `<p><strong>For tee stems in tension (sagging)</strong></p>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p>For double angles with web legs in tension (sagging)</p>`;
+    html += `<p><strong>For double angles with web legs in tension (sagging)</strong></p>`;
   }
 
   const My = Fy * Sx;
@@ -609,7 +609,7 @@ function F9_1YieldingHogging(shapeType, Fy, Sx) {
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
     html += `<p><strong>For tee stems in compression (hogging)</strong></p>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p>For double angles with web legs in compression (hogging)</p>`;
+    html += `<p><strong>For double angles with web legs in compression (hogging)</strong></p>`;
   }
 
   const My = Fy * Sx;
@@ -652,7 +652,7 @@ function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
     html += `<p><strong>For tee stems in tension (sagging)</strong></p>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p>For double angles with web legs in tension (sagging)</p>`;
+    html += `<p><strong>For double angles with web legs in tension (sagging)</strong></p>`;
   }
 
   // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
@@ -678,7 +678,6 @@ function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry
     html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>
              <p>${Lr_} = 1.95 (${E_} / ${Fy_}) &radic;(${Iy_} ${J_}) / ${Sx_} &radic;(2.36 (${Fy_} / ${E_}) ${d_}${Sx_} / ${J_} + 1) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
 
-    // Mn
     if (Lb <= Lr) {
       // (b) when Lp < Lb ≤ Lr
       html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
@@ -717,7 +716,7 @@ function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb)
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
     html += `<p><strong>For tee stems in compression (hogging)</strong></p>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p>For double angles with web legs in compression (hogging)</p>`;
+    html += `<p><strong>For double angles with web legs in compression (hogging)</strong></p>`;
   }
 
   if (Lb > 0) {
@@ -902,13 +901,12 @@ function F10_1Yielding(Fy, Sx) {
 
 
 // html notation
-
+// material notation
 const Fy_ = 'F<sub>y</sub>';
 const Fu_ = 'F<sub>u</sub>';
 const E_ = 'E';
 const G_ = 'G';
-
-
+// database variable notation
 const W_ = 'W';
 const A_ = 'A';
 const d_ = 'd';
@@ -940,37 +938,25 @@ const Cw_ = 'C<sub>w</sub>';
 const C_ = 'C';
 const rts_ = 'r<sub>ts</sub>';
 const ho_ = 'h<sub>o</sub>';
-
-
+// flexure calc variable notation
 const Lb_ = 'L<sub>b</sub>';
 const Lp_ = 'L<sub>p</sub>';
 const Lr_ = 'L<sub>r</sub>';
-
 const Cb_ = 'C<sub>b</sub>';
-
 const Fcr_ = 'F<sub>cr</sub>';
-
-const Mp_ = 'M<sub>p</sub>';
-const Mn_ = 'M<sub>n</sub>';
-
-
 const lambdaf_ = '&lambda;<sub>f</sub>';
 const lambdapf_ = '&lambda;<sub>pf</sub>';
 const lambdarf_ = '&lambda;<sub>rf</sub>';
 const lambdaw_ = '&lambda;<sub>w</sub>';
-
-
-const Rpg_ = 'R<sub>pg</sub>';
-
-const aw_ = 'a<sub>w</sub>';
-
-const kc_ = 'k<sub>c</sub>';
-
+const lambdapw_ = '&lambda;<sub>pw</sub>';
+const lambdarw_ = '&lambda;<sub>rw</sub>';
 const be_ = 'b<sub>e</sub>';
 const Se_ = 'S<sub>e</sub>';
-
-const My_ = 'M<sub>y</sub>';
-
-const Mcr_ = 'M<sub>cr</sub>';
-
+const aw_ = 'a<sub>w</sub>';
+const Rpg_ = 'R<sub>pg</sub>';
+const kc_ = 'k<sub>c</sub>';
 const Sxc_ = 'S<sub>xc</sub>';
+const My_ = 'M<sub>y</sub>';
+const Mcr_ = 'M<sub>cr</sub>';
+const Mp_ = 'M<sub>p</sub>';
+const Mn_ = 'M<sub>n</sub>';

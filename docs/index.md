@@ -10,9 +10,9 @@ actions:
 
 features:
   - title: Steel
-    details: Steel calcs
-  - title: Concrete
-    details: Concrete calcs
+    details: Steel calculator
+  # - title: Concrete
+  #   details: Concrete calculator
 
 footer: MIT Licensed | Copyright © 2024 Yi Chen
 ---

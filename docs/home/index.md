@@ -3,8 +3,6 @@
 
 # Overview
 
-## Calculator
-
 [Steel](../steel/)
 
-[Concrete](../concrete/)
+<!-- [Concrete](../concrete/) -->

@@ -33,7 +33,7 @@ export default defineUserConfig({
         text: 'Page',
         children: [
           '/steel/',
-          '/concrete/'
+          // '/concrete/'
         ],
       },
     ],
