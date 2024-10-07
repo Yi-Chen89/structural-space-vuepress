@@ -124,20 +124,7 @@
     <div v-if="slenderClassDisplay">
       <h2>Element Slenderness Class</h2>
 
-      <div>
-        <p>Slenderness Ratio</p>
-
-        <table>
-          <tbody>
-            <tr v-for="(item, key) in selectedShapeSlenderRatioRenderData" :key="key">
-              <td v-html="item.notation"  :title="item.description"></td>
-              <td>{{ item.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div>
+      <!-- <div>
         <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
 
         <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
@@ -145,20 +132,32 @@
             {{ key.charAt(0).toUpperCase() + key.slice(1) }} Class: {{ item }}
           </p>
         </div>
-        
-        <!-- {{ selectedShapeTypeAxialSlenderLimitRatio }} -->
-      </div>
+      </div> -->
 
       <div>
         <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
 
         <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
-          <p>
-            {{ key.charAt(0).toUpperCase() + key.slice(1) }} Class: {{ item }}
-          </p>
+          <div v-if="item.isApplicable">
+            <p>
+              <strong>{{ item.notation }}</strong>
+            </p>
+            <div style="margin-left: 1em;">
+              <p>
+                <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
+              </p>
+              <p>
+                <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
+              </p>
+              <p>
+                <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
+              </p>
+              <p>
+                <strong>{{ item.notation }} is {{ item.class }}</strong>
+              </p>
+            </div>
+          </div>
         </div>
-        
-        <!-- {{ selectedShapeTypeFlexureSlenderLimitRatio }} -->
       </div>
     </div>
 
@@ -170,7 +169,7 @@
       <h2>Compressive Strength</h2>
     </div>
 
-    <div v-if="flexureCalcDisplay">
+    <!-- <div v-if="flexureCalcDisplay">
       <h2>Flexural Strength</h2>
       
       <div v-if="true">
@@ -203,7 +202,7 @@
       <div v-if="false">
         <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
       </div>
-    </div>
+    </div> -->
 
     <div v-if="shearCalcDisplay">
       <h2>Shear Strength</h2>
@@ -238,9 +237,9 @@
   import { astmSpecPropFetcher } from './utils/data-fetchers.js';
   import { astmSpecPropRenderDataFetcher } from './utils/data-fetchers.js';
 
-  import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
-  import { axialSlenderClassifier } from './utils/slender-calculators.js';
-  import { flexureSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
+  // import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
+  // import { axialSlenderClassifier } from './utils/slender-calculators.js';
+  // import { flexureSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
@@ -452,20 +451,21 @@
         return shapeSlenderRatioFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
-      selectedShapeTypeAxialSlenderLimitRatio() {
-        return axialSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
-      },
+      // selectedShapeTypeAxialSlenderLimitRatio() {
+      //   return axialSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
+      // },
 
-      selectedShapeAxialSlenderClass() {
-        return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio);
-      },
+      // selectedShapeAxialSlenderClass() {
+      //   return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio);
+      // },
 
-      selectedShapeTypeFlexureSlenderLimitRatio() {
-        return flexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
-      },
+      // selectedShapeTypeFlexureSlenderLimitRatio() {
+      //   return flexureSlenderLimitRatioCalculator(this.selectedShapeType, this.selectedASTMSpecProp);
+      // },
 
       selectedShapeFlexureSlenderClass() {
-        return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio);
+        // return flexureSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeFlexureSlenderLimitRatio);
+        return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
       },
 
       validatedUnbracedLength() {
