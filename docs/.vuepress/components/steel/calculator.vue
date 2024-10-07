@@ -124,15 +124,28 @@
     <div v-if="slenderClassDisplay">
       <h2>Element Slenderness Class</h2>
 
-      <!-- <div>
+      <div>
         <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
 
         <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
-          <p>
-            {{ key.charAt(0).toUpperCase() + key.slice(1) }} Class: {{ item }}
-          </p>
+          <div v-if="item.isApplicable">
+            <p>
+              <strong>{{ item.notation }}</strong>
+            </p>
+            <div style="margin-left: 1em;">
+              <p>
+                <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
+              </p>
+              <p>
+                <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
+              </p>
+              <p>
+                <strong>{{ item.notation }} is {{ item.class }}</strong>
+              </p>
+            </div>
+          </div>
         </div>
-      </div> -->
+      </div>
 
       <div>
         <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
@@ -237,8 +250,7 @@
   import { astmSpecPropFetcher } from './utils/data-fetchers.js';
   import { astmSpecPropRenderDataFetcher } from './utils/data-fetchers.js';
 
-  // import { axialSlenderLimitRatioCalculator } from './utils/slender-calculators.js';
-  // import { axialSlenderClassifier } from './utils/slender-calculators.js';
+  import { axialSlenderClassifier } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
@@ -450,9 +462,9 @@
         return shapeSlenderRatioFilterer(this.selectedShapeData, this.selectedShapeType);
       },
 
-      // selectedShapeAxialSlenderClass() {
-      //   return axialSlenderClassifier(this.selectedShapeType, this.selectedShapeSlenderRatio, this.selectedShapeTypeAxialSlenderLimitRatio);
-      // },
+      selectedShapeAxialSlenderClass() {
+        return axialSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
+      },
 
       selectedShapeFlexureSlenderClass() {
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
