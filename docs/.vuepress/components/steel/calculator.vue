@@ -110,15 +110,13 @@
 
       <div style="font-size: 1.1em;"><strong>{{ selectedGradeDesig }}</strong></div>
 
-      <table>
-        <tbody>
-          <tr v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
-            <td v-html="item.notation"  :title="item.description"></td>
-            <td>{{ item.value }}</td>
-            <td v-html="item.unit"></td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
+        <p>
+          <span v-html="item.notation" :title="item.description"></span>
+          <span> = {{ item.value }}&nbsp;</span>
+          <span v-html="item.unit"></span>
+        </p>
+      </div>
     </div>
 
     <div v-if="slenderClassDisplay">
