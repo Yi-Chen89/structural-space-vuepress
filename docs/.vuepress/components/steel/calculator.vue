@@ -63,45 +63,45 @@
       <div style="font-size: 1.1em;"><strong>{{ selectedShape }}</strong></div>
 
       <div>
-        <p>Weight</p>
+        <p><strong>Weight</strong></p>
 
-        <table>
-          <tbody>
-            <tr v-for="(item, key) in selectedShapeWeightRenderData" :key="key">
-              <td v-html="item.notation"  :title="item.description"></td>
-              <td>{{ item.value }}</td>
-              <td v-html="item.unit"></td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="margin-left: 1em;">
+          <div v-for="(item, key) in selectedShapeWeightRenderData" :key="key">
+            <p>
+              <span v-html="item.notation" :title="item.description"></span>
+              <span> = {{ item.value }}&nbsp;</span>
+              <span v-html="item.unit"></span>
+            </p>
+          </div>
+        </div>
       </div>
 
       <div>
-        <p>Dimension</p>
+        <p><strong>Dimension</strong></p>
 
-        <table>
-          <tbody>
-            <tr v-for="(item, key) in selectedShapeDimensionRenderData" :key="key">
-              <td v-html="item.notation"  :title="item.description"></td>
-              <td>{{ item.value }}</td>
-              <td v-html="item.unit"></td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="margin-left: 1em;">
+          <div v-for="(item, key) in selectedShapeDimensionRenderData" :key="key">
+            <p>
+              <span v-html="item.notation" :title="item.description"></span>
+              <span> = {{ item.value }}&nbsp;</span>
+              <span v-html="item.unit"></span>
+            </p>
+          </div>
+        </div>
       </div>
 
       <div>
-        <p>Property</p>
+        <p><strong>Property</strong></p>
 
-        <table>
-          <tbody>
-            <tr v-for="(item, key) in selectedShapePropertyRenderData" :key="key">
-              <td v-html="item.notation"  :title="item.description"></td>
-              <td>{{ item.value }}</td>
-              <td v-html="item.unit"></td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="margin-left: 1em;">
+          <div v-for="(item, key) in selectedShapePropertyRenderData" :key="key">
+            <p>
+              <span v-html="item.notation" :title="item.description"></span>
+              <span> = {{ item.value }}&nbsp;</span>
+              <span v-html="item.unit"></span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -110,12 +110,14 @@
 
       <div style="font-size: 1.1em;"><strong>{{ selectedGradeDesig }}</strong></div>
 
-      <div v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
-        <p>
-          <span v-html="item.notation" :title="item.description"></span>
-          <span> = {{ item.value }}&nbsp;</span>
-          <span v-html="item.unit"></span>
-        </p>
+      <div style="margin-left: 1em;">
+        <div v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
+          <p>
+            <span v-html="item.notation" :title="item.description"></span>
+            <span> = {{ item.value }}&nbsp;</span>
+            <span v-html="item.unit"></span>
+          </p>
+        </div>
       </div>
     </div>
 
