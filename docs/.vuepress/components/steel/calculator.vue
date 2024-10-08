@@ -125,6 +125,21 @@
       <h2>Element Slenderness Class</h2>
 
       <div>
+        <p style="font-size: 1.2em;"><strong>Element Width-to-Thickness Ratio</strong></p>
+
+        <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
+          <div v-if="item.isApplicable">
+            <div style="margin-left: 1em;">
+              <p>
+                <span>{{ item.notation }}:&emsp;</span>
+                <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
         <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
 
         <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
@@ -134,9 +149,7 @@
             </p>
             <div style="margin-left: 1em;">
               <p>
-                <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
-              </p>
-              <p>
+                <span>Nonslender Limiting Ratio:&emsp;</span>
                 <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
               </p>
               <p>
@@ -157,12 +170,11 @@
             </p>
             <div style="margin-left: 1em;">
               <p>
-                <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
-              </p>
-              <p>
+                <span>Compact Limiting Ratio:&emsp;</span>
                 <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
               </p>
               <p>
+                <span>Noncompact Limiting Ratio:&emsp;</span>
                 <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
               </p>
               <p>
@@ -173,6 +185,7 @@
         </div>
       </div>
     </div>
+  
 
     <div v-if="tensionCalcDisplay">
       <h2>Tensile Strength</h2>
