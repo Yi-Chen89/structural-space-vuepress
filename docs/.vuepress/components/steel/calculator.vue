@@ -111,17 +111,22 @@
     </div>
 
     <div v-if="gradeDataDisplay">
-      <h2>Steel Property</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Steel Property</span>
+        <span style="font-size: 0.6em; font-weight: normal; cursor: pointer;" @click="showGradeDataContent()">{{ gradeDataContentDisplay }}</span>
+      </h2>
 
-      <div style="font-size: 1.1em;"><strong>{{ selectedGradeDesig }}</strong></div>
+      <div v-if="gradeDataContentDisplay === 'hide'">
+        <div style="font-size: 1.1em;"><strong>{{ selectedGradeDesig }}</strong></div>
 
-      <div style="margin-left: 1em;">
-        <div v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
-          <p>
-            <span v-html="item.notation" :title="item.description"></span>
-            <span> = {{ item.value }}&nbsp;</span>
-            <span v-html="item.unit"></span>
-          </p>
+        <div style="margin-left: 1em;">
+          <div v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
+            <p>
+              <span v-html="item.notation" :title="item.description"></span>
+              <span> = {{ item.value }}&nbsp;</span>
+              <span v-html="item.unit"></span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -305,6 +310,7 @@
 
         // content display variable
         shapeDataContentDisplay: 'hide',
+        gradeDataContentDisplay: 'hide',
 
         // error variable
         unbracedLengthInputError: '',
@@ -546,8 +552,17 @@
         }
       },
 
+      showGradeDataContent() {
+        if (this.gradeDataContentDisplay === 'hide') {
+          this.gradeDataContentDisplay = 'show';
+        } else {
+          this.gradeDataContentDisplay = 'hide';
+        }
+      },
+
       resetContentDisplay() {
         this.shapeDataContentDisplay = 'hide';
+        this.gradeDataContentDisplay = 'hide';
       },
     },
   };
