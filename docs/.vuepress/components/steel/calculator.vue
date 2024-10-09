@@ -45,7 +45,7 @@
         <p v-if="unbracedLengthInputDisplay" class="input-container">
           <label for="unbracedLength">Enter Unbraced Length (L<sub>b</sub>):&emsp;</label>
           <input type="number" id="unbracedLength" v-model="enteredUnbracedLength" class="input-number-short" @input="unbracedLengthInputValidator">
-          <span>&emsp;ft</span>
+          <span>&nbsp;ft</span>
           <div v-if="unbracedLengthInputError" class="error-message">{{ unbracedLengthInputError }}</div>
         </p>
 
@@ -58,48 +58,53 @@
     </div>
 
     <div v-if="shapeDataDisplay">
-      <h2>Shape Dimension and Property</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Shape Dimension and Property</span>
+        <span style="font-size: 0.6em; font-weight: normal; cursor: pointer;" @click="showShapeDataContent()">{{ shapeDataContentDisplay }}</span>
+      </h2>
 
-      <div style="font-size: 1.1em;"><strong>{{ selectedShape }}</strong></div>
+      <div v-if="shapeDataContentDisplay === 'hide'">
+        <div style="font-size: 1.1em;"><strong>{{ selectedShape }}</strong></div>
 
-      <div>
-        <p><strong>Weight</strong></p>
+        <div>
+          <p><strong>Weight</strong></p>
 
-        <div style="margin-left: 1em;">
-          <div v-for="(item, key) in selectedShapeWeightRenderData" :key="key">
-            <p>
-              <span v-html="item.notation" :title="item.description"></span>
-              <span> = {{ item.value }}&nbsp;</span>
-              <span v-html="item.unit"></span>
-            </p>
+          <div style="margin-left: 1em;">
+            <div v-for="(item, key) in selectedShapeWeightRenderData" :key="key">
+              <p>
+                <span v-html="item.notation" :title="item.description"></span>
+                <span> = {{ item.value }}&nbsp;</span>
+                <span v-html="item.unit"></span>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <p><strong>Dimension</strong></p>
+        <div>
+          <p><strong>Dimension</strong></p>
 
-        <div style="margin-left: 1em;">
-          <div v-for="(item, key) in selectedShapeDimensionRenderData" :key="key">
-            <p>
-              <span v-html="item.notation" :title="item.description"></span>
-              <span> = {{ item.value }}&nbsp;</span>
-              <span v-html="item.unit"></span>
-            </p>
+          <div style="margin-left: 1em;">
+            <div v-for="(item, key) in selectedShapeDimensionRenderData" :key="key">
+              <p>
+                <span v-html="item.notation" :title="item.description"></span>
+                <span> = {{ item.value }}&nbsp;</span>
+                <span v-html="item.unit"></span>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <p><strong>Property</strong></p>
+        <div>
+          <p><strong>Property</strong></p>
 
-        <div style="margin-left: 1em;">
-          <div v-for="(item, key) in selectedShapePropertyRenderData" :key="key">
-            <p>
-              <span v-html="item.notation" :title="item.description"></span>
-              <span> = {{ item.value }}&nbsp;</span>
-              <span v-html="item.unit"></span>
-            </p>
+          <div style="margin-left: 1em;">
+            <div v-for="(item, key) in selectedShapePropertyRenderData" :key="key">
+              <p>
+                <span v-html="item.notation" :title="item.description"></span>
+                <span> = {{ item.value }}&nbsp;</span>
+                <span v-html="item.unit"></span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -295,9 +300,11 @@
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
 
-
         // display variable
         shapeTypeSelectionDisplay: true,
+
+        // content display variable
+        shapeDataContentDisplay: 'hide',
 
         // error variable
         unbracedLengthInputError: '',
@@ -513,6 +520,7 @@
       selectedDescShapeType(newDescShapeType) {
         if (!this.shapeList.includes(this.selectedShape)) {
           this.selectedShape = null;
+          this.resetContentDisplay();
         }
       },
 
@@ -528,6 +536,18 @@
 
       ltbModFactorInputValidator() {
         this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
+      },
+
+      showShapeDataContent() {
+        if (this.shapeDataContentDisplay === 'hide') {
+          this.shapeDataContentDisplay = 'show';
+        } else {
+          this.shapeDataContentDisplay = 'hide';
+        }
+      },
+
+      resetContentDisplay() {
+        this.shapeDataContentDisplay = 'hide';
       },
     },
   };
