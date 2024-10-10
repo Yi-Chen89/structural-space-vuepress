@@ -60,10 +60,14 @@
     <div v-if="shapeDataDisplay">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
         <span>Shape Dimension and Property</span>
-        <span style="font-size: 0.6em; font-weight: normal; cursor: pointer;" @click="showShapeDataContent()">{{ shapeDataContentDisplay }}</span>
+        <span
+          v-html="shapeDataContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showShapeDataContent()">
+        </span>
       </h2>
 
-      <div v-if="shapeDataContentDisplay === 'hide'">
+      <div v-if="shapeDataContentDisplay === '-'">
         <div style="font-size: 1.1em;"><strong>{{ selectedShape }}</strong></div>
 
         <div>
@@ -113,10 +117,14 @@
     <div v-if="gradeDataDisplay">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
         <span>Steel Property</span>
-        <span style="font-size: 0.6em; font-weight: normal; cursor: pointer;" @click="showGradeDataContent()">{{ gradeDataContentDisplay }}</span>
+        <span
+          v-html="gradeDataContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showGradeDataContent()">
+        </span>
       </h2>
 
-      <div v-if="gradeDataContentDisplay === 'hide'">
+      <div v-if="gradeDataContentDisplay === '-'">
         <div style="font-size: 1.1em;"><strong>{{ selectedGradeDesig }}</strong></div>
 
         <div style="margin-left: 1em;">
@@ -134,7 +142,11 @@
     <div v-if="slenderClassDisplay">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
         <span>Element Slenderness Class</span>
-        <span v-html="slenderClassContentDisplay === '-' ? '&minus;' : '&plus;'" style="font-size: 0.9em; font-weight: normal; cursor: pointer;" @click="showSlenderClassContent()"></span>
+        <span
+          v-html="slenderClassContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showSlenderClassContent()">
+        </span>
       </h2>
       
       <div v-if="slenderClassContentDisplay === '-'">
@@ -344,8 +356,8 @@
         shapeTypeSelectionDisplay: true,
 
         // content display variable
-        shapeDataContentDisplay: 'hide',
-        gradeDataContentDisplay: 'hide',
+        shapeDataContentDisplay: '-',
+        gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
 
         // error variable
@@ -581,19 +593,11 @@
       },
 
       showShapeDataContent() {
-        if (this.shapeDataContentDisplay === 'hide') {
-          this.shapeDataContentDisplay = 'show';
-        } else {
-          this.shapeDataContentDisplay = 'hide';
-        }
+        this.shapeDataContentDisplay = this.shapeDataContentDisplay === '-' ? '+' : '-';
       },
 
       showGradeDataContent() {
-        if (this.gradeDataContentDisplay === 'hide') {
-          this.gradeDataContentDisplay = 'show';
-        } else {
-          this.gradeDataContentDisplay = 'hide';
-        }
+        this.gradeDataContentDisplay = this.gradeDataContentDisplay === '-' ? '+' : '-';
       },
 
       showSlenderClassContent() {
@@ -601,8 +605,8 @@
       },
 
       resetContentDisplay() {
-        this.shapeDataContentDisplay = 'hide';
-        this.gradeDataContentDisplay = 'hide';
+        this.shapeDataContentDisplay = '-';
+        this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
       },
     },
