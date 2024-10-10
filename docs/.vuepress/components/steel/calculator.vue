@@ -130,66 +130,101 @@
         </div>
       </div>
     </div>
-
+    
     <div v-if="slenderClassDisplay">
-      <h2>Element Slenderness Class</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Element Slenderness Class</span>
+        <span v-html="slenderClassContentDisplay === '-' ? '&minus;' : '&plus;'" style="font-size: 0.9em; font-weight: normal; cursor: pointer;" @click="showSlenderClassContent()"></span>
+      </h2>
+      
+      <div v-if="slenderClassContentDisplay === '-'">
+        <div>
+          <p style="font-size: 1.2em;"><strong>Element Width-to-Thickness Ratio</strong></p>
 
-      <div>
-        <p style="font-size: 1.2em;"><strong>Element Width-to-Thickness Ratio</strong></p>
+          <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
+              <div style="margin-left: 1em;">
+                <p>
+                  <span>{{ item.notation }}:&emsp;</span>
+                  <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
-          <div v-if="item.isApplicable">
-            <div style="margin-left: 1em;">
+        <div>
+          <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
+
+          <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
               <p>
-                <span>{{ item.notation }}:&emsp;</span>
-                <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
+                <strong>{{ item.notation }}</strong>
               </p>
+              <div style="margin-left: 1em;">
+                <p>
+                  <span>Nonslender Limiting Ratio:&emsp;</span>
+                  <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
+                </p>
+                <p>
+                  <strong>{{ item.notation }} is {{ item.class }}</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
+
+          <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
+              <p>
+                <strong>{{ item.notation }}</strong>
+              </p>
+              <div style="margin-left: 1em;">
+                <p>
+                  <span>Compact Limiting Ratio:&emsp;</span>
+                  <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
+                </p>
+                <p>
+                  <span>Noncompact Limiting Ratio:&emsp;</span>
+                  <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
+                </p>
+                <p>
+                  <strong>{{ item.notation }} is {{ item.class }}</strong>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
+      <div v-else>
+        <div>
+          <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
 
-        <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
-          <div v-if="item.isApplicable">
-            <p>
-              <strong>{{ item.notation }}</strong>
-            </p>
-            <div style="margin-left: 1em;">
-              <p>
-                <span>Nonslender Limiting Ratio:&emsp;</span>
-                <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
-              </p>
-              <p>
-                <strong>{{ item.notation }} is {{ item.class }}</strong>
-              </p>
+          <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
+              <div style="margin-left: 1em;">
+                <p>
+                  {{ item.notation }} is {{ item.class }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
+        <div>
+          <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
 
-        <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
-          <div v-if="item.isApplicable">
-            <p>
-              <strong>{{ item.notation }}</strong>
-            </p>
-            <div style="margin-left: 1em;">
-              <p>
-                <span>Compact Limiting Ratio:&emsp;</span>
-                <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
-              </p>
-              <p>
-                <span>Noncompact Limiting Ratio:&emsp;</span>
-                <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
-              </p>
-              <p>
-                <strong>{{ item.notation }} is {{ item.class }}</strong>
-              </p>
+          <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
+              <div style="margin-left: 1em;">
+                <p>
+                  {{ item.notation }} is {{ item.class }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -311,6 +346,7 @@
         // content display variable
         shapeDataContentDisplay: 'hide',
         gradeDataContentDisplay: 'hide',
+        slenderClassContentDisplay: '-',
 
         // error variable
         unbracedLengthInputError: '',
@@ -560,9 +596,14 @@
         }
       },
 
+      showSlenderClassContent() {
+        this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
+      },
+
       resetContentDisplay() {
         this.shapeDataContentDisplay = 'hide';
         this.gradeDataContentDisplay = 'hide';
+        this.slenderClassContentDisplay = '-';
       },
     },
   };
