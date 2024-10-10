@@ -290,8 +290,31 @@
           </div>
         </div>
       
-        <div v-if="false">
+        <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
+          <div>
+            <div v-for="(item, key) in selectedShapeMinorFlexureCapacityRenderData" :key="key">
+              <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+              <div style="margin-left: 1em;">
+                <div v-html="item.html"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p><strong>Governing Limit State</strong></p>
+            <div v-for="data in selectedShapeMinorFlexureCriticalCapacityRenderData">
+              <div style="margin-left: 1em;">
+                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p>
+                  M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
+                </p>
+                <p><strong>
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                </strong></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -314,8 +337,22 @@
           </div>
         </div>
       
-        <div v-if="false">
+        <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
+
+          <div>
+            <div v-for="data in selectedShapeMinorFlexureCriticalCapacityRenderData">
+              <div style="margin-left: 1em;">
+                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p>
+                  M<sub>n</sub> = {{ (data.value / 12).toFixed(1) }} k-ft
+                </p>
+                <p><strong>
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                </strong></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -357,6 +394,7 @@
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
+  import { minorFlexureCalculator } from './utils/flexure-calculators.js';
   import { criticalResultProcessor } from './utils/flexure-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
@@ -477,6 +515,13 @@
         return criticalResultRenderDataConstructor(this.selectedShapeMajorFlexureCriticalCapacity, 'flexure');
       },
 
+      selectedShapeMinorFlexureCapacityRenderData() {
+        return resultRenderDataConstructor(this.selectedShapeMinorFlexureCapacity, 'flexure');
+      },
+
+      selectedShapeMinorFlexureCriticalCapacityRenderData() {
+        return criticalResultRenderDataConstructor(this.selectedShapeMinorFlexureCriticalCapacity, 'flexure');
+      },
 
       // valid variable
 
@@ -600,6 +645,14 @@
 
       selectedShapeMajorFlexureCriticalCapacity() {
         return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity);
+      },
+
+      selectedShapeMinorFlexureCapacity() {
+        return minorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
+      },
+
+      selectedShapeMinorFlexureCriticalCapacity() {
+        return criticalResultProcessor(this.selectedShapeMinorFlexureCapacity);
       },
 
     },

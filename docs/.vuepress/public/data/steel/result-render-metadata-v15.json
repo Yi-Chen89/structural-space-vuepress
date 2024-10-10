@@ -20,6 +20,18 @@
       "notation": "M<sub>n</sub>",
       "unit": "k-in"
     },
+    "Mn_6_1": {
+      "section": "F6.1",
+      "title": "Yielding",
+      "notation": "M<sub>p</sub>",
+      "unit": "k-in"
+    },
+    "Mn_6_2": {
+      "section": "F6.2",
+      "title": "Flange Local Buckling",
+      "notation": "M<sub>n</sub>",
+      "unit": "k-in"
+    },
     "Mn_7_1": {
       "section": "F7.1",
       "title": "Yielding",

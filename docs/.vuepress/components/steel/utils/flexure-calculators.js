@@ -183,6 +183,52 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
   }
 }
 
+export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lb, Cb) {
+  if (shapeData && shapeType && astmSpecProp && slenderClass && Cb) {
+    const { Fy, E } = astmSpecProp;
+    const {
+      flange: {
+        ratio: { value: lambdaf },
+        limit: {
+          compact: { value: lambdapf },
+          noncompact: { value: lambdarf },
+        },
+        class: flange,
+      },
+      web: {
+        ratio: { value: lambdaw },
+        limit: {
+          compact: { value: lambdapw },
+          noncompact: { value: lambdarw },
+        },
+        class: web,
+      }
+    } = slenderClass;
+
+    let result = {
+      'Mn_6_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_6_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+    };
+
+    if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+      // F6
+      // limit state: Y, FLB
+
+      const { Zy, Sy } = shapeData;
+
+      // F6.1 Yielding
+      result['Mn_6_1']['isApplicable'] = true;
+      const [Mp, html_6_1] = F6_1Yielding(Fy, Zy, Sy);
+      result['Mn_6_1']['values'][0] = Mp;
+      result['Mn_6_1']['html'] = html_6_1;
+    }
+    return result;
+
+  } else {
+    return null;
+  }
+}
+
 export function criticalResultProcessor(result) {
   if (result) {
     const resultAsList = Object.entries(result);
@@ -335,6 +381,18 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
 // F5 Doubly Symmetric and Singly Symmetric I-Shaped Members with Slender Webs Bent about Their Major Axis
 
 // F6 I-Shaped Members and Channels Bent about Their Minor Axis
+
+// F6.1 Yielding
+function F6_1Yielding(Fy, Zy, Sy) {
+  let Mp = Fy * Zy;
+  let html = `<p>${Mp_} = ${Fy_} ${Zy_} = ${Mp.toFixed(2)} k-in &le; 1.6 ${Fy_} ${Sy_}</p>`;
+  Mp = Math.min(Mp, 1.6 * Fy * Sy);
+  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
+  return [Mp, html];
+}
+
+
+
 
 // F7 Square and Rectangular HSS and Box Sections
 
