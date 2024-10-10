@@ -253,37 +253,70 @@
     </div>
 
     <div v-if="flexureCalcDisplay">
-      <h2>Flexural Strength</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Flexural Strength</span>
+        <span
+          v-html="flexureCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showFlexureCalcContent()">
+        </span>
+      </h2>
       
-      <div v-if="true">
-        <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
-        <div>
-          <div v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
-            <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-            <div style="margin-left: 1em;">
-              <div v-html="item.html"></div>
+      <div v-if="flexureCalcContentDisplay === '-'">
+        <div v-if="true">
+          <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
+          <div>
+            <div v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
+              <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+              <div style="margin-left: 1em;">
+                <div v-html="item.html"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p><strong>Governing Limit State</strong></p>
+            <div v-for="data in selectedShapeMajorFlexureCriticalCapacityRenderData">
+              <div style="margin-left: 1em;">
+                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p>
+                  M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
+                </p>
+                <p><strong>
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                </strong></p>
+              </div>
             </div>
           </div>
         </div>
-
-        <div>
-          <p><strong>Governing Limit State</strong></p>
-          <div v-for="data in selectedShapeMajorFlexureCriticalCapacityRenderData">
-            <div style="margin-left: 1em;">
-              <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
-              <p>
-                M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
-              </p>
-              <p><strong>
-                &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
-              </strong></p>
-            </div>
-          </div>
+      
+        <div v-if="false">
+          <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
         </div>
       </div>
+
+      <div v-else>
+        <div v-if="true">
+          <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
+
+          <div>
+            <div v-for="data in selectedShapeMajorFlexureCriticalCapacityRenderData">
+              <div style="margin-left: 1em;">
+                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p>
+                  M<sub>n</sub> = {{ (data.value / 12).toFixed(1) }} k-ft
+                </p>
+                <p><strong>
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                </strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
       
-      <div v-if="false">
-        <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
+        <div v-if="false">
+          <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
+        </div>
       </div>
     </div>
 
@@ -359,6 +392,7 @@
         shapeDataContentDisplay: '-',
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
+        flexureCalcContentDisplay: '-',
 
         // error variable
         unbracedLengthInputError: '',
@@ -604,10 +638,15 @@
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
       },
 
+      showFlexureCalcContent() {
+        this.flexureCalcContentDisplay = this.flexureCalcContentDisplay === '-' ? '+' : '-';
+      },
+
       resetContentDisplay() {
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
+        this.flexureCalcContentDisplay = '-';
       },
     },
   };
