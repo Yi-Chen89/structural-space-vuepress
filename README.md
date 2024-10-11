@@ -66,7 +66,7 @@ Symbol
 - F5.4 Tension Flange Yielding
 
 #### F6 I-Shaped Members and Channels Bent about Their Minor Axis
-- F6.1 Yielding
+- ✅✅ F6.1 Yielding
 - F6.2 Flange Local Buckling
 
 #### F7 Square and Rectangular HSS and Box Sections
