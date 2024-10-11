@@ -121,7 +121,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
 
         // F8.1 Yielding
         result['Mn_8_1']['isApplicable'] = true;
-        const [Mp, html_8_1] = F8_1Yielding(Fy, Zx);
+        const [Mp, html_8_1] = F8_1Yielding('x', Fy, Zx);
         result['Mn_8_1']['values'][0] = Mp;
         result['Mn_8_1']['html'] = html_8_1;
 
@@ -208,6 +208,8 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
     let result = {
       'Mn_6_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_6_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_8_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_8_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
@@ -227,6 +229,32 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       const [Mn_6_2, html_6_2] = F6_2FlangeLocalBuckling(Mp, Fy, E, Sy, lambdaf, lambdapf, lambdarf, flange);
       result['Mn_6_2']['values'][0] = Mn_6_2;
       result['Mn_6_2']['html'] = html_6_2;
+
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
+      // F7
+      // limit state: Y, FLB, WLB, LTB
+
+    } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
+      // F8
+      // limit state: Y, LB
+      // F8 only applies to round HSS with D/t < 0.45E/Fy
+      // same as major axis
+
+      if (lambdaf < 0.45 * E * Fy) {
+        const { Zy, Sy } = shapeData;
+
+        // F8.1 Yielding
+        result['Mn_8_1']['isApplicable'] = true;
+        const [Mp, html_8_1] = F8_1Yielding('y', Fy, Zy);
+        result['Mn_8_1']['values'][0] = Mp;
+        result['Mn_8_1']['html'] = html_8_1;
+
+        // F8.2 Local Buckling
+        // result['Mn_8_2']['isApplicable'] = true;
+        // const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sy, lambdaf, flange);
+        // result['Mn_8_2']['values'][0] = Mn_8_2;
+        // result['Mn_8_2']['html'] = html_8_2;
+      }
     }
     return result;
 
@@ -634,9 +662,11 @@ function F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, Ag, Sx, ry, J, Lb, C
 // F8 Round HSS
 
 // F8.1 Yielding
-function F8_1Yielding(Fy, Zx) {
-  const Mp = Fy * Zx;
-  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</p>
+function F8_1Yielding(axis, Fy, Z) {
+  let Z_ = axis === 'x' ? Zx_ : Zy_;
+
+  const Mp = Fy * Z;
+  const html = `<p>${Mp_} = ${Fy_} ${Z_} = ${Mp.toFixed(2)} k-in</p>
                 <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
   return [Mp, html];
 }
