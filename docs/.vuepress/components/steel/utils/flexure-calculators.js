@@ -89,7 +89,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
 
       // F7.1 Yielding
       result['Mn_7_1']['isApplicable'] = true;
-      const [Mp, html_7_1] = F7_1Yielding(Fy, Zx);
+      const [Mp, html_7_1] = F7_1Yielding('x', Fy, Zx);
       result['Mn_7_1']['values'][0] = Mp;
       result['Mn_7_1']['html'] = html_7_1;
 
@@ -208,6 +208,10 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
     let result = {
       'Mn_6_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_6_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_3': {'isApplicable': false, 'values': [0, 0], 'html': null},
+      'Mn_7_4': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_8_1': {'isApplicable': false, 'values': [0, 0], 'html': null},
       'Mn_8_2': {'isApplicable': false, 'values': [0, 0], 'html': null},
     };
@@ -233,6 +237,32 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // F7
       // limit state: Y, FLB, WLB, LTB
+
+      const { A, Ht, h, b, tdes, Ix, Zy, Sx, ry, J } = shapeData;
+
+      // F7.1 Yielding
+      result['Mn_7_1']['isApplicable'] = true;
+      const [Mp, html_7_1] = F7_1Yielding('y', Fy, Zy);
+      result['Mn_7_1']['values'][0] = Mp;
+      result['Mn_7_1']['html'] = html_7_1;
+
+      // F7.2 Flange Local Buckling
+      // result['Mn_7_2']['isApplicable'] = true;
+      // const [Mn_7_2, html_7_2] = F7_2FlangeLocalBuckling(Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
+      // result['Mn_7_2']['values'][0] = Mn_7_2;
+      // result['Mn_7_2']['html'] = html_7_2;
+
+      // F7.3 Web Local Buckling
+      // result['Mn_7_3']['isApplicable'] = true;
+      // const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
+      // result['Mn_7_3']['values'][0] = Mn_7_3;
+      // result['Mn_7_3']['html'] = html_7_3;
+
+      // F7.4 Lateral-Torsional Buckling
+      // result['Mn_7_4']['isApplicable'] = true;
+      // const [Mn_7_4, html_7_4] = F7_4LateralTorsionalBuckling(shapeType, Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
+      // result['Mn_7_4']['values'][0] = Mn_7_4;
+      // result['Mn_7_4']['html'] = html_7_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
       // F8
@@ -461,9 +491,11 @@ function F6_2FlangeLocalBuckling(Mp, Fy, E, Sy, lambdaf, lambdapf, lambdarf, fla
 // F7 Square and Rectangular HSS and Box Sections
 
 // F7.1 Yielding
-function F7_1Yielding(Fy, Zx) {
-  const Mp = Fy * Zx;
-  const html = `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</p>
+function F7_1Yielding(axis, Fy, Z) {
+  let Z_ = axis === 'x' ? Zx_ : Zy_;
+
+  const Mp = Fy * Z;
+  const html = `<p>${Mp_} = ${Fy_} ${Z_} = ${Mp.toFixed(2)} k-in</p>
                 <p>${Mp_} = ${Mp.toFixed(1)} k-in</p>`;
   return [Mp, html];
 }
