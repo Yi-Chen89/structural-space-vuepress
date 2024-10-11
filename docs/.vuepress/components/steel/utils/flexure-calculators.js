@@ -221,6 +221,12 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       const [Mp, html_6_1] = F6_1Yielding(Fy, Zy, Sy);
       result['Mn_6_1']['values'][0] = Mp;
       result['Mn_6_1']['html'] = html_6_1;
+
+      // F6.2 Flange Local Buckling
+      result['Mn_6_2']['isApplicable'] = true;
+      const [Mn_6_2, html_6_2] = F6_2FlangeLocalBuckling(Mp, Fy, E, Sy, lambdaf, lambdapf, lambdarf, flange);
+      result['Mn_6_2']['values'][0] = Mn_6_2;
+      result['Mn_6_2']['html'] = html_6_2;
     }
     return result;
 
@@ -391,8 +397,38 @@ function F6_1Yielding(Fy, Zy, Sy) {
   return [Mp, html];
 }
 
+// F6.2 Flange Local Buckling
+function F6_2FlangeLocalBuckling(Mp, Fy, E, Sy, lambdaf, lambdapf, lambdarf, flangeClass) {
+  let Mn = 0;
+  let html = '';
 
+  if (flangeClass === 'compact') {
+    html += `<p>For sections with compact flanges, flange local buckling does not apply</p>`;
+    return [Mn, html];
 
+  } else if (flangeClass === 'noncompact') {
+    Mn = Mp - (Mp - 0.7 * Fy * Sy) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
+    html += `<p>For sections with noncompact flanges</p>
+             <p>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sy_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+    return [Mn, html];
+
+  } else if (flangeClass === 'slender') {
+    html += `<p>For sections with slender flanges</p>`;
+
+    const Fcr = 0.69 * E / lambdaf**2;
+    html += `<p>Critical stress</p>
+             <p>${Fcr_} = 0.69 ${E_} / ${lambdaf_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>`;
+
+    Mn = Fcr * Sy;
+    html += `<p>${Mn_} = ${Fcr_} ${Sy_} = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
+    return [Mn, html];
+
+  } else {
+    return [Mn, html];
+  }
+}
 
 // F7 Square and Rectangular HSS and Box Sections
 
