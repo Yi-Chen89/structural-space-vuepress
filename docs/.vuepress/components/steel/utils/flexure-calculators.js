@@ -127,7 +127,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
 
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
-        const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sx, lambdaf, flange);
+        const [Mn_8_2, html_8_2] = F8_2LocalBuckling('x', Fy, E, Sx, lambdaf, flange);
         result['Mn_8_2']['values'][0] = Mn_8_2;
         result['Mn_8_2']['html'] = html_8_2;
       }
@@ -250,10 +250,10 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
         result['Mn_8_1']['html'] = html_8_1;
 
         // F8.2 Local Buckling
-        // result['Mn_8_2']['isApplicable'] = true;
-        // const [Mn_8_2, html_8_2] = F8_2LocalBuckling(Fy, E, Sy, lambdaf, flange);
-        // result['Mn_8_2']['values'][0] = Mn_8_2;
-        // result['Mn_8_2']['html'] = html_8_2;
+        result['Mn_8_2']['isApplicable'] = true;
+        const [Mn_8_2, html_8_2] = F8_2LocalBuckling('y', Fy, E, Sy, lambdaf, flange);
+        result['Mn_8_2']['values'][0] = Mn_8_2;
+        result['Mn_8_2']['html'] = html_8_2;
       }
     }
     return result;
@@ -672,27 +672,29 @@ function F8_1Yielding(axis, Fy, Z) {
 }
 
 // F8.2 Local Buckling
-function F8_2LocalBuckling(Fy, E, Sx, lambda, wallClass) {
+function F8_2LocalBuckling(axis, Fy, E, S, lambda, wallClass) {
   let Mn = 0;
   let html = '';
+
+  let S_ = axis === 'x' ? Sx_ : Sy_;
 
   if (wallClass === 'compact') {
     html += `<p>For sections with compact walls, local buckling does not apply</p>`;
     return [Mn, html];
 
   } else if (wallClass === 'noncompact') {
-    Mn = (0.021 * E / lambda + Fy) * Sx;
+    Mn = (0.021 * E / lambda + Fy) * S;
     html += `<p>For sections with noncompact walls</p>
-             <p>${Mn_} = (0.021 ${E_} / (${OD_} / ${tdes_}) + ${Fy_}) ${Sx_} = ${Mn.toFixed(2)} k-in</p>
+             <p>${Mn_} = (0.021 ${E_} / ${lambda_} + ${Fy_}) ${S_} = ${Mn.toFixed(2)} k-in</p>
              <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
     return [Mn, html];
 
   } else if (wallClass === 'slender') {
     const Fcr = 0.33 * E / lambda;
     html += `<p>For sections with slender walls</p>
-             <p>${Fcr_} = 0.33 ${E_} / (${OD_} / ${tdes_}) = ${Fcr.toFixed(2)} ksi</p>`;
-    Mn = Fcr * Sx;
-    html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in</p>
+             <p>${Fcr_} = 0.33 ${E_} / ${lambda_} = ${Fcr.toFixed(2)} ksi</p>`;
+    Mn = Fcr * S;
+    html += `<p>${Mn_} = ${Fcr_} ${S_} = ${Mn.toFixed(2)} k-in</p>
              <p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
     return [Mn, html];
 
@@ -1079,6 +1081,7 @@ const Lp_ = 'L<sub>p</sub>';
 const Lr_ = 'L<sub>r</sub>';
 const Cb_ = 'C<sub>b</sub>';
 const Fcr_ = 'F<sub>cr</sub>';
+const lambda_ = '&lambda;';
 const lambdaf_ = '&lambda;<sub>f</sub>';
 const lambdapf_ = '&lambda;<sub>pf</sub>';
 const lambdarf_ = '&lambda;<sub>rf</sub>';
