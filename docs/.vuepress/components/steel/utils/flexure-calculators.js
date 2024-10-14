@@ -101,7 +101,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
 
       // F7.3 Web Local Buckling
       result['Mn_7_3']['isApplicable'] = true;
-      const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
+      const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling('x', Mp, Fy, E, h, b, tdes, tdes, Sx, web);
       result['Mn_7_3']['values'][0] = Mn_7_3;
       result['Mn_7_3']['html'] = html_7_3;
 
@@ -183,8 +183,8 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
   }
 }
 
-export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lb, Cb) {
-  if (shapeData && shapeType && astmSpecProp && slenderClass && Cb) {
+export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slenderClass) {
+  if (shapeData && shapeType && astmSpecProp && slenderClass) {
     const { Fy, E } = astmSpecProp;
     const {
       flange: {
@@ -238,7 +238,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7
       // limit state: Y, FLB, WLB, LTB
 
-      const { A, B, h, b, tdes, Iy, Zy, Sy, ry, J } = shapeData;
+      const { B, h, b, tdes, Iy, Zy, Sy } = shapeData;
 
       // F7.1 Yielding
       result['Mn_7_1']['isApplicable'] = true;
@@ -253,10 +253,10 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       result['Mn_7_2']['html'] = html_7_2;
 
       // F7.3 Web Local Buckling
-      // result['Mn_7_3']['isApplicable'] = true;
-      // const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling(Mp, Fy, E, h, b, tdes, tdes, Sx, web);
-      // result['Mn_7_3']['values'][0] = Mn_7_3;
-      // result['Mn_7_3']['html'] = html_7_3;
+      result['Mn_7_3']['isApplicable'] = true;
+      const [Mn_7_3, html_7_3] = F7_3WebLocalBuckling('y', Mp, Fy, E, b, h, tdes, tdes, Sy, web);
+      result['Mn_7_3']['values'][0] = Mn_7_3;
+      result['Mn_7_3']['html'] = html_7_3;
 
       // F7.4 Lateral-Torsional Buckling
       result['Mn_7_4']['isApplicable'] = true;
@@ -501,17 +501,17 @@ function F7_1Yielding(axis, Fy, Z) {
 }
 
 // F7.2 Flange Local Buckling
-function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bcomp, tcomp, I, S, flangeClass) {
+function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bflange, tflange, I, S, flangeClass) {
   let Mn = 0;
   let html = '';
 
   let H_ = axis === 'x' ? Ht_ : B_;
-  let bcomp_ = axis === 'x' ? b_ : h_;
-  const tcomp_ = tdes_;
+  let bflange_ = axis === 'x' ? b_ : h_;
+  const tflange_ = tdes_;
   let I_ = axis === 'x' ? Ix_ : Iy_;
   let S_ = axis === 'x' ? Sx_ : Sy_;
-  let bcompeff_ = axis === 'x' ? be_ : he_;
-  let bcompineff_ = axis === 'x' ? `b<sub>ineff</sub>` : `h<sub>ineff</sub>`;
+  let bflangeeff_ = axis === 'x' ? be_ : he_;
+  let bflangeineff_ = axis === 'x' ? `b<sub>ineff</sub>` : `h<sub>ineff</sub>`;
   let Ie_ = axis === 'x' ? Ixe_ : Iye_;
   let Se_ = axis === 'x' ? Sxe_ : Sye_;
 
@@ -520,8 +520,8 @@ function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bcomp, tcomp, I, S, flangeC
     return [Mn, html];
 
   } else {
-    const calcTerm1 = bcomp / tcomp;
-    const calcTerm1_ = `${bcomp_} / ${tcomp_}`;
+    const calcTerm1 = bflange / tflange;
+    const calcTerm1_ = `${bflange_} / ${tflange_}`;
 
     const calcTerm2 = Math.sqrt(E / Fy);
     const calcTerm2_ = `&radic;(${E_} / ${Fy_})`;
@@ -537,26 +537,26 @@ function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bcomp, tcomp, I, S, flangeC
     } else if (flangeClass === 'slender') {
       html += `<p>For sections with slender flanges</p>
                <p>Effective width of the compression flange</p>`;
-      const bcompeff = 1.92 * tcomp * calcTerm2 * (1 - 0.38 / calcTerm1 * calcTerm2);
-      html += `<p>${bcompeff_} = 1.92 ${tcomp_} ${calcTerm2_} (1 - 0.38 / (${calcTerm1_}) ${calcTerm2_}) = ${bcompeff.toFixed(2)} in. &le; ${bcomp_}</p>`;
+      const bflangeeff = 1.92 * tflange * calcTerm2 * (1 - 0.38 / calcTerm1 * calcTerm2);
+      html += `<p>${bflangeeff_} = 1.92 ${tflange_} ${calcTerm2_} (1 - 0.38 / (${calcTerm1_}) ${calcTerm2_}) = ${bflangeeff.toFixed(2)} in. &le; ${bflange_}</p>`;
 
       let Se = 0;
-      if (bcompeff >= bcomp) {
+      if (bflangeeff >= bflange) {
         Se = S;
-        html += `<p>${bcompeff_} = ${bcomp_} = ${bcomp} in.</p>
+        html += `<p>${bflangeeff_} = ${bflange_} = ${bflange} in.</p>
                  <p>${Se_} = ${S_} = ${S} in.<sup>3</sup></p>`;
         
       } else {
-        html += `<p>${bcompeff_} = ${bcompeff.toFixed(2)} in.</p>`;
+        html += `<p>${bflangeeff_} = ${bflangeeff.toFixed(2)} in.</p>`;
         // Simple and conservative approach to calculate effective I and S
         // removing ineffective width from top and bottom flanges
-        const bcompineff = bcomp - bcompeff;
+        const bflangeineff = bflange - bflangeeff;
         html += `<p>Ineffective width of the compression flange</p>
-                 <p>${bcompineff_} = ${bcomp_} - ${bcompeff_} = ${bcompineff.toFixed(2)} in.</p>
+                 <p>${bflangeineff_} = ${bflange_} - ${bflangeeff_} = ${bflangeineff.toFixed(2)} in.</p>
                  <p>Use <span title="exact calculation is to only remove ineffective width from the compression flange">simplified approach</span> to calculate ${Se_} (remove ineffective width symmetrically from both tension and compression flanges)</p>`;
 
-        const Ie = I - 2 * (bcompineff * tcomp**3 / 12 + bcompineff * tcomp * ((H - tcomp) / 2)**2);
-        html += `<p>${Ie_} = ${I_} - 2 (${bcompineff_} ${tcomp_}<sup>3</sup> / 12 + ${bcompineff_} ${tcomp_} ((${H_} - ${tcomp_}) / 2)<sup>2</sup>) = ${Ie.toFixed(2)} in.<sup>4</sup></p>`;
+        const Ie = I - 2 * (bflangeineff * tflange**3 / 12 + bflangeineff * tflange * ((H - tflange) / 2)**2);
+        html += `<p>${Ie_} = ${I_} - 2 (${bflangeineff_} ${tflange_}<sup>3</sup> / 12 + ${bflangeineff_} ${tflange_} ((${H_} - ${tflange_}) / 2)<sup>2</sup>) = ${Ie.toFixed(2)} in.<sup>4</sup></p>`;
         Se = Ie / (H / 2);
         html += `<p>${Se_} = ${Ie_} / (${H_} / 2) = ${Se.toFixed(2)} in.<sup>3</sup></p>`;
       }
@@ -573,25 +573,31 @@ function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bcomp, tcomp, I, S, flangeC
 }
 
 // F7.3 Web Local Buckling
-function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
+function F7_3WebLocalBuckling(axis, Mp, Fy, E, bweb, bflange, tweb, tflange, S, webClass) {
   let Mn = 0;
   let html = '';
+
+  let bweb_ = axis === 'x' ? h_ : b_;
+  let bflange_ = axis === 'x' ? b_ : h_;
+  const tweb_ = tdes_;
+  const tflange_ = tdes_;
+  let S_ = axis === 'x' ? Sx_ : Sy_;
 
   if (webClass === 'compact') {
     html += `<p>For sections with compact webs, web local buckling does not apply</p>`;
     return [Mn, html];
 
   } else {
-    const calcTerm1 = h / tw;
-    const calcTerm1_ = `${h_} / ${tw_}`;
+    const calcTerm1 = bweb / tweb;
+    const calcTerm1_ = `${bweb_} / ${tweb_}`;
 
     const calcTerm2 = Math.sqrt(Fy / E);
     const calcTerm2_ = `&radic;(${Fy_} / ${E_})`;
 
     if (webClass === 'noncompact') {
-      Mn = Mp - (Mp - Fy * Sx) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
+      Mn = Mp - (Mp - Fy * S) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
       html += `<p>For sections with noncompact webs</p>
-               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${Sx_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${S_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
       Mn = Math.min(Mn, Mp);
       html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
@@ -600,11 +606,11 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
       html += `<p>For sections with slender webs</p>
                <p>Bending strength reduction factor</p>`;
 
-      const aw = 2 * h * tw / (b * tf);
-      html += `<p>${aw_} = 2${h_}${tw_} / (${b_}${tf_}) = ${aw.toFixed(2)}</p>`;
+      const aw = 2 * bweb * tweb / (bflange * tflange);
+      html += `<p>${aw_} = 2${bweb_}${tweb_} / (${bflange_}${tflange_}) = ${aw.toFixed(2)}</p>`;
 
       // bending strength reduction factor
-      let Rpg = 1 - aw / (1200 + 300 * aw) * (h / tw - 5.7 * (1/calcTerm2));
+      let Rpg = 1 - aw / (1200 + 300 * aw) * (calcTerm1 - 5.7 * (1/calcTerm2));
       html += `<p>${Rpg_} = 1 - ${aw_} / (1200 + 300${aw_}) (${calcTerm1_} - 5.7&radic;(${E_} / ${Fy_})) = ${Rpg.toFixed(2)} &le; 1.0</p>`;
 
       // Rpg less than or equal to 1.0
@@ -612,26 +618,26 @@ function F7_3WebLocalBuckling(Mp, Fy, E, h, b, tw, tf, Sx, webClass) {
       html += `<p>${Rpg_} = ${Rpg.toFixed(2)}</p>`;
 
       // (1) compression flange yielding
-      const Mn_1 = Rpg * Fy * Sx;
+      const Mn_1 = Rpg * Fy * S;
       html += `<p>Compression flange yielding</p>
-               <p>${Mn_} = ${Rpg_} ${Fy_} ${Sx_} = ${Mn_1.toFixed(2)} k-in</p>`;
+               <p>${Mn_} = ${Rpg_} ${Fy_} ${S_} = ${Mn_1.toFixed(2)} k-in</p>`;
 
       // (2) compression flange local buckling
       const kc = 4.0;
-      const Fcr = 0.9 * E * kc / (b / tf)**2;
+      const Fcr = 0.9 * E * kc / (bflange / tflange)**2;
 
-      const Mn_2 = Rpg * Fcr * Sx;
+      const Mn_2 = Rpg * Fcr * S;
       html += `<p>Compression flange local buckling</p>
                <p>${kc_} = ${kc.toFixed(1)}</p>
-               <p>${Fcr_} = 0.9 ${E_} ${kc_} / (${b_} / ${tf_})<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>
-               <p>${Mn_} = ${Rpg_} ${Fcr_} ${Sx_} = ${Mn_2.toFixed(2)} k-in</p>`;
+               <p>${Fcr_} = 0.9 ${E_} ${kc_} / (${bflange_} / ${tflange_})<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>
+               <p>${Mn_} = ${Rpg_} ${Fcr_} ${S_} = ${Mn_2.toFixed(2)} k-in</p>`;
 
       if (Mn_1 <= Mn_2) {
         Mn = Mn_1;
         html += `<p>Compression flange yielding governs</p>`;
       } else {
         Mn = Mn_2;
-        html += `<p>Compression flange yielding governs</p>`;
+        html += `<p>Compression flange local buckling governs</p>`;
       }
       html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in</p>`;
       return [Mn, html];
