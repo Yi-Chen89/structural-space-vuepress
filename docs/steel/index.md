@@ -3,4 +3,4 @@
 
 # Steel
 
-<steel-calculator/>
+<steel-calculator />

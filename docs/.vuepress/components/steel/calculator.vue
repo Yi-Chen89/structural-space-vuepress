@@ -188,7 +188,7 @@
 
         <div>
           <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
-
+          
           <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
             <div v-if="item.isApplicable">
               <p>
@@ -203,9 +203,13 @@
                   <span>Noncompact Limiting Ratio:&emsp;</span>
                   <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
                 </p>
-                <p>
-                  <strong>{{ item.notation }} is {{ item.class }}</strong>
-                </p>
+                <div v-if="selectedShapeType === 'HSS Rect.'">
+                  <p><strong>{{ item.notation }} is {{ item.class[0] }}</strong> (major axis bending)</p>
+                  <p><strong>{{ item.notation }} is {{ item.class[1] }}</strong> (minor axis bending)</p>
+                </div>
+                <div v-else>
+                  <p><strong>{{ item.notation }} is {{ item.class[0] }}</strong></p>
+                </div>
               </div>
             </div>
           </div>
@@ -229,13 +233,16 @@
 
         <div>
           <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
-
+          
           <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
             <div v-if="item.isApplicable">
               <div style="margin-left: 1em;">
-                <p>
-                  {{ item.notation }} is {{ item.class }}
-                </p>
+                <div v-if="selectedShapeType === 'HSS Rect.'">
+                  <p>{{ item.notation }} is {{ item.class[0] }} (major) and {{ item.class[1] }} (minor)</p>
+                </div>
+                <div v-else>
+                  <p>{{ item.notation }} is {{ item.class[0] }}</p>
+                </div>
               </div>
             </div>
           </div>

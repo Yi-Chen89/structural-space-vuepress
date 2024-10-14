@@ -63,14 +63,14 @@ export function flexureSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRa
         'notation': null,
         'ratio': {'notation': null, 'value': 0, 'html': null},
         'limit': {'compact': {'notation': null, 'value': 0, 'html': null}, 'noncompact': {'notation': null, 'value': 0, 'html': null}},
-        'class': null,
+        'class': [null, null],
       },
       'web': {
         'isApplicable': false,
         'notation': null,
         'ratio': {'notation': null, 'value': 0, 'html': null},
         'limit': {'compact': {'notation': null, 'value': 0, 'html': null}, 'noncompact': {'notation': null, 'value': 0, 'html': null}},
-        'class': null,
+        'class': [null, null],
       }
     };
 
@@ -100,10 +100,20 @@ export function flexureSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRa
     const lambdarw = result['web']['limit']['noncompact']['value'];
 
     if (result['flange']['isApplicable']) {
-      result['flange']['class'] = flexureElementClassifier(lambdaf, lambdapf, lambdarf);
+      result['flange']['class'][0] = flexureElementClassifier(lambdaf, lambdapf, lambdarf);
+      if (['HSS Rect.'].includes(shapeType)) {
+        result['flange']['class'][1] = flexureElementClassifier(lambdaw, lambdapf, lambdarf);
+      } else {
+        result['flange']['class'][1] = flexureElementClassifier(lambdaf, lambdapf, lambdarf);
+      }
     }
     if (result['web']['isApplicable']) {
-      result['web']['class'] = flexureElementClassifier(lambdaw, lambdapw, lambdarw);
+      result['web']['class'][0] = flexureElementClassifier(lambdaw, lambdapw, lambdarw);
+      if (['HSS Rect.'].includes(shapeType)) {
+        result['web']['class'][1] = flexureElementClassifier(lambdaf, lambdapw, lambdarw);
+      } else {
+        result['web']['class'][1] = flexureElementClassifier(lambdaw, lambdapw, lambdarw);
+      }
     }
 
     return result;

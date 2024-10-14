@@ -10,7 +10,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
           compact: { value: lambdapf },
           noncompact: { value: lambdarf },
         },
-        class: flange,
+        class: [flange],
       },
       web: {
         ratio: { value: lambdaw },
@@ -18,7 +18,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
           compact: { value: lambdapw },
           noncompact: { value: lambdarw },
         },
-        class: web,
+        class: [web],
       } 
     } = slenderClass;
 
@@ -193,7 +193,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
           compact: { value: lambdapf },
           noncompact: { value: lambdarf },
         },
-        class: flange,
+        class: [, flange],
       },
       web: {
         ratio: { value: lambdaw },
@@ -201,7 +201,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
           compact: { value: lambdapw },
           noncompact: { value: lambdarw },
         },
-        class: web,
+        class: [, web],
       }
     } = slenderClass;
 
