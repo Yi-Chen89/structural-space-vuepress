@@ -1,4 +1,4 @@
-import aiscShapeDataCategory from '../../../public/data/steel/aisc-shapes-data-category.json';
+import aiscShapeDataCategory from '/src/data/steel/aisc-shapes-data-category.json';
 
 
 export function shapeWeightFilterer(shapeData, shapeType) {

@@ -22,13 +22,13 @@
 |                   | I-Shaped                            | Channel                             | RHS                                 | CHS                                 | Tee                                 | 2L | L |
 | ----------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- | -- | - |
 | **Flexure Major** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |    |   |
-| **Flexure Minor** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |                                     | <center>:heavy_check_mark:</center> |                                     |    |   |
+| **Flexure Minor** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |                                     |    |   |
 
 ---
 
 **Software**
-  - VuePress v2.0.0-rc.7
-  - Vue v3.4.0
+  - VuePress v2.0.0-rc.18
+  - Vue v3.5.12
 :::
 
 

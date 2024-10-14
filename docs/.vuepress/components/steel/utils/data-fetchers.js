@@ -1,10 +1,10 @@
-import aiscShapeDataV15US from '../../../public/data/steel/aisc-shapes-database-v15.0_us.json';
-import aiscShapeDataV15Metric from '../../../public/data/steel/aisc-shapes-database-v15.0_metric.json';
-import aiscShapeTypeV15 from '../../../public/data/steel/aisc-shape-type-v15.json';
-import aiscShapeASTMSpecV15Match from '../../../public/data/steel/aisc-shapes-astm-specifications-v15_match.json';
-import aiscShapeASTMSpecV15Prop from '../../../public/data/steel/aisc-shapes-astm-specifications-v15_property.json';
+import aiscShapeDataV15US from '/src/data/steel/aisc-shapes-database-v15.0_us.json';
+import aiscShapeDataV15Metric from '/src/data/steel/aisc-shapes-database-v15.0_metric.json';
+import aiscShapeTypeV15 from '/src/data/steel/aisc-shape-type-v15.json';
+import aiscShapeASTMSpecV15Match from '/src/data/steel/aisc-shapes-astm-specifications-v15_match.json';
+import aiscShapeASTMSpecV15Prop from '/src/data/steel/aisc-shapes-astm-specifications-v15_property.json';
 
-// import aiscShapeTypeDescription from '../../public/data/steel/aisc-shape-type-description.json';
+// import aiscShapeTypeDescription from '/src/data/steel/aisc-shape-type-description.json';
 
 
 export function descShapeTypeListFetcher() {

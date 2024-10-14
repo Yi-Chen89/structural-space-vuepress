@@ -1,4 +1,4 @@
-import resultRenderMetadata from '../../../public/data/steel/result-render-metadata-v15.json';
+import resultRenderMetadata from '/src/data/steel/result-render-metadata-v15.json';
 
 
 export function resultRenderDataConstructor(result, category) {
