@@ -1,8 +1,0 @@
-{
-  "W": "W-shapes, which have essentially parallel inner and outer flange surfaces.",
-  "M": "M-shapes, which are H-shaped members that are not classified in ASTM A6 as W-, S- or HP-shapes. M-shapes may have a sloped inside flange face or other cross-section features that do not meet the criteria for W-, S- or HP-shapes.",
-  "S": "S-shapes (also known as American standard beams), which have a slope of approximately 16 2/3% (2 on 12) on the inner flange surfaces.",
-  "HP": "HP-shapes (also known as bearing piles), which are similar to W-shapes except their webs and flanges are of equal thickness and the depth and flange width are nominally equal for a given designation.",
-  "C": "C-shapes (also known as American standard channels), which have a slope of approximately 16 2/3% (2 on 12) on the inner flange surfaces.",
-  "MC": "MC-shapes (also known as miscellaneous channels), which have a slope other than 16 2/3% (2 on 12) on the inner flange surfaces."
-}
