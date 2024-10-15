@@ -1,6 +1,6 @@
 // A360 Chapter E
 
-export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lc) {
+export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lcx, Lcy) {
   if (shapeData && shapeType && astmSpecProp && slenderClass) {
     const { Fy, E } = astmSpecProp;
     const {
@@ -29,7 +29,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
 
         // E3 Flexural Buckling
         result['Pn_3']['isApplicable'] = true;
-        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lc);
+        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lcx, Lcy);
         result['Pn_3']['values'] = Pn;
         result['Pn_3']['html'] = html_3;
 
@@ -41,7 +41,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
 
         // E3 Flexural Buckling
         result['Pn_3']['isApplicable'] = true;
-        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lc);
+        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lcx, Lcy);
         result['Pn_3']['values'] = Pn;
         result['Pn_3']['html'] = html_3;
 
@@ -53,7 +53,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
 
         // E3 Flexural Buckling
         result['Pn_3']['isApplicable'] = true;
-        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lc);
+        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lcx, Lcy);
         result['Pn_3']['values'] = Pn;
         result['Pn_3']['html'] = html_3;
 
@@ -70,32 +70,62 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
 // Helper Function
 
 // E3 Flexural Buckling of Members without Slender Elements
-function E3FlexuralBucklingWithoutSlenderElement(Fy, E, Ag, rx, ry, Lc) {
+function E3FlexuralBucklingWithoutSlenderElement(Fy, E, Ag, rx, ry, Lcx, Lcy) {
   let Pn = 0;
   let html = '';
 
-  let r = rx >= ry ? ry : rx;
-  let r_ = rx >= ry ? ry_ : rx_;
-
-  const Fe = Math.PI**2 * E / (Lc / r)**2;
-  html += `<p>Elastic buckling stress</p>
-           <p>${Fe_} = &pi;<sup>2</sup> ${E_} / (${Lc_} / ${r_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</p>`;
-
-  const calcTerm1 = Fy / Fe;
-  const calcTerm1_ = `${Fy_} / ${Fe_}`;
-
   let Fcr = 0;
-  if (calcTerm1 <= 2.25) {
-    Fcr = 0.658**calcTerm1 * Fy;
-    html += `<p>For ${calcTerm1_} &le; 2.25</p>
+  if (Lcx === 0 && Lcy === 0) {
+    Fcr = Fy;
+    html += `<p>For ${Lcx_} = ${Lcy_} = 0</p>
              <p>Critical stress</p>
-             <p>${Fcr_} = 0.658<sup>${calcTerm1_}</sup> ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+             <p>${Fcr_} = ${Fy_} = ${Fy.toFixed(2)} ksi</p>`;
 
   } else {
-    Fcr = 0.877 * Fe;
-    html += `<p>For ${calcTerm1_} &gt; 2.25</p>
-             <p>Critical stress</p>
-             <p>${Fcr_} = 0.877 ${Fe_} = ${Fcr.toFixed(2)} ksi</p>`;
+    const calcTerm1x = Lcx / rx;
+    const calcTerm1x_ = `${Lcx_} / ${rx_}`;
+    const calcTerm1y = Lcy / ry;
+    const calcTerm1y_ = `${Lcy_} / ${ry_}`;
+
+    html += `<p>Effective slenderness ratio</p>
+             <p>${calcTerm1x_} = ${calcTerm1x.toFixed(2)}</p>
+             <p>${calcTerm1y_} = ${calcTerm1y.toFixed(2)}</p>`;
+
+    let calcTerm2 = 0;
+    let calcTerm2_ = '';
+    if (calcTerm1x > calcTerm1y) {
+      calcTerm2 = calcTerm1x;
+      calcTerm2_ = calcTerm1x_;
+      html += `<p>Major axis governs</p>`;
+    } else if (calcTerm1x < calcTerm1y) {
+      calcTerm2 = calcTerm1y;
+      calcTerm2_ = calcTerm1y_;
+      html += `<p>Minor axis governs</p>`;
+    } else {
+      calcTerm2 = calcTerm1x;
+      calcTerm2_ = calcTerm1x_;
+      html += `<p>Major and minor axes govern equally</p>`;
+    }
+  
+    const Fe = Math.PI**2 * E / calcTerm2**2;
+    html += `<p>Elastic buckling stress</p>
+             <p>${Fe_} = &pi;<sup>2</sup> ${E_} / (${calcTerm2_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</p>`;
+  
+    const calcTerm3 = Fy / Fe;
+    const calcTerm3_ = `${Fy_} / ${Fe_}`;
+  
+    if (calcTerm3 <= 2.25) {
+      Fcr = 0.658**calcTerm3 * Fy;
+      html += `<p>For ${calcTerm3_} &le; 2.25</p>
+               <p>Critical stress</p>
+               <p>${Fcr_} = 0.658<sup>${calcTerm3_}</sup> ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+  
+    } else {
+      Fcr = 0.877 * Fe;
+      html += `<p>For ${calcTerm3_} &gt; 2.25</p>
+               <p>Critical stress</p>
+               <p>${Fcr_} = 0.877 ${Fe_} = ${Fcr.toFixed(2)} ksi</p>`;
+    }
   }
 
   Pn = Fcr * Ag;
@@ -158,7 +188,8 @@ const ho_ = 'h<sub>o</sub>';
 
 
 
-const Lc_ = 'L<sub>c</sub>';
+const Lcx_ = 'L<sub>cx</sub>';
+const Lcy_ = 'L<sub>cy</sub>';
 
 const Fe_ = 'F<sub>e</sub>';
 const Fcr_ = 'F<sub>cr</sub>';

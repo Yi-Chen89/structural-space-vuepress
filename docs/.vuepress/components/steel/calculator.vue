@@ -39,6 +39,24 @@
         </p>
       </div>
 
+      <div v-if="compressionInputDisplay">
+        <p style="font-size: 1.2em;"><strong>For Compression</strong></p>
+
+        <p v-if="effectiveLengthInputDisplay" class="input-container">
+          <label for="effectiveLengthX">Enter Effective Length about Major Axis (L<sub>cx</sub>):&emsp;</label>
+          <input type="number" id="effectiveLengthX" v-model="enteredEffectiveLengthX" class="input-number-short" @input="effectiveLengthXInputValidator">
+          <span>&nbsp;ft</span>
+          <div v-if="effectiveLengthXInputError" class="error-message">{{ effectiveLengthXInputError }}</div>
+        </p>
+
+        <p v-if="effectiveLengthInputDisplay" class="input-container">
+          <label for="effectiveLengthY">Enter Effective Length about Minor Axis (L<sub>cy</sub>):&emsp;</label>
+          <input type="number" id="effectiveLengthY" v-model="enteredEffectiveLengthY" class="input-number-short" @input="effectiveLengthYInputValidator">
+          <span>&nbsp;ft</span>
+          <div v-if="effectiveLengthYInputError" class="error-message">{{ effectiveLengthYInputError }}</div>
+        </p>
+      </div>
+
       <div v-if="flexureInputDisplay">
         <p style="font-size: 1.2em;"><strong>For Flexure</strong></p>
 
@@ -279,7 +297,7 @@
       </div>
 
       <div v-else>
-        
+
       </div>
     </div>
 
@@ -453,6 +471,8 @@
         selectedDescShapeType: 'All',
         selectedShape: null,
         selectedGrade: null,
+        enteredEffectiveLengthX: 0,
+        enteredEffectiveLengthY: 0,
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
 
@@ -467,6 +487,8 @@
         flexureCalcContentDisplay: '-',
 
         // error variable
+        effectiveLengthXInputError: '',
+        effectiveLengthYInputError: '',
         unbracedLengthInputError: '',
         ltbModFactorInputError: '',
         
@@ -594,6 +616,14 @@
         return this.selectedShapeValid;
       },
 
+      compressionInputDisplay() {
+        return this.selectedGradeValid;
+      },
+
+      effectiveLengthInputDisplay() {
+        return this.selectedGradeValid;
+      },
+
       flexureInputDisplay() {
         return this.selectedGradeValid;
       },
@@ -665,6 +695,22 @@
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
       },
 
+      validatedEffectiveLengthX() {
+        if (this.effectiveLengthXInputError) {
+          return 0;
+        } else {
+          return this.enteredEffectiveLengthX * 12;
+        }
+      },
+
+      validatedEffectiveLengthY() {
+        if (this.effectiveLengthYInputError) {
+          return 0;
+        } else {
+          return this.enteredEffectiveLengthY * 12;
+        }
+      },
+
       validatedUnbracedLength() {
         if (this.unbracedLengthInputError) {
           return 0;
@@ -682,7 +728,7 @@
       },
 
       selectedShapeCompressionCapacity() {
-        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, 144);
+        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY);
       },
 
       selectedShapeMajorFlexureCapacity() {
@@ -717,6 +763,14 @@
     },
 
     methods: {
+      effectiveLengthXInputValidator() {
+        this.effectiveLengthXInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthX);
+      },
+
+      effectiveLengthYInputValidator() {
+        this.effectiveLengthYInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthY);
+      },
+
       unbracedLengthInputValidator() {
         this.unbracedLengthInputError = nonnegativeNumberInputValidator(this.enteredUnbracedLength);
       },
