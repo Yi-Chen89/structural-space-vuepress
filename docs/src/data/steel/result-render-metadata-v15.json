@@ -1,6 +1,13 @@
 {
   "tension": {},
-  "compression": {},
+  "compression": {
+    "Pn_3": {
+      "section": "E3",
+      "title": "Flexural Buckling of Members without Slender Elements",
+      "notation": "P<sub>n</sub>",
+      "unit": "k"
+    }
+  },
   "flexure": {
     "Mn_2_1": {
       "section": "F2.1",

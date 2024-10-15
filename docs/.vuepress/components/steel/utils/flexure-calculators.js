@@ -661,7 +661,7 @@ function F7_4LateralTorsionalBuckling(axis, shapeType, Mp, Fy, E, Ag, Sx, ry, J,
       // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
       const Lp = 0.13 * E * ry * calcTerm1 / Mp;
       html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
-              <p>${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
+               <p>${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
 
       if (Lb <= Lp) {
         // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
@@ -672,7 +672,7 @@ function F7_4LateralTorsionalBuckling(axis, shapeType, Mp, Fy, E, Ag, Sx, ry, J,
         // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
         const Lr = 2 * E * ry * calcTerm1 / (0.7 * Fy * Sx);
         html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>
-                <p>${Lr_} = 2 ${E_} ${ry_} ${calcTerm1_} / (0.7${Fy_}${Sx_}) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
+                 <p>${Lr_} = 2 ${E_} ${ry_} ${calcTerm1_} / (0.7${Fy_}${Sx_}) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
 
         if (Lb <= Lr) {
           // (b) when Lp < Lb ≤ Lr

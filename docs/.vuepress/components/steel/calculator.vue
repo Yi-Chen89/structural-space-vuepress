@@ -254,9 +254,33 @@
     <div v-if="tensionCalcDisplay">
       <h2>Tensile Strength</h2>
     </div>
-
+    
     <div v-if="compressionCalcDisplay">
-      <h2>Compressive Strength</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Compressive Strength</span>
+        <span
+          v-html="compressionCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showCompressionCalcContent()">
+        </span>
+      </h2>
+      
+      <div v-if="compressionCalcContentDisplay === '-'">
+        <div v-for="(item, key) in selectedShapeCompressionCapacityRenderData" :key="key">
+          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+            <div style="margin-left: 1em;">
+              <div v-html="item.html"></div>
+            </div>
+        </div>
+
+        <div>
+          <!-- <p><strong>Governing Limit State</strong></p> -->
+        </div>
+      </div>
+
+      <div v-else>
+        
+      </div>
     </div>
 
     <div v-if="flexureCalcDisplay">
@@ -400,6 +424,8 @@
   import { axialSlenderClassifier } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
+  import { compressionCalculator } from './utils/compression-calculators.js';
+
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
   import { criticalResultProcessor } from './utils/flexure-calculators.js';
@@ -437,6 +463,7 @@
         shapeDataContentDisplay: '-',
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
+        compressionCalcContentDisplay: '-',
         flexureCalcContentDisplay: '-',
 
         // error variable
@@ -514,6 +541,10 @@
         return astmSpecPropRenderDataFetcher(this.selectedGrade);
       },
 
+      selectedShapeCompressionCapacityRenderData() {
+        return resultRenderDataConstructor(this.selectedShapeCompressionCapacity, 'compression');
+      },
+
       selectedShapeMajorFlexureCapacityRenderData() {
         return resultRenderDataConstructor(this.selectedShapeMajorFlexureCapacity, 'flexure');
       },
@@ -544,8 +575,12 @@
         return selectionValidator(this.selectedGrade);
       },
 
+      compressionCalcValid() {
+        return !!this.selectedShapeCompressionCapacity;
+      },
+
       flexureCalcValid() {
-        return !!this.selectedShapeMajorFlexureCapacity;
+        return !!this.selectedShapeMajorFlexureCapacity || !!this.selectedShapeMinorFlexureCapacity;
       },
 
 
@@ -591,7 +626,7 @@
       },
 
       compressionCalcDisplay() {
-        return false;
+        return this.compressionCalcValid;
       },
 
       flexureCalcDisplay() {
@@ -646,6 +681,10 @@
         }
       },
 
+      selectedShapeCompressionCapacity() {
+        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, 144);
+      },
+
       selectedShapeMajorFlexureCapacity() {
         return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
       },
@@ -698,6 +737,10 @@
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
       },
 
+      showCompressionCalcContent() {
+        this.compressionCalcContentDisplay = this.compressionCalcContentDisplay === '-' ? '+' : '-';
+      },
+
       showFlexureCalcContent() {
         this.flexureCalcContentDisplay = this.flexureCalcContentDisplay === '-' ? '+' : '-';
       },
@@ -706,6 +749,7 @@
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
+        this.compressionCalcContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
       },
     },
