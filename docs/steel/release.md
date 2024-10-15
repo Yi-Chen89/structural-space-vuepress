@@ -17,6 +17,7 @@
 
 |                   | I-Shaped                            | Channel                             | RHS                                 | CHS                                 | Tee                                 | 2L | L |
 | ----------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- | ----------------------------------- | -- | - |
+| **Compression**   |                                     |                                     |                                     |                                     |                                     |    |   |
 | **Flexure Major** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |    |   |
 | **Flexure Minor** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |                                     |    |   |
 
