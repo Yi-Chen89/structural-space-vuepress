@@ -55,6 +55,13 @@
           <span>&nbsp;ft</span>
           <div v-if="effectiveLengthYInputError" class="error-message">{{ effectiveLengthYInputError }}</div>
         </p>
+
+        <p v-if="effectiveLengthInputDisplay" class="input-container">
+          <label for="effectiveLengthZ">Enter Effective Length about Longitudinal Axis (L<sub>cz</sub>):&emsp;</label>
+          <input type="number" id="effectiveLengthZ" v-model="enteredEffectiveLengthZ" class="input-number-short" @input="effectiveLengthZInputValidator">
+          <span>&nbsp;ft</span>
+          <div v-if="effectiveLengthZInputError" class="error-message">{{ effectiveLengthZInputError }}</div>
+        </p>
       </div>
 
       <div v-if="flexureInputDisplay">
@@ -473,6 +480,7 @@
         selectedGrade: null,
         enteredEffectiveLengthX: 0,
         enteredEffectiveLengthY: 0,
+        enteredEffectiveLengthZ: 0,
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
 
@@ -489,6 +497,7 @@
         // error variable
         effectiveLengthXInputError: '',
         effectiveLengthYInputError: '',
+        effectiveLengthZInputError: '',
         unbracedLengthInputError: '',
         ltbModFactorInputError: '',
         
@@ -711,6 +720,14 @@
         }
       },
 
+      validatedEffectiveLengthZ() {
+        if (this.effectiveLengthZInputError) {
+          return 0;
+        } else {
+          return this.enteredEffectiveLengthZ * 12;
+        }
+      },
+
       validatedUnbracedLength() {
         if (this.unbracedLengthInputError) {
           return 0;
@@ -728,7 +745,7 @@
       },
 
       selectedShapeCompressionCapacity() {
-        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, 120);
+        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
       },
 
       selectedShapeMajorFlexureCapacity() {
@@ -769,6 +786,10 @@
 
       effectiveLengthYInputValidator() {
         this.effectiveLengthYInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthY);
+      },
+
+      effectiveLengthZInputValidator() {
+        this.effectiveLengthZInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthZ);
       },
 
       unbracedLengthInputValidator() {

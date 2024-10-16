@@ -122,7 +122,8 @@ function E3FlexuralBucklingWithoutSlenderElement(Fy, E, Ag, rx, ry, Lcx, Lcy) {
     html += `<p>Elastic buckling stress</p>
              <p>${Fe_} = &pi;<sup>2</sup> ${E_} / (${calcTerm2_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</p>`;
 
-    const [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
+    let FcrHtml = '';
+    [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
     html += FcrHtml;
   }
 
