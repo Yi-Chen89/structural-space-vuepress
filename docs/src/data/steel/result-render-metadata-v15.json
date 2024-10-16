@@ -6,6 +6,12 @@
       "title": "Flexural Buckling of Members without Slender Elements",
       "notation": "P<sub>n</sub>",
       "unit": "k"
+    },
+    "Pn_4": {
+      "section": "E4",
+      "title": "Torsional and Flexural-Torsional Buckling of Members without Slender Elements",
+      "notation": "P<sub>n</sub>",
+      "unit": "k"
     }
   },
   "flexure": {

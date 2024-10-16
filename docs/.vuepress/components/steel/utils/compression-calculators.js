@@ -1,8 +1,8 @@
 // A360 Chapter E
 
-export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lcx, Lcy) {
+export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lcx, Lcy, Lcz) {
   if (shapeData && shapeType && astmSpecProp && slenderClass) {
-    const { Fy, E } = astmSpecProp;
+    const { Fy, E, G } = astmSpecProp;
     const {
       flange: {
         ratio: { value: lambdaf },
@@ -18,6 +18,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
 
     let result = {
       'Pn_3': {'isApplicable': false, 'values': 0, 'html': null},
+      'Pn_4': {'isApplicable': false, 'values': 0, 'html': null},
     };
 
     if (flange === 'nonslender' && web === 'nonslender') {
@@ -25,13 +26,19 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         // E3 E4
         // limit state: FB TB
 
-        const { A, rx, ry } = shapeData;
+        const { A, Ix, rx, Iy, ry, J, Cw } = shapeData;
 
         // E3 Flexural Buckling
         result['Pn_3']['isApplicable'] = true;
-        const [Pn, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lcx, Lcy);
-        result['Pn_3']['values'] = Pn;
+        const [Pn_3, html_3] = E3FlexuralBucklingWithoutSlenderElement(Fy, E, A, rx, ry, Lcx, Lcy);
+        result['Pn_3']['values'] = Pn_3;
         result['Pn_3']['html'] = html_3;
+
+        // E4 Torsional Buckling
+        result['Pn_4']['isApplicable'] = true;
+        const [Pn_4, html_4] = E4TorsionalBucklingWithoutSlenderElement(Fy, E, G, A, Ix, Iy, J, Cw, Lcz);
+        result['Pn_4']['values'] = Pn_4;
+        result['Pn_4']['html'] = html_4;
 
       } else if (['C', 'MC'].includes(shapeType)) {
         // E3 E4
@@ -106,26 +113,17 @@ function E3FlexuralBucklingWithoutSlenderElement(Fy, E, Ag, rx, ry, Lcx, Lcy) {
       calcTerm2_ = calcTerm1x_;
       html += `<p>Major and minor axes govern equally</p>`;
     }
+
+    if (calcTerm2 > 200) {
+      html += `<p>Effective slenderness ratio preferably should not exceed 200</p>`;
+    }
   
     const Fe = Math.PI**2 * E / calcTerm2**2;
     html += `<p>Elastic buckling stress</p>
              <p>${Fe_} = &pi;<sup>2</sup> ${E_} / (${calcTerm2_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</p>`;
-  
-    const calcTerm3 = Fy / Fe;
-    const calcTerm3_ = `${Fy_} / ${Fe_}`;
-  
-    if (calcTerm3 <= 2.25) {
-      Fcr = 0.658**calcTerm3 * Fy;
-      html += `<p>For ${calcTerm3_} &le; 2.25</p>
-               <p>Critical stress</p>
-               <p>${Fcr_} = 0.658<sup>${calcTerm3_}</sup> ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
-  
-    } else {
-      Fcr = 0.877 * Fe;
-      html += `<p>For ${calcTerm3_} &gt; 2.25</p>
-               <p>Critical stress</p>
-               <p>${Fcr_} = 0.877 ${Fe_} = ${Fcr.toFixed(2)} ksi</p>`;
-    }
+
+    const [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
+    html += FcrHtml;
   }
 
   Pn = Fcr * Ag;
@@ -136,6 +134,60 @@ function E3FlexuralBucklingWithoutSlenderElement(Fy, E, Ag, rx, ry, Lcx, Lcy) {
 
 // E4 Torsional and Flexural-Torsional Buckling of Single Angles and Members without Slender Elements
 
+// E4 Torsional Buckling of Members without Slender Elements
+function E4TorsionalBucklingWithoutSlenderElement(Fy, E, G, Ag, Ix, Iy, J, Cw, Lcz) {
+  let Pn = 0;
+  let html = '';
+
+  let Fcr = 0;
+  if (Lcz === 0) {
+    Fcr = Fy;
+    html += `<p>For ${Lcz_} = 0</p>
+             <p>Critical stress</p>
+             <p>${Fcr_} = ${Fy_} = ${Fy.toFixed(2)} ksi</p>`;
+
+  } else {
+    const Fe = (Math.PI**2 * E * Cw / Lcz**2 + G * J) / (Ix + Iy);
+    html += `<p>Torsional elastic buckling stress</p>
+            <p>${Fe_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ix_} + ${Iy_}) = ${Fe.toFixed(2)} ksi</p>`;
+    
+    let FcrHtml = '';
+    [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
+    html += FcrHtml;
+  }
+
+  Pn = Fcr * Ag;
+  html += `<p>${Pn_} = ${Fcr_} ${Ag_} = ${Pn.toFixed(2)} k</p>
+           <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
+  return [Pn, html];
+}
+
+// E4 Flexural-Torsional Buckling of Members without Slender Elements
+
+
+// Critical Stress Calculator
+function criticalStressCalculator(Fy, Fe) {
+  let Fcr = 0;
+  let html = '';
+
+  const calcTerm1 = Fy / Fe;
+  const calcTerm1_ = `${Fy_} / ${Fe_}`;
+
+  if (calcTerm1 <= 2.25) {
+    Fcr = 0.658**calcTerm1 * Fy;
+    html += `<p>For ${calcTerm1_} &le; 2.25</p>
+             <p>Critical stress</p>
+             <p>${Fcr_} = 0.658<sup>${calcTerm1_}</sup> ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+
+  } else {
+    Fcr = 0.877 * Fe;
+    html += `<p>For ${calcTerm1_} &gt; 2.25</p>
+             <p>Critical stress</p>
+             <p>${Fcr_} = 0.877 ${Fe_} = ${Fcr.toFixed(2)} ksi</p>`;
+  }
+
+  return [Fcr, html];
+}
 
 // E5 Single-Angle Compression Members
 
@@ -190,6 +242,7 @@ const ho_ = 'h<sub>o</sub>';
 
 const Lcx_ = 'L<sub>cx</sub>';
 const Lcy_ = 'L<sub>cy</sub>';
+const Lcz_ = 'L<sub>cz</sub>';
 
 const Fe_ = 'F<sub>e</sub>';
 const Fcr_ = 'F<sub>cr</sub>';
