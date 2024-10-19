@@ -953,7 +953,7 @@ function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb)
     }
 
   } else {
-    html += `<p>Section is continuously braced, lateral-torsional buckling does not apply</p>`;
+    html += `<p>For sections with continuous bracing, lateral-torsional buckling does not apply</p>`;
     return [Mn, html];
   }
 }
