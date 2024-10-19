@@ -54,7 +54,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
 
       // E4 Flexural-Torsional Buckling
-      const [Fcr_4, FcrHtml_4] = [0, '']; ///////////////////////
+      const [Fcr_4, FcrHtml_4] = E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G, A, rx, ry, J, Cw, ro, H, Lcx, Lcy, Lcz);
 
       if (flange === 'nonslender' && web === 'nonslender') {
         // E3 E4
@@ -205,14 +205,13 @@ function E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lc
 }
 
 // E4 Flexural-Torsional Buckling of Members without Slender Elements
-function E4FlexuralTorsionalBucklingWithoutSlenderElement(shapeType, Fy, E, G, Ag, rx, ry, J, Cw, ro, H, Lcx, Lcy, Lcz) {
-  let Pn = 0;
+function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G, Ag, rx, ry, J, Cw, ro, H, Lcx, Lcy, Lcz) {
+  let Fcr = 0;
   let html = '';
 
-  let Fcr = 0;
   if (Lcz === 0) {
     html += `<p>For sections with continuous torsional bracing, flexural-torsional buckling does not apply</p>`;
-    return [Pn, html];
+    return [Fcr, html];
 
   } else {
     let Fe = 0;
@@ -220,7 +219,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElement(shapeType, Fy, E, G, A
     if (['C', 'MC'].includes(shapeType)) {
       if (Lcx === 0) {
         html += `<p>${Lcx_} must not be 0</p>`;
-        return [Pn, html];
+        return [Fcr, html];
       } else {
         [Fe, FeHtml] = flexuralTorsionalElasticBucklingStressCalculator('x', E, G, Ag, rx, J, Cw, ro, H, Lcx, Lcz);
       }
@@ -228,7 +227,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElement(shapeType, Fy, E, G, A
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       if (Lcy === 0) {
         html += `<p>${Lcy_} must not be 0</p>`;
-        return [Pn, html];
+        return [Fcr, html];
       } else {
         [Fe, FeHtml] = flexuralTorsionalElasticBucklingStressCalculator('y', E, G, Ag, ry, J, 0, ro, H, Lcy, Lcz);
       }
@@ -241,10 +240,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElement(shapeType, Fy, E, G, A
     html += FcrHtml;
   }
 
-  Pn = Fcr * Ag;
-  html += `<p>${Pn_} = ${Fcr_} ${Ag_} = ${Pn.toFixed(2)} k</p>
-           <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
-  return [Pn, html];
+  return [Fcr, html];
 }
 
 // Flexural-Torsional Elastic Buckling Stress Calculator
