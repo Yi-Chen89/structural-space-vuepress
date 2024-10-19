@@ -31,7 +31,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
 
       // E4 Torsional Buckling
-      const [Fcr_4, FcrHtml_4] = [0, '']; ///////////////////////
+      const [Fcr_4, FcrHtml_4] = E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lcz);
 
       if (flange === 'nonslender' && web === 'nonslender') {
         // E3 E4
@@ -183,29 +183,25 @@ function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
 // E4 Torsional and Flexural-Torsional Buckling of Single Angles and Members without Slender Elements
 
 // E4 Torsional Buckling of Members without Slender Elements
-function E4TorsionalBucklingWithoutSlenderElement(Fy, E, G, Ag, Ix, Iy, J, Cw, Lcz) {
-  let Pn = 0;
+function E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lcz) {
+  let Fcr = 0;
   let html = '';
 
-  let Fcr = 0;
   if (Lcz === 0) {
     html += `<p>For sections with continuous torsional bracing, torsional buckling does not apply</p>`;
-    return [Pn, html];
+    return [Fcr, html];
 
   } else {
     const Fe = (Math.PI**2 * E * Cw / Lcz**2 + G * J) / (Ix + Iy);
     html += `<p>Torsional elastic buckling stress</p>
-            <p>${Fe_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ix_} + ${Iy_}) = ${Fe.toFixed(2)} ksi</p>`;
+             <p>${Fe_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ix_} + ${Iy_}) = ${Fe.toFixed(2)} ksi</p>`;
     
     let FcrHtml = '';
     [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
     html += FcrHtml;
   }
 
-  Pn = Fcr * Ag;
-  html += `<p>${Pn_} = ${Fcr_} ${Ag_} = ${Pn.toFixed(2)} k</p>
-           <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
-  return [Pn, html];
+  return [Fcr, html];
 }
 
 // E4 Flexural-Torsional Buckling of Members without Slender Elements
@@ -357,15 +353,22 @@ function E7MemberWithSlenderElementAe(shapeType, Fy, E, Ag, lambda) {
 
 // Nominal Compressive Strength, Pn, Calculator
 function capacityCalculator(Fcr, A, areaType) {
-  const Pn = Fcr * A;
-  let A_ = '';
-  if (areaType === 'gross') {
-    A_ = 'A<sub>g</sub>';
-  } else if (areaType === 'effective') {
-    A_ = 'A<sub>e</sub>';
+  let Pn = 0;
+  let html = '';
+  
+  if (Fcr > 0) {
+    Pn = Fcr * A;
+    
+    let A_ = '';
+    if (areaType === 'gross') {
+      A_ = 'A<sub>g</sub>';
+    } else if (areaType === 'effective') {
+      A_ = 'A<sub>e</sub>';
+    }
+    html = `<p>${Pn_} = ${Fcr_} ${A_} = ${Pn.toFixed(2)} k</p>
+            <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
   }
-  const html = `<p>${Pn_} = ${Fcr_} ${A_} = ${Pn.toFixed(2)} k</p>
-                <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
+
   return [Pn, html];
 }
 
