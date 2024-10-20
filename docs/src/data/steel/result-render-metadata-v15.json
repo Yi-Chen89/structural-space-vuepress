@@ -7,27 +7,21 @@
       "notation": "P<sub>n</sub>",
       "unit": "k"
     },
-    "Fcr_3": {
-      "section": "E3",
-      "title": "Flexural Buckling of Members without Slender Elements",
-      "notation": "F<sub>cr</sub>",
-      "unit": "ksi"
-    },
     "Pn_4": {
       "section": "E4",
       "title": "Torsional and Flexural-Torsional Buckling of Members without Slender Elements",
       "notation": "P<sub>n</sub>",
       "unit": "k"
     },
-    "Ae": {
-      "section": "E7",
-      "title": "Members with Slender Elements",
-      "notation": "A<sub>e</sub>",
-      "unit": "in.<sup>2</sup>"
-    },
     "Pn_3_7": {
       "section": "E3 and E7",
       "title": "Flexural Buckling of Members with Slender Elements",
+      "notation": "P<sub>n</sub>",
+      "unit": "k"
+    },
+    "Pn_4_7": {
+      "section": "E4 and E7",
+      "title": "Torsional and Flexural-Torsional Buckling of Members with Slender Elements",
       "notation": "P<sub>n</sub>",
       "unit": "k"
     }
