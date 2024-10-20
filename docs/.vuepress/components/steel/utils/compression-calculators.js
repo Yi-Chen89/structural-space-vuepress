@@ -45,6 +45,9 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         const [Pn_4, PnHtml_4] = capacityCalculator(Fcr_4, A, 'gross');
         result['Pn_4']['value'] = Pn_4;
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
+
+      } else if (flange === 'slender' || web === 'slender') {
+
       }
 
     } else if (['C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
@@ -68,10 +71,13 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         const [Pn_4, PnHtml_4] = capacityCalculator(Fcr_4, A, 'gross');
         result['Pn_4']['value'] = Pn_4;
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
+
+      } else if (flange === 'slender' || web === 'slender') {
+
       }
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
-      const { A, rx, ry } = shapeData;
+      const { A, h, b, tdes, rx, ry } = shapeData;
 
       // E3 Flexural Buckling
       const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
@@ -83,6 +89,23 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
         result['Pn_3']['value'] = Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
+
+      } else if (flange === 'slender' || web === 'slender') {
+        // E7
+        // limit state: LB
+        result['Fcr_3']['isApplicable'] = true;
+        result['Fcr_3']['value'] = Fcr_3;
+        result['Fcr_3']['html'] = FcrHtml_3;
+
+        result['Ae']['isApplicable'] = true;
+        const [Ae, AeHtml] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, b, h, tdes, tdes, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
+        result['Ae']['value'] = Ae;
+        result['Ae']['html'] = AeHtml;
+
+        result['Pn_3_7']['isApplicable'] = true;
+        const [Pn_3_7, Html_3_7] = capacityCalculator(Fcr_3, Ae, 'effective');
+        result['Pn_3_7']['value'] = Pn_3_7;
+        result['Pn_3_7']['html'] = Html_3_7;
       }
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
@@ -107,7 +130,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Fcr_3']['html'] = FcrHtml_3;
 
         result['Ae']['isApplicable'] = true;
-        const [Ae, AeHtml] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, lambdaf);
+        const [Ae, AeHtml] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, 0, 0, 0, 0, 0, lambdaf, 0, lambdarf, 0, flange, null);
         result['Ae']['value'] = Ae;
         result['Ae']['html'] = AeHtml;
 
@@ -311,40 +334,143 @@ function criticalStressCalculator(Fy, Fe) {
 
 
 // E7 Members with Slender Elements
-function E7MemberWithSlenderElementAe(shapeType, Fy, E, Ag, lambda) {
+function E7MemberWithSlenderElementAe(shapeType, Fy, E, Ag, b, h, tf, tw, Fcr, lambdaf, lambdaw, lambdarf, lambdarw, flangeClass, webClass) {
   let Ae = 0;
   let html = '';
 
   if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-    // Ae = 0.85 * Ag;
-    // html += `<p>Effective net area</p>
-    //          <p>${Ae_} = 0.85 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    Ae = 1;
 
   } else if (['C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
-    // Ae = 0.85 * Ag;
-    // html += `<p>Effective net area</p>
-    //          <p>${Ae_} = 0.85 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    Ae = 1;
 
-  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
-    // Ae = Ag;
-    // html += `<p>Effective net area</p>
-    //          <p>${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {    
+    const [be, beHtml] = effectiveWidthCalculator(shapeType, 'flange', Fy, b, Fcr, lambdaf, lambdarf, flangeClass);
+    const [he, heHtml] = effectiveWidthCalculator(shapeType, 'web', Fy, h, Fcr, lambdaw, lambdarw, webClass);
+    html += beHtml + heHtml;
+
+    if (be === 0 && he === 0) {
+      Ae = Ag;
+      html += `<p>Effective area</p>
+               <p>${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+
+    } else if (be > 0 && he === 0) {
+      Ae = Ag - 2 * (b - be) * tf
+      html += `<p>Effective area</p>
+               <p>${Ae_} = ${Ag_} - 2 (${b_} - ${be_}) ${tdes_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+
+    } else if (be === 0 && he > 0) {
+      Ae = Ag - 2 * (h - he) * tw
+      html += `<p>Effective area</p>
+               <p>${Ae_} = ${Ag_} - 2 (${h_} - ${he_}) ${tdes_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+
+    } else if (be > 0 && he > 0) {
+      Ae = Ag - 2 * (b - be) * tf - 2 * (h - he) * tw
+      html += `<p>Effective area</p>
+               <p>${Ae_} = ${Ag_} - 2 (${b_} - ${be_}) ${tdes_} - 2 (${h_} - ${he_}) ${tdes_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    }
+
   } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
     const calcTerm1 = E / Fy;
     const calcTerm1_ = `${E_} / ${Fy_}`;
 
-    if (lambda <= 0.11 * calcTerm1) {
+    if (lambdaf <= 0.11 * calcTerm1) {
       Ae = Ag;
       html += `<p>For ${lambda_} &le; 0.11 ${calcTerm1_}</p>
                <p>${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
-    } else if (lambda <= 0.45 * calcTerm1) {
-      Ae = (0.038 * E / (Fy * lambda) + 2 / 3) * Ag;
+    } else if (lambdaf <= 0.45 * calcTerm1) {
+      Ae = (0.038 * E / (Fy * lambdaf) + 2 / 3) * Ag;
       html += `<p>For 0.11 ${calcTerm1_} &lt; ${lambda_} &le; 0.45 ${calcTerm1_}</p>
                <p>${Ae_} = (0.038 ${E_} / (${Fy_} ${lambda_}) + 2 / 3) ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
     }
   }
 
   return [Ae, html];
+}
+
+// Effective Width, be, Calculator
+function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, lambdar, elementClass) {
+  let be = 0;
+  let html = '';
+
+  let lambda_ = '';
+  let lambdar_ = '';
+  let beff_ = '';
+  let bfull_ = '';
+  if (elementType === 'flange') {
+    lambda_ = lambdaf_;
+    lambdar_ = lambdarf_;
+    beff_ = be_;
+    if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
+      bfull_ = b_;
+    } else {
+      bfull_ = bf_;
+    }
+
+  } else if (elementType === 'web') {
+    lambda_ = lambdaw_;
+    lambdar_ = lambdarw_;
+    beff_ = he_;
+    bfull_ = h_;
+
+  } else if (elementType === 'stem') {
+    lambda_ = lambdaw_;
+    lambdar_ = lambdarw_;
+    beff_ = de_;
+    bfull_ = d_;
+  }
+
+  const calcTerm1 = lambdar * Math.sqrt(Fy / Fcr);
+  const calcTerm1_ = `${lambdar_} &radic;(${Fy_} / ${Fcr_})`;
+
+  if (elementClass === 'nonslender') {
+    html += `<p>For nonslender ${elementType}s, 
+                ${beff_} = ${bfull_}</p>`;
+
+  } else {
+    if (lambda <= calcTerm1) {
+      html += `<p>For slender ${elementType}s when ${lambda_} &le; ${calcTerm1_}, 
+                  ${beff_} = ${bfull_}</p>`;
+
+    } else {
+      html += `<p>For slender ${elementType}s when ${lambda_} &gt; ${calcTerm1_}</p>`
+      
+      const [c1, c2] = effectiveWidthImperfectionAdjustmentFactorFinder(shapeType, elementType);
+      html += `<p>Effective width imperfection adjustment factors</p>
+               <p>${c1_} = ${c1.toFixed(2)},&emsp;
+                  ${c2_} = ${c2.toFixed(2)}</p>`;
+
+      const Fel = (c2 * lambdar / lambda)**2 * Fy;
+      html += `<p>Elastic local buckling stress</p>
+               <p>${Fel_} = (${c2_} ${lambdar_} / ${lambda_})<sup>2</sup> ${Fy_} = ${Fel.toFixed(2)} ksi</p>`;
+      
+      const calcTerm2 = Math.sqrt(Fel / Fcr);
+      const calcTerm2_ = `&radic;(${Fel_} / ${Fcr_})`;
+      be = b * (1 - c1 * calcTerm2) * calcTerm2;
+      html += `<p>Effective width</p>
+               <p>${beff_} = ${bfull_} (1 - ${c1_} ${calcTerm2_}) ${calcTerm2_} = ${be.toFixed(2)} in.</p>`;
+    }
+  }
+  return [be, html];
+}
+
+// Effective Width Imperfection Adjustment Factors Finder
+function effectiveWidthImperfectionAdjustmentFactorFinder(shapeType, elementType) {
+  let c1 = 0;
+  let c2 = 0;
+
+  if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && elementType === 'web') {
+    c1 = 0.18;
+    c2 = 1.31;
+  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
+    c1 = 0.20;
+    c2 = 1.38;
+  } else {
+    c1 = 0.22;
+    c2 = 1.49;
+  }
+
+  return [c1, c2];
 }
 
 // Nominal Compressive Strength, Pn, Calculator
@@ -423,9 +549,26 @@ const Fey_ = 'F<sub>ey</sub>';
 const Fez_ = 'F<sub>ez</sub>';
 const Fcr_ = 'F<sub>cr</sub>';
 
+const be_ = 'b<sub>e</sub>';
+const he_ = 'h<sub>e</sub>';
+const de_ = 'd<sub>e</sub>';
+
+const c1_ = 'c<sub>1</sub>';
+const c2_ = 'c<sub>2</sub>';
+
+const Fel_ = 'F<sub>el</sub>';
+
+
 const Ag_ = 'A<sub>g</sub>';
 const Ae_ = 'A<sub>e</sub>';
+
+
+
 
 const Pn_ = 'P<sub>n</sub>';
 
 const lambda_ = '&lambda;';
+const lambdaf_ = '&lambda;<sub>f</sub>';
+const lambdarf_ = '&lambda;<sub>rf</sub>';
+const lambdaw_ = '&lambda;<sub>w</sub>';
+const lambdarw_ = '&lambda;<sub>rw</sub>';
