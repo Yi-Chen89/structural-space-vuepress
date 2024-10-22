@@ -62,7 +62,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       }
 
     } else if (['C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
-      const { A, rx, ry, J, Cw, ro, H } = shapeData;
+      const { A, d, bf, tw, tf, rx, ry, J, Cw, ro, H } = shapeData;
 
       // E3 Flexural Buckling
       const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
@@ -84,7 +84,19 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
 
       } else if (flange === 'slender' || web === 'slender') {
+        // E7
+        // limit state: LB
+        result['Pn_3_7']['isApplicable'] = true;
+        const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
+        const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
+        result['Pn_3_7']['value'] = Pn_3_7;
+        result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
 
+        result['Pn_4_7']['isApplicable'] = true;
+        const [Ae_4, AeHtml_4] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_4, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
+        const [Pn_4_7, PnHtml_4_7] = capacityCalculator(Fcr_4, Ae_4, 'effective');
+        result['Pn_4_7']['value'] = Pn_4_7;
+        result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
       }
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
@@ -337,20 +349,10 @@ function E7MemberWithSlenderElementAe(shapeType, Fy, E, Ag, b, h, tf, tw, Fcr, l
     return [Ae, html];
   }
 
-  if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-    const [be, beHtml] = effectiveWidthCalculator(shapeType, 'flange', Fy, b, Fcr, lambdaf, lambdarf, flangeClass);
-    h = lambdaw * tw;
-    const [he, heHtml] = effectiveWidthCalculator(shapeType, 'web', Fy, h, Fcr, lambdaw, lambdarw, webClass);
-    html += beHtml + heHtml;
-
-    let AeHtml = '';
-    [Ae, AeHtml] = effectiveAreaCalculator(shapeType, Ag, b, h, tf, tw, be, he);
-    html += AeHtml;
-
-  } else if (['C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
-    Ae = 1;
-
-  } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {    
+  if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square'].includes(shapeType)) {
+    if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+      h = lambdaw * tw;
+    }
     const [be, beHtml] = effectiveWidthCalculator(shapeType, 'flange', Fy, b, Fcr, lambdaf, lambdarf, flangeClass);
     const [he, heHtml] = effectiveWidthCalculator(shapeType, 'web', Fy, h, Fcr, lambdaw, lambdarw, webClass);
     html += beHtml + heHtml;
