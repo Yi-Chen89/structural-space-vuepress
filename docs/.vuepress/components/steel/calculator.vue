@@ -467,7 +467,6 @@
   import { criticalResultProcessor } from './utils/general-calculators.js';
 
   import { compressionCalculator } from './utils/compression-calculators.js';
-  import { criticalCompressionCapacityProcessor } from './utils/compression-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
@@ -770,7 +769,7 @@
       },
 
       selectedShapeCompressionCriticalCapacity() {
-        return criticalCompressionCapacityProcessor(this.selectedShapeCompressionCapacity);
+        return criticalResultProcessor(this.selectedShapeCompressionCapacity, 'compression');
       },
 
       selectedShapeMajorFlexureCapacity() {
