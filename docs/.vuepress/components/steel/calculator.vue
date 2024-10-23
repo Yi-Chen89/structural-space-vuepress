@@ -464,12 +464,13 @@
   import { axialSlenderClassifier } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
+  import { criticalResultProcessor } from './utils/general-calculators.js';
+
   import { compressionCalculator } from './utils/compression-calculators.js';
   import { criticalCompressionCapacityProcessor } from './utils/compression-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
-  import { criticalResultProcessor } from './utils/flexure-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
