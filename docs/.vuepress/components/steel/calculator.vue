@@ -315,7 +315,19 @@
       </div>
 
       <div v-else>
-
+        <div>
+          <div v-for="data in selectedShapeCompressionCriticalCapacityRenderData">
+            <div style="margin-left: 1em;">
+              <p><strong>Compressive Strength ({{ data.section }})</strong></p>
+              <p>
+                P<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }}
+              </p>
+              <p><strong>
+                &phi;<sub>c</sub>P<sub>n</sub> = {{ (0.9 * data.value).toFixed(1) }} {{ data.unit }}
+              </strong></p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
