@@ -778,7 +778,7 @@
       },
 
       selectedShapeMajorFlexureCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity);
+        return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity, 'flexure');
       },
 
       selectedShapeMinorFlexureCapacity() {
@@ -786,7 +786,7 @@
       },
 
       selectedShapeMinorFlexureCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeMinorFlexureCapacity);
+        return criticalResultProcessor(this.selectedShapeMinorFlexureCapacity, 'flexure');
       },
 
     },

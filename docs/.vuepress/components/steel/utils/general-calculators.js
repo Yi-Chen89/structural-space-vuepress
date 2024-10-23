@@ -1,10 +1,13 @@
-export function criticalResultProcessor(result) {
-    if (result) {
-      const resultAsList = Object.entries(result);
-  
+export function criticalResultProcessor(result, category) {
+  if (result && category) {
+    const resultAsList = Object.entries(result);
+
+    if (category === 'compression') {
+
+    } else if (category === 'flexure') {
       // filter out objects where isApplicable is false or all values are 0
       const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['values'].some(value => value !== 0));
-  
+
       if (filteredResultAsList.length > 0) {
         const criticalKeys = [null, null];
         const criticalResults = [0, 0];
@@ -26,8 +29,8 @@ export function criticalResultProcessor(result) {
       } else {
         return null;
       }
-  
-    } else {
-      return null;
     }
+  } else {
+    return null;
   }
+}
