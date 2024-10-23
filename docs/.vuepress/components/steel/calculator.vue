@@ -297,9 +297,20 @@
               <div v-html="item.html"></div>
             </div>
         </div>
-
+        
         <div>
-          <!-- <p><strong>Governing Limit State</strong></p> -->
+          <p><strong>Governing Limit State</strong></p>
+          <div v-for="data in selectedShapeCompressionCriticalCapacityRenderData">
+            <div style="margin-left: 1em;">
+              <p><strong>Compressive Strength ({{ data.section }})</strong></p>
+              <p>
+                P<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }}
+              </p>
+              <p><strong>
+                &phi;<sub>c</sub>P<sub>n</sub> = {{ (0.9 * data.value).toFixed(1) }} {{ data.unit }}
+              </strong></p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -442,6 +453,7 @@
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
   import { compressionCalculator } from './utils/compression-calculators.js';
+  import { criticalCompressionCapacityProcessor } from './utils/compression-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
@@ -566,6 +578,10 @@
 
       selectedShapeCompressionCapacityRenderData() {
         return resultRenderDataConstructor(this.selectedShapeCompressionCapacity, 'compression');
+      },
+
+      selectedShapeCompressionCriticalCapacityRenderData() {
+        return criticalResultRenderDataConstructor(this.selectedShapeCompressionCriticalCapacity, 'compression');
       },
 
       selectedShapeMajorFlexureCapacityRenderData() {
@@ -738,6 +754,10 @@
 
       selectedShapeCompressionCapacity() {
         return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
+      },
+
+      selectedShapeCompressionCriticalCapacity() {
+        return criticalCompressionCapacityProcessor(this.selectedShapeCompressionCapacity);
       },
 
       selectedShapeMajorFlexureCapacity() {

@@ -25,27 +25,42 @@ export function criticalResultRenderDataConstructor(criticalResult, category) {
   if (criticalResult && category && category in resultMetadata) {
     const results = [];
 
-    const momentSign = ['Sagging', 'Hogging'];
-    
-    const criticalKeys = criticalResult[0];
-    const criticalResults = criticalResult[1];
+    if (category === 'compression') {
+      const criticalKey = criticalResult[0];
+      const criticalValue = criticalResult[1];
 
-    criticalKeys.forEach((value, index) => {
-      if (criticalKeys[index]) {
-        const metadata = resultMetadata[category][criticalKeys[index]];
+      const metadata = resultMetadata[category][criticalKey];
 
-        results.push({
-          'value': criticalResults[index],
-          'section': metadata['section'],
-          'notation': metadata['notation'],
-          'unit': metadata['unit'],
-          'sign': momentSign[index],
-        });
+      results.push({
+        'value': criticalValue,
+        'section': metadata['section'],
+        'notation': metadata['notation'],
+        'unit': metadata['unit'],
+      });
+
+    } else if (category === 'flexure') {
+      const momentSign = ['Sagging', 'Hogging'];
+      
+      const criticalKeys = criticalResult[0];
+      const criticalValues = criticalResult[1];
+
+      criticalKeys.forEach((value, index) => {
+        if (criticalKeys[index]) {
+          const metadata = resultMetadata[category][criticalKeys[index]];
+
+          results.push({
+            'value': criticalValues[index],
+            'section': metadata['section'],
+            'notation': metadata['notation'],
+            'unit': metadata['unit'],
+            'sign': momentSign[index],
+          });
+        }
+      });
+
+      if (results.length === 1) {
+        results[0]['sign'] = '';
       }
-    });
-
-    if (results.length === 1) {
-      results[0]['sign'] = '';
     }
     return results;
 

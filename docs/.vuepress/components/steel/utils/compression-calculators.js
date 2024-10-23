@@ -154,6 +154,36 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
   }
 }
 
+export function criticalCompressionCapacityProcessor(result) {
+  if (result) {
+    const resultAsList = Object.entries(result);
+    
+    // filter out objects where isApplicable is false or value is 0
+    const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['value']);
+    
+    if (filteredResultAsList.length > 0) {
+      let criticalKey = null;
+      let criticalResult = 0;
+      
+      filteredResultAsList.forEach(([key, item]) => {
+        const value = item['value'];
+        
+        if (value !== 0 && (criticalResult === 0 || value < criticalResult)) {
+          criticalKey = key;
+          criticalResult = value;
+        }
+      });
+      return [criticalKey, criticalResult];
+
+    } else {
+      return null;
+    }
+
+  } else {
+    return null;
+  }
+}
+
 
 // Helper Function
 
