@@ -21,7 +21,7 @@
             </option>
           </select>
         </p>
-
+        
         <p v-if="gradeSelectionDisplay" class="select-container">
           <label for="grade">Select Grade:&emsp;</label>
           <select id="grade" v-model="selectedGrade" class="select">
@@ -38,7 +38,23 @@
           </select>
         </p>
       </div>
-
+      
+      <div v-if="calcSelectionDisplay">
+        <p>Select Calculations</p>
+        <p>
+          <label>
+            <input type="checkbox" v-model="selectedCalcs" value="compression" />
+            Compressive Strength
+          </label>
+        </p>
+        <p>
+          <label>
+            <input type="checkbox" v-model="selectedCalcs" value="flexure" />
+            Flexural Strength
+          </label>
+        </p>
+      </div>
+      
       <div v-if="compressionInputDisplay">
         <p style="font-size: 1.2em;"><strong>For Compression</strong></p>
 
@@ -190,7 +206,7 @@
           </div>
         </div>
 
-        <div>
+        <div v-if="compressionSlenderClassDisplay">
           <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
 
           <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
@@ -211,7 +227,7 @@
           </div>
         </div>
 
-        <div>
+        <div v-if="flexureSlenderClassDisplay">
           <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
           
           <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
@@ -242,7 +258,7 @@
       </div>
 
       <div v-else>
-        <div>
+        <div v-if="compressionSlenderClassDisplay">
           <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
 
           <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
@@ -256,7 +272,7 @@
           </div>
         </div>
 
-        <div>
+        <div v-if="flexureSlenderClassDisplay">
           <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
           
           <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
@@ -494,6 +510,7 @@
         selectedDescShapeType: 'All',
         selectedShape: null,
         selectedGrade: null,
+        selectedCalcs: [],
         enteredEffectiveLengthX: 0,
         enteredEffectiveLengthY: 0,
         enteredEffectiveLengthZ: 0,
@@ -561,6 +578,15 @@
         }
       },
 
+      // calculation selection variable
+
+      compressionCalcSelected() {
+        return this.selectedCalcs.includes('compression');
+      },
+
+      flexureCalcSelected() {
+        return this.selectedCalcs.includes('flexure');
+      },
 
       // rendering variable
 
@@ -645,8 +671,12 @@
         return this.selectedShapeValid;
       },
 
-      compressionInputDisplay() {
+      calcSelectionDisplay() {
         return this.selectedGradeValid;
+      },
+
+      compressionInputDisplay() {
+        return this.compressionCalcSelected;
       },
 
       effectiveLengthInputDisplay() {
@@ -654,7 +684,7 @@
       },
 
       flexureInputDisplay() {
-        return this.selectedGradeValid;
+        return this.flexureCalcSelected;
       },
 
       unbracedLengthInputDisplay() {
@@ -677,7 +707,15 @@
       },
 
       slenderClassDisplay() {
-        return this.selectedShapeValid && this.selectedGradeValid;
+        return (this.selectedShapeValid && this.selectedGradeValid) && (this.compressionCalcSelected || this.flexureCalcSelected);
+      },
+
+      compressionSlenderClassDisplay() {
+        return this.compressionCalcSelected;
+      },
+
+      flexureSlenderClassDisplay() {
+        return this.flexureCalcSelected;
       },
 
       tensionCalcDisplay() {
@@ -685,11 +723,11 @@
       },
 
       compressionCalcDisplay() {
-        return this.compressionCalcValid;
+        return this.compressionCalcValid && this.compressionCalcSelected;
       },
 
       flexureCalcDisplay() {
-        return this.flexureCalcValid;
+        return this.flexureCalcValid && this.flexureCalcSelected;
       },
 
       shearCalcDisplay() {
