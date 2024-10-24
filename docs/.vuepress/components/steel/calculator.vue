@@ -40,7 +40,8 @@
       </div>
       
       <div v-if="calcSelectionDisplay">
-        <p>Select Calculations</p>
+        <p style="font-size: 1.2em;"><strong>Select Calculations</strong></p>
+        
         <p>
           <label>
             <input type="checkbox" v-model="selectedCalcs" value="compression" />
