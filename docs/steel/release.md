@@ -20,6 +20,8 @@
 | **Compression**   | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |    |   |
 | **Flexure Major** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |    |   |
 | **Flexure Minor** | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> | <center>:heavy_check_mark:</center> |                                     |    |   |
+| **Shear Major**   |                                     |                                     | <center>:heavy_check_mark:</center> |                                     |                                     |    |   |
+| **Shear Minor**   |                                     |                                     |                                     |                                     |                                     |    |   |
 
 @tab Design Code
 
