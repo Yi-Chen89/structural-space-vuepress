@@ -1,6 +1,6 @@
 // A360 Chapter G
 
-export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass) {
+export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lv) {
   if (shapeData && shapeType && astmSpecProp && slenderClass) {
     const { Fy, E } = astmSpecProp;
     const {
@@ -14,6 +14,7 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 
     let result = {
       'Vn_4': {'isApplicable': false, 'value': 0, 'html': null},
+      'Vn_5': {'isApplicable': false, 'value': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
@@ -29,6 +30,14 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_4']['html'] = html_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
+      // G5
+
+      const { A, OD } = shapeData;
+
+      result['Vn_5']['isApplicable'] = true;
+      const [Vn_5, html_5] = G5CircularHollowSection(Fy, E, A, OD, lambdaf, Lv);
+      result['Vn_5']['value'] = Vn_5;
+      result['Vn_5']['html'] = html_5;
 
     }
 
@@ -82,24 +91,57 @@ function webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw) {
   if (lambdaw <= 1.10 * calcTerm1) {
     Cv2 = 1.0;
     html += `<p>For ${lambdaw_} &le; 1.10 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.0</p>`;
+             <p>${Cv2_} = 1.0</p>
+             <p>Shear yielding governs</p>`;
 
   } else if (lambdaw <= 1.37 * calcTerm1) {
     Cv2 = 1.10 * calcTerm1 / lambdaw;
     html += `<p>For 1.10 ${calcTerm1_} &lt; ${lambdaw_} &le; 1.37 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.10 ${calcTerm1_} / ${lambdaw_} = ${Cv2.toFixed(2)}</p>`;
+             <p>${Cv2_} = 1.10 ${calcTerm1_} / ${lambdaw_} = ${Cv2.toFixed(2)}</p>
+             <p>Shear buckling governs</p>`;
 
   } else {
     Cv2 = 1.51 * kv * E / (lambdaw**2 * Fy);
     html += `<p>For ${lambdaw_} &gt; 1.37 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.51 ${kv_} ${E_} / (${lambdaw_}<sup>2</sup> ${Fy_}) = ${Cv2.toFixed(2)}</p>`;
+             <p>${Cv2_} = 1.51 ${kv_} ${E_} / (${lambdaw_}<sup>2</sup> ${Fy_}) = ${Cv2.toFixed(2)}</p>
+             <p>Shear buckling governs</p>`;
   }
 
   return [Cv2, html];
 }
 
 // G5 Round HSS
+function G5CircularHollowSection(Fy, E, Ag, D, lambda, Lv) {
+  let Vn = 0;
+  let html = '';
 
+  let Fcr1 = 0;
+  let Fcr2 = 0;
+  html += `<p>Critical stress</p>`;
+  if (Lv > 0) {
+    Fcr1 = 1.60 * E / (Math.sqrt(Lv / D) * lambda**(5 / 4));
+    html += `<p>${Fcr_} = 1.60 ${E_} / (&radic;(${Lv_} / ${OD_}) ${lambda_}<sup>5 / 4</sup>) = ${Fcr1.toFixed(2)} ksi</p>`;
+  }
+  Fcr2 = 0.78 * E / lambda**(3 / 2);
+  html += `<p>${Fcr_} = 0.78 ${E_} / ${lambda_}<sup>3 / 2</sup> = ${Fcr2.toFixed(2)} ksi</p>`;
+
+  let Fcr = Math.max(Fcr1, Fcr2);
+  html += `<p>${Fcr_} = ${Fcr.toFixed(2)} ksi &le; 0.6 ${Fy_}</p>`;
+
+  if (Fcr <= 0.6 * Fy) {
+    html += `<p>Shear buckling governs</p>`;
+  } else {
+    Fcr = 0.6 * Fy;
+    html += `<p>Shear yielding governs</p>
+             <p>${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+  }
+
+  Vn = Fcr * Ag / 2;
+  html += `<p>${Vn_} = ${Fcr_} ${Ag_} / 2 = ${Vn.toFixed(2)} k</p>
+           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+
+  return [Vn, html];
+}
 
 // G6 Weak-Axis Shear in Doubly Symmetric and Singly Symmetric Shapes
 
@@ -144,11 +186,16 @@ const rts_ = 'r<sub>ts</sub>';
 const ho_ = 'h<sub>o</sub>';
 
 
+const Lv_ = 'L<sub>v</sub>';
+
+
+const Fcr_ = 'F<sub>cr</sub>';
 
 const Aw_ = 'A<sub>w</sub>';
 const kv_ = 'k<sub>v</sub>';
 const Cv2_ = 'C<sub>v2</sub>';
 
+const Ag_ = 'A<sub>g</sub>';
 
 const Vn_ = 'V<sub>n</sub>';
 

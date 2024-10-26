@@ -130,6 +130,12 @@
       "title": "Rectangular HSS, Box Sections, and Other Singly and Doubly Symmetric Members",
       "notation": "V<sub>n</sub>",
       "unit": "k"
+    },
+    "Vn_5": {
+      "section": "G5",
+      "title": "Round HSS",
+      "notation": "V<sub>n</sub>",
+      "unit": "k"
     }
   }
 }

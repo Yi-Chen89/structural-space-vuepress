@@ -63,7 +63,7 @@
       </div>
       
       <div v-if="compressionInputDisplay">
-        <p style="font-size: 1.2em;"><strong>For Compression</strong></p>
+        <p style="font-size: 1.2em;"><strong>For Compression Calculation</strong></p>
 
         <p v-if="effectiveLengthInputDisplay" class="input-container">
           <label for="effectiveLengthX">Enter Effective Length about Major Axis (L<sub>cx</sub>):&emsp;</label>
@@ -88,7 +88,7 @@
       </div>
 
       <div v-if="flexureInputDisplay">
-        <p style="font-size: 1.2em;"><strong>For Flexure</strong></p>
+        <p style="font-size: 1.2em;"><strong>For Flexure Calculation</strong></p>
 
         <p v-if="unbracedLengthInputDisplay" class="input-container">
           <label for="unbracedLength">Enter Unbraced Length (L<sub>b</sub>):&emsp;</label>
@@ -101,6 +101,17 @@
           <label for="ltbModFactor">Enter LTB Modification Factor (C<sub>b</sub>):&emsp;</label>
           <input type="number" id="ltbModFactor" v-model="enteredLTBModFactor" class="input-number-short" @input="ltbModFactorInputValidator">
           <div v-if="ltbModFactorInputError" class="error-message">{{ ltbModFactorInputError }}</div>
+        </p>
+      </div>
+
+      <div v-if="shearInputDisplay">
+        <p style="font-size: 1.2em;"><strong>For Shear Calculation</strong></p>
+
+        <p v-if="maxToZeroShearDistanceInputDisplay" class="input-container">
+          <label for="maxToZeroShearDistance">Enter Distance from Max to Zero Shear Force (L<sub>v</sub>):&emsp;</label>
+          <input type="number" id="maxToZeroShearDistance" v-model="enteredMaxToZeroShearDistance" class="input-number-short" @input="maxToZeroShearDistanceInputValidator">
+          <span>&nbsp;ft</span>
+          <div v-if="maxToZeroShearDistanceInputError" class="error-message">{{ maxToZeroShearDistanceInputError }}</div>
         </p>
       </div>
     </div>
@@ -551,6 +562,7 @@
         enteredEffectiveLengthZ: 0,
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
+        enteredMaxToZeroShearDistance: 0,
 
         // display variable
         shapeTypeSelectionDisplay: true,
@@ -569,6 +581,7 @@
         effectiveLengthZInputError: '',
         unbracedLengthInputError: '',
         ltbModFactorInputError: '',
+        maxToZeroShearDistanceInputError: '',
         
       }
     },
@@ -756,6 +769,13 @@
         return this.selectedGradeValid;
       },
 
+      shearInputDisplay() {
+        return this.shearCalcSelected;
+      },
+
+      maxToZeroShearDistanceInputDisplay() {
+        return this.selectedGradeValid;
+      },
 
       // output display variable
 
@@ -863,6 +883,14 @@
         }
       },
 
+      validatedMaxToZeroShearDistance() {
+        if (this.maxToZeroShearDistanceInputError) {
+          return 0;
+        } else {
+          return this.enteredMaxToZeroShearDistance * 12;
+        }
+      },
+
       selectedShapeCompressionCapacity() {
         return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
       },
@@ -888,7 +916,7 @@
       },
 
       selectedShapeMajorShearCapacity() {
-        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass);
+        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedMaxToZeroShearDistance);
       },
 
       selectedShapeMajorShearCriticalCapacity() {
@@ -937,6 +965,10 @@
 
       ltbModFactorInputValidator() {
         this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
+      },
+
+      maxToZeroShearDistanceInputValidator() {
+        this.maxToZeroShearDistanceInputError = nonnegativeNumberInputValidator(this.enteredMaxToZeroShearDistance);
       },
 
       showShapeDataContent() {
