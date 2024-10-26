@@ -340,6 +340,9 @@
               <p>
                 P<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }}
               </p>
+              <p>
+                &phi;<sub>c</sub> = 0.9
+              </p>
               <p><strong>
                 &phi;<sub>c</sub>P<sub>n</sub> = {{ (0.9 * data.value).toFixed(1) }} {{ data.unit }}
               </strong></p>
@@ -395,6 +398,9 @@
                 <p>
                   M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
                 </p>
+                <p>
+                  &phi;<sub>b</sub> = 0.9
+                </p>
                 <p><strong>
                   &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
                 </strong></p>
@@ -421,6 +427,9 @@
                 <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
                 <p>
                   M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
+                </p>
+                <p>
+                  &phi;<sub>b</sub> = 0.9
                 </p>
                 <p><strong>
                   &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
