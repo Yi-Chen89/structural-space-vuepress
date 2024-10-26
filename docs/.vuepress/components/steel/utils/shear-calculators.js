@@ -13,11 +13,22 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     } = slenderClass;
 
     let result = {
+      'Vn_3': {'isApplicable': false, 'value': 0, 'html': null},
       'Vn_4': {'isApplicable': false, 'value': 0, 'html': null},
       'Vn_5': {'isApplicable': false, 'value': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+
+    } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+      // G3
+
+      const { d, tw } = shapeData;
+
+      result['Vn_3']['isApplicable'] = true;
+      const [Vn_3, html_3] = G3Tee(Fy, E, d, tw, lambdaw);
+      result['Vn_3']['value'] = Vn_3;
+      result['Vn_3']['html'] = html_3;
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // G4
@@ -55,7 +66,22 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 
 
 // G3 Single Angles and Tees
+function G3Tee(Fy, E, b, t, lambdaw) {
+  let Vn = 0;
+  let html = '';
 
+  const kv = 1.2;
+  const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
+  html += `<p>Web shear buckling strength coefficient</p>
+           <p>${kv_} = 1.2</p>`;
+  html += Cv2Html;
+
+  Vn = 0.6 * Fy * b * t * Cv2;
+  html += `<p>${Vn_} = 0.6 ${Fy_} ${d_} ${tw_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
+           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+
+  return [Vn, html];
+}
 
 // G4 Rectangular HSS, Box Sections, and Other Singly and Doubly Symmetric Members
 function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {

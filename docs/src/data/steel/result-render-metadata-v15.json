@@ -125,6 +125,12 @@
     }
   },
   "shear": {
+    "Vn_3": {
+      "section": "G3",
+      "title": "Single Angles and Tees",
+      "notation": "V<sub>n</sub>",
+      "unit": "k"
+    },
     "Vn_4": {
       "section": "G4",
       "title": "Rectangular HSS, Box Sections, and Other Singly and Doubly Symmetric Members",
