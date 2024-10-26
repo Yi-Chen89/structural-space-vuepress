@@ -2,7 +2,7 @@ export function criticalResultProcessor(result, category) {
   if (result && category) {
     const resultAsList = Object.entries(result);
 
-    if (category === 'compression') {
+    if (['compression', 'shear'].includes(category)) {
       // filter out objects where isApplicable is false or value is 0
       const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['value']);
     
@@ -24,7 +24,7 @@ export function criticalResultProcessor(result, category) {
         return null;
       }
 
-    } else if (category === 'flexure') {
+    } else if (['flexure'].includes(category)) {
       // filter out objects where isApplicable is false or all values are 0
       const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['values'].some(value => value !== 0));
 

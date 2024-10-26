@@ -25,7 +25,7 @@ export function criticalResultRenderDataConstructor(criticalResult, category) {
   if (criticalResult && category && category in resultMetadata) {
     const results = [];
 
-    if (category === 'compression') {
+    if (['compression', 'shear'].includes(category)) {
       const criticalKey = criticalResult[0];
       const criticalValue = criticalResult[1];
 
@@ -38,7 +38,7 @@ export function criticalResultRenderDataConstructor(criticalResult, category) {
         'unit': metadata['unit'],
       });
 
-    } else if (category === 'flexure') {
+    } else if (['flexure'].includes(category)) {
       const momentSign = ['Sagging', 'Hogging'];
       
       const criticalKeys = criticalResult[0];

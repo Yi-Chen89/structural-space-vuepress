@@ -124,5 +124,12 @@
       "unit": "k-in"
     }
   },
-  "shear": {}
+  "shear": {
+    "Vn_4": {
+      "section": "G4",
+      "title": "Rectangular HSS, Box Sections, and Other Singly and Doubly Symmetric Members",
+      "notation": "V<sub>n</sub>",
+      "unit": "k"
+    }
+  }
 }

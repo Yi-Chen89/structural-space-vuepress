@@ -550,9 +550,9 @@ function capacityCalculator(Fcr, A, areaType) {
   
   let A_ = '';
   if (areaType === 'gross') {
-    A_ = 'A<sub>g</sub>';
+    A_ = Ag_;
   } else if (areaType === 'effective') {
-    A_ = 'A<sub>e</sub>';
+    A_ = Ae_;
   }
   html = `<p>${Pn_} = ${Fcr_} ${A_} = ${Pn.toFixed(2)} k</p>
           <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;

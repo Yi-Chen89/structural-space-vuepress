@@ -54,6 +54,12 @@
             Flexural Strength
           </label>
         </p>
+        <p>
+          <label>
+            <input type="checkbox" v-model="selectedCalcs" value="shear" />
+            Shear Strength
+          </label>
+        </p>
       </div>
       
       <div v-if="compressionInputDisplay">
@@ -454,7 +460,33 @@
     </div>
 
     <div v-if="shearCalcDisplay">
-      <h2>Shear Strength</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Shear Strength</span>
+        <span
+          v-html="shearCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showShearCalcContent()">
+        </span>
+      </h2>
+
+      <div v-if="shearCalcContentDisplay === '-'">
+        <div v-if="true">
+          <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
+          <div>
+            <div v-for="(item, key) in selectedShapeMajorShearCapacityRenderData" :key="key">
+              <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+              <div style="margin-left: 1em;">
+                <div v-html="item.html"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else>
+
+      </div>
+
     </div>
 
     <footer style="font-size: 0.75em; margin-top: 50px;">
@@ -487,6 +519,8 @@
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
+
+  import { majorShearCalculator } from './utils/shear-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
@@ -527,6 +561,7 @@
         slenderClassContentDisplay: '-',
         compressionCalcContentDisplay: '-',
         flexureCalcContentDisplay: '-',
+        shearCalcContentDisplay: '-',
 
         // error variable
         effectiveLengthXInputError: '',
@@ -589,6 +624,10 @@
         return this.selectedCalcs.includes('flexure');
       },
 
+      shearCalcSelected() {
+        return this.selectedCalcs.includes('shear');
+      },
+
       // rendering variable
 
       selectedGradeDesig() {
@@ -639,6 +678,23 @@
         return criticalResultRenderDataConstructor(this.selectedShapeMinorFlexureCriticalCapacity, 'flexure');
       },
 
+      selectedShapeMajorShearCapacityRenderData() {
+        return resultRenderDataConstructor(this.selectedShapeMajorShearCapacity, 'shear');
+      },
+
+      selectedShapeMajorShearCriticalCapacityRenderData() {
+        return criticalResultRenderDataConstructor(this.selectedShapeMajorShearCriticalCapacity, 'shear');
+      },
+
+      // selectedShapeMinorShearCapacityRenderData() {
+      //   return resultRenderDataConstructor(this.selectedShapeMinorShearCapacity, 'shear');
+      // },
+
+      // selectedShapeMinorShearCriticalCapacityRenderData() {
+      //   return criticalResultRenderDataConstructor(this.selectedShapeMinorShearCriticalCapacity, 'shear');
+      // },
+
+
       // valid variable
 
       selectedDescShapeTypeValid() {
@@ -659,6 +715,10 @@
 
       flexureCalcValid() {
         return !!this.selectedShapeMajorFlexureCapacity || !!this.selectedShapeMinorFlexureCapacity;
+      },
+
+      shearCalcValid() {
+        return !!this.selectedShapeMajorShearCapacity || !!this.selectedShapeMinorShearCapacity;
       },
 
 
@@ -708,7 +768,7 @@
       },
 
       slenderClassDisplay() {
-        return (this.selectedShapeValid && this.selectedGradeValid) && (this.compressionCalcSelected || this.flexureCalcSelected);
+        return (this.selectedShapeValid && this.selectedGradeValid) && (this.compressionCalcSelected || this.flexureCalcSelected || this.shearCalcSelected);
       },
 
       compressionSlenderClassDisplay() {
@@ -732,7 +792,7 @@
       },
 
       shearCalcDisplay() {
-        return false;
+        return this.shearCalcValid && this.shearCalcSelected;
       },
 
 
@@ -827,6 +887,22 @@
         return criticalResultProcessor(this.selectedShapeMinorFlexureCapacity, 'flexure');
       },
 
+      selectedShapeMajorShearCapacity() {
+        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass);
+      },
+
+      selectedShapeMajorShearCriticalCapacity() {
+        return criticalResultProcessor(this.selectedShapeMajorShearCapacity, 'shear');
+      },
+
+      selectedShapeMinorShearCapacity() {
+        return 0;
+      },
+
+      // selectedShapeMinorShearCriticalCapacity() {
+      //   return criticalResultProcessor(this.selectedShapeMinorShearCapacity, 'shear');
+      // },
+
     },
 
     watch: {
@@ -883,12 +959,17 @@
         this.flexureCalcContentDisplay = this.flexureCalcContentDisplay === '-' ? '+' : '-';
       },
 
+      showShearCalcContent() {
+        this.shearCalcContentDisplay = this.shearCalcContentDisplay === '-' ? '+' : '-';
+      },
+
       resetContentDisplay() {
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
         this.compressionCalcContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
+        this.shearCalcContentDisplay = '-';
       },
     },
   };
