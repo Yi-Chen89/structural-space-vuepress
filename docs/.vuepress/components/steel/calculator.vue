@@ -107,19 +107,27 @@
       <div v-if="shearInputDisplay">
         <p style="font-size: 1.2em;"><strong>For Shear Calculation</strong></p>
 
-        <p v-if="considerTransverseStiffenerSelectionDisplay" class="select-container">
-          <label for="considerTransverseStiffener">Consider Transverse Stiffeners:&emsp;</label>
-          <select id="considerTransverseStiffener" v-model="selectedConsiderTransverseStiffener" class="select">
+        <p v-if="considerTensionFieldActionSelectionDisplay" class="select-container">
+          <label for="considerTensionFieldAction">Consider Tension Field Action for Interior Web Panels:&emsp;</label>
+          <select id="considerTensionFieldAction" v-model="selectedConsiderTensionFieldAction" class="select">
             <option :value="true">Yes</option>
             <option :value="false">No</option>
           </select>
         </p>
 
-        <p v-if="stiffenerDistanceInputDisplay" class="input-container">
-          <label for="stiffenerDistance">Enter Clear Distance between Transverse Stiffeners (a):&emsp;</label>
-          <input type="number" id="stiffenerDistance" v-model="enteredStiffenerDistance" class="input-number-short" @input="stiffenerDistanceInputValidator">
+        <p v-if="considerTransverseStiffenerSelectionDisplay" class="select-container">
+          <label for="considerTransverseStiffener">Consider Transverse Stiffeners:&emsp;</label>
+          <select id="considerTransverseStiffener" v-model="selectedConsiderTransverseStiffener" class="select">
+            <option :value="true">Yes</option>
+            <option :value="false" :disabled="selectedConsiderTensionFieldAction">No</option>
+          </select>
+        </p>
+
+        <p v-if="transverseStiffenerDistanceInputDisplay" class="input-container">
+          <label for="transverseStiffenerDistance">Enter Clear Distance between Transverse Stiffeners (a):&emsp;</label>
+          <input type="number" id="transverseStiffenerDistance" v-model="enteredTransverseStiffenerDistance" class="input-number-short" @input="transverseStiffenerDistanceInputValidator">
           <span>&nbsp;in.</span>
-          <div v-if="stiffenerDistanceInputError" class="error-message">{{ stiffenerDistanceInputError }}</div>
+          <div v-if="transverseStiffenerDistanceInputError" class="error-message">{{ transverseStiffenerDistanceInputError }}</div>
         </p>
 
         <p v-if="maxToZeroShearDistanceInputDisplay" class="input-container">
@@ -586,8 +594,9 @@
         enteredEffectiveLengthZ: 0,
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
+        selectedConsiderTensionFieldAction: false,
         selectedConsiderTransverseStiffener: false,
-        enteredStiffenerDistance: 0,
+        enteredTransverseStiffenerDistance: 0,
         enteredMaxToZeroShearDistance: 0,
 
         // display variable
@@ -607,7 +616,7 @@
         effectiveLengthZInputError: '',
         unbracedLengthInputError: '',
         ltbModFactorInputError: '',
-        stiffenerDistanceInputError: '',
+        transverseStiffenerDistanceInputError: '',
         maxToZeroShearDistanceInputError: '',
         
       }
@@ -800,11 +809,15 @@
         return this.shearCalcSelected && (this.considerTransverseStiffenerSelectionDisplay || this.maxToZeroShearDistanceInputDisplay);
       },
 
+      considerTensionFieldActionSelectionDisplay() {
+        return this.selectedGradeValid && ['W', 'M', 'S', 'HP', 'C', 'MC'].includes(this.selectedShapeType);
+      },
+
       considerTransverseStiffenerSelectionDisplay() {
         return this.selectedGradeValid && ['W', 'M', 'S', 'HP', 'C', 'MC'].includes(this.selectedShapeType);
       },
 
-      stiffenerDistanceInputDisplay() {
+      transverseStiffenerDistanceInputDisplay() {
         return this.selectedConsiderTransverseStiffener;
       },
 
@@ -918,11 +931,11 @@
         }
       },
 
-      validatedStiffenerDistance() {
-        if (this.stiffenerDistanceInputError || !this.selectedConsiderTransverseStiffener) {
+      validatedTransverseStiffenerDistance() {
+        if (this.transverseStiffenerDistanceInputError || !this.selectedConsiderTransverseStiffener) {
           return 0;
         } else {
-          return this.enteredStiffenerDistance;
+          return this.enteredTransverseStiffenerDistance;
         }
       },
 
@@ -959,7 +972,7 @@
       },
 
       selectedShapeMajorShearCapacity() {
-        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.selectedConsiderTransverseStiffener, this.validatedStiffenerDistance, this.validatedMaxToZeroShearDistance);
+        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.selectedConsiderTransverseStiffener, this.validatedTransverseStiffenerDistance, this.validatedMaxToZeroShearDistance);
       },
 
       selectedShapeMajorShearCriticalCapacity() {
@@ -987,6 +1000,12 @@
       selectedShape(newShape) {
         this.selectedGrade = this.selectedShapeTypeASTMSpecPreferredKey;
       },
+
+      selectedConsiderTensionFieldAction(newValue) {
+        if (newValue) {
+          this.selectedConsiderTransverseStiffener = true;
+        }
+      }
     },
 
     methods: {
@@ -1010,8 +1029,8 @@
         this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
       },
 
-      stiffenerDistanceInputValidator() {
-        this.stiffenerDistanceInputError = nonnegativeNumberInputValidator(this.enteredStiffenerDistance);
+      transverseStiffenerDistanceInputValidator() {
+        this.transverseStiffenerDistanceInputError = nonnegativeNumberInputValidator(this.enteredTransverseStiffenerDistance);
       },
 
       maxToZeroShearDistanceInputValidator() {
