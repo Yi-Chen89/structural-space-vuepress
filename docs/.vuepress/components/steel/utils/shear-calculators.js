@@ -33,7 +33,7 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 
       if (considerTFA) {
         result['Vn_2_2']['isApplicable'] = true;
-        const [phi_2_2, Vn_2_2, html_2_2] = G2_2IShapedAndChannelWithTFA(shapeType, Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, stiffenerDistance);
+        const [phi_2_2, Vn_2_2, html_2_2] = G2_2IShapedAndChannelWithTFA(Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, stiffenerDistance);
         result['Vn_2_2']['phi'] = phi_2_2;
         result['Vn_2_2']['value'] = Vn_2_2;
         result['Vn_2_2']['html'] = html_2_2;
