@@ -161,7 +161,7 @@ function G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, consi
 }
 
 // G2.1 I-Shaped Members and Channels Interior Web Panels with Tension Field Action
-function G2_2IShapedAndChannelWithTFA(shapeType, Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, a) {
+function G2_2IShapedAndChannelWithTFA(Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, a) {
   let phi = 0;
   let Vn = 0;
   let html = '';
