@@ -60,7 +60,7 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
+          <td><span v-html="check"></span></td>
           <td></td>
           <td></td>
           <td></td>
