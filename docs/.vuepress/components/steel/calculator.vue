@@ -524,6 +524,18 @@
             </div>
           </div>
         </div>
+
+        <div v-if="true">
+          <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
+          <div>
+            <div v-for="(item, key) in selectedShapeMinorShearCapacityRenderData" :key="key">
+              <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+              <div style="margin-left: 1em;">
+                <div v-html="item.html"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div v-else>
@@ -564,6 +576,7 @@
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
 
   import { majorShearCalculator } from './utils/shear-calculators.js';
+  import { minorShearCalculator } from './utils/shear-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
@@ -735,13 +748,13 @@
         return criticalResultRenderDataConstructor(this.selectedShapeMajorShearCriticalCapacity, 'shear');
       },
 
-      // selectedShapeMinorShearCapacityRenderData() {
-      //   return resultRenderDataConstructor(this.selectedShapeMinorShearCapacity, 'shear');
-      // },
+      selectedShapeMinorShearCapacityRenderData() {
+        return resultRenderDataConstructor(this.selectedShapeMinorShearCapacity, 'shear');
+      },
 
-      // selectedShapeMinorShearCriticalCapacityRenderData() {
-      //   return criticalResultRenderDataConstructor(this.selectedShapeMinorShearCriticalCapacity, 'shear');
-      // },
+      selectedShapeMinorShearCriticalCapacityRenderData() {
+        return criticalResultRenderDataConstructor(this.selectedShapeMinorShearCriticalCapacity, 'shear');
+      },
 
 
       // valid variable
@@ -980,12 +993,12 @@
       },
 
       selectedShapeMinorShearCapacity() {
-        return 0;
+        return minorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedMaxToZeroShearDistance);
       },
 
-      // selectedShapeMinorShearCriticalCapacity() {
-      //   return criticalResultProcessor(this.selectedShapeMinorShearCapacity, 'shear');
-      // },
+      selectedShapeMinorShearCriticalCapacity() {
+        return criticalResultProcessor(this.selectedShapeMinorShearCapacity, 'shear');
+      },
 
     },
 
