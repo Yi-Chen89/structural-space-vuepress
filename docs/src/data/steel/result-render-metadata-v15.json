@@ -131,6 +131,12 @@
       "notation": "V<sub>n</sub>",
       "unit": "k"
     },
+    "Vn_2_2": {
+      "section": "G2.2",
+      "title": "I-Shaped Members and Channels Interior Web Panels with Tension Field Action",
+      "notation": "V<sub>n</sub>",
+      "unit": "k"
+    },
     "Vn_3": {
       "section": "G3",
       "title": "Single Angles and Tees",

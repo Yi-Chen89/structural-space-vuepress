@@ -1,6 +1,6 @@
 // A360 Chapter G
 
-export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass, considerStiffener, stiffenerDistance, Lv) {
+export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass, considerTFA, considerStiffener, stiffenerDistance, Lv) {
   if (shapeData && shapeType && astmSpecProp && slenderClass) {
     const { Fy, E } = astmSpecProp;
     const {
@@ -14,6 +14,7 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 
     let result = {
       'Vn_2_1': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
+      'Vn_2_2': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
       'Vn_3': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
       'Vn_4': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
       'Vn_5': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
@@ -22,13 +23,21 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
       // G2
 
-      const { d, tw } = shapeData;
+      const { d, bf, tw, tf } = shapeData;
 
       result['Vn_2_1']['isApplicable'] = true;
       const [phi_2_1, Vn_2_1, html_2_1] = G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, considerStiffener, stiffenerDistance)
       result['Vn_2_1']['phi'] = phi_2_1;
       result['Vn_2_1']['value'] = Vn_2_1;
       result['Vn_2_1']['html'] = html_2_1;
+
+      if (considerTFA) {
+        result['Vn_2_2']['isApplicable'] = true;
+        const [phi_2_2, Vn_2_2, html_2_2] = G2_2IShapedAndChannelWithTFA(shapeType, Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, stiffenerDistance);
+        result['Vn_2_2']['phi'] = phi_2_2;
+        result['Vn_2_2']['value'] = Vn_2_2;
+        result['Vn_2_2']['html'] = html_2_2;
+      }
 
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       // G3
@@ -110,6 +119,7 @@ function G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, consi
       const h = lambdaw * tw;
       html += `<p>For webs with transverse stiffeners</p>
                <p>${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</p>`;
+
       if (a / h <= 3.0) {
         kv = 5 + 5 / (a / h)**2;
         html += `<p>For ${a_} / ${h_} &le; 3.0</p>
@@ -147,6 +157,92 @@ function G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, consi
   html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} ${Cv1_} = ${Vn.toFixed(2)} k</p>
            <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
   
+  return [phi, Vn, html];
+}
+
+// G2.1 I-Shaped Members and Channels Interior Web Panels with Tension Field Action
+function G2_2IShapedAndChannelWithTFA(shapeType, Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, a) {
+  let phi = 0;
+  let Vn = 0;
+  let html = '';
+
+  if (considerStiffener && a > 0) {
+    phi = 0.9;
+
+    const h = lambdaw * tw;
+    html += `<p>${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</p>`;
+    
+    const calcTerm1 = a / h;
+    const calcTerm1_ = `${a_} / ${h_}`;
+
+    if (calcTerm1 > 3.0) {
+      html += `<p>Tension Field Action is not considered for ${calcTerm1_} &gt; 3</p>`;
+
+    } else {
+      const Aw = d * tw;
+      html += `<p>Area of web</p>
+               <p>${Aw_} = ${d_} ${tw_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
+
+      const kv = 5 + 5 / calcTerm1**2;
+      html += `<p>Web plate shear buckling coefficient</p>
+               <p>${kv_} = 5 + 5 / (${calcTerm1_})<sup>2</sup> = ${kv.toFixed(2)}</p>`;
+
+      const calcTerm2 = 1.10 * Math.sqrt(kv * E / Fy);
+      const calcTerm2_ = `1.10 &radic;(${kv_} ${E_} / ${Fy_})`;
+
+      if (lambdaw <= calcTerm2) {
+        Vn = 0.6 * Fy * Aw;
+        html += `<p>For ${lambdaw_} &le; ${calcTerm2_}</p>
+                 <p>Shear yielding governs</p>
+                 <p>${Vn_} = 0.6 ${Fy_} ${Aw_} = ${Vn.toFixed(2)} k</p>
+                 <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+
+      } else {
+        html += `<p>For ${lambdaw_} &gt; ${calcTerm2_}</p>`;
+        const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
+        html += Cv2Html;
+
+        const Afc = bf * tf;
+        const Aft = bf * tf;
+        html += `<p>Area of compression and tension flange</p>
+                 <p>${Afc_} = ${Aft_} = ${bf_} ${tf_} = ${Afc.toFixed(2)} in.<sup>2</sup></p>`;
+
+        const bfc = bf;
+        const bft = bf;
+        html += `<p>Width of compression and tension flange</p>
+                 <p>${bfc_} = ${bft_} = ${bf_} = ${bfc.toFixed(2)} in.</p>`;
+        
+        if (2 * Aw / (Afc + Aft) <= 2.5 && h / bfc <= 6.0 && h / bft <= 6.0) {
+          Vn = 0.6 * Fy * Aw * (Cv2 + (1 - Cv2) / (1.15 * Math.sqrt(1 + calcTerm1**2)));
+          html += `<p>For 2 ${Aw_} / (${Afc_} + ${Aft_}) &le; 2.5, ${h_} / ${bfc_} &le; 6.0, and ${h_} / ${bft_} &le; 6.0</p>
+                   <p>${Vn_} = 0.6 ${Fy_} ${Aw_} (${Cv2_} + (1 - ${Cv2_}) / (1.15 &radic;(1 + (${calcTerm1_})<sup>2</sup>))) = ${Vn.toFixed(2)} k</p>
+                   <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+
+        } else {
+          if (2 * Aw / (Afc + Aft) > 2.5) {
+            html += `<p>For 2 ${Aw_} / (${Afc_} + ${Aft_}) &gt; 2.5`;
+            if (h / bfc > 6.0) {
+              html += `, ${h_} / ${bfc_} &gt; 6.0, and ${h_} / ${bft_} &gt; 6.0</p>`;
+            } else {
+              html += `</p>`;
+            }
+          } else {
+            if (h / bfc > 6.0) {
+              html += `<p>For ${h_} / ${bfc_} &gt; 6.0, and ${h_} / ${bft_} &gt; 6.0</p>`;
+            }
+          }
+
+          Vn = 0.6 * Fy * Aw * (Cv2 + (1 - Cv2) / (1.15 * (calcTerm1 + Math.sqrt(1 + calcTerm1**2))));
+          html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} (${Cv2_} + (1 - ${Cv2_}) / (1.15 (${calcTerm1_} + &radic;(1 + (${calcTerm1_})<sup>2</sup>)))) = ${Vn.toFixed(2)} k</p>
+                   <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+        }
+      }
+    }
+
+  } else {
+    html += `To consider Tension Field Action, ${a_} must not be 0`;
+  }
+
   return [phi, Vn, html];
 }
 
@@ -196,7 +292,7 @@ function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
 // Web Shear Buckling Strength Coefficient, Cv2, Calculator
 function webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw) {
   let Cv2 = 0;
-  let html = '';
+  let html = '<p>Web shear buckling coefficient</p>';
 
   const calcTerm1 = Math.sqrt(kv * E / Fy);
   const calcTerm1_ = `&radic;(${kv_} ${E_} / ${Fy_})`;
@@ -312,6 +408,12 @@ const Cv2_ = 'C<sub>v2</sub>';
 const a_ = 'a';
 
 const Ag_ = 'A<sub>g</sub>';
+const Afc_ = 'A<sub>fc</sub>';
+const Aft_ = 'A<sub>ft</sub>';
+
+const bfc_ = 'b<sub>fc</sub>';
+const bft_ = 'b<sub>ft</sub>';
+
 
 const Vn_ = 'V<sub>n</sub>';
 

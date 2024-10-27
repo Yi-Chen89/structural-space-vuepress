@@ -972,7 +972,7 @@
       },
 
       selectedShapeMajorShearCapacity() {
-        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.selectedConsiderTransverseStiffener, this.validatedTransverseStiffenerDistance, this.validatedMaxToZeroShearDistance);
+        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.selectedConsiderTensionFieldAction, this.selectedConsiderTransverseStiffener, this.validatedTransverseStiffenerDistance, this.validatedMaxToZeroShearDistance);
       },
 
       selectedShapeMajorShearCriticalCapacity() {
