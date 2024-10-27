@@ -107,6 +107,21 @@
       <div v-if="shearInputDisplay">
         <p style="font-size: 1.2em;"><strong>For Shear Calculation</strong></p>
 
+        <p v-if="considerTransverseStiffenerSelectionDisplay" class="select-container">
+          <label for="considerTransverseStiffener">Consider Transverse Stiffeners:&emsp;</label>
+          <select id="considerTransverseStiffener" v-model="selectedConsiderTransverseStiffener" class="select">
+            <option :value="true">Yes</option>
+            <option :value="false">No</option>
+          </select>
+        </p>
+
+        <p v-if="stiffenerDistanceInputDisplay" class="input-container">
+          <label for="stiffenerDistance">Enter Clear Distance between Transverse Stiffeners (a):&emsp;</label>
+          <input type="number" id="stiffenerDistance" v-model="enteredStiffenerDistance" class="input-number-short" @input="stiffenerDistanceInputValidator">
+          <span>&nbsp;in.</span>
+          <div v-if="stiffenerDistanceInputError" class="error-message">{{ stiffenerDistanceInputError }}</div>
+        </p>
+
         <p v-if="maxToZeroShearDistanceInputDisplay" class="input-container">
           <label for="maxToZeroShearDistance">Enter Distance from Max to Zero Shear Force (L<sub>v</sub>):&emsp;</label>
           <input type="number" id="maxToZeroShearDistance" v-model="enteredMaxToZeroShearDistance" class="input-number-short" @input="maxToZeroShearDistanceInputValidator">
@@ -571,6 +586,8 @@
         enteredEffectiveLengthZ: 0,
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
+        selectedConsiderTransverseStiffener: false,
+        enteredStiffenerDistance: 0,
         enteredMaxToZeroShearDistance: 0,
 
         // display variable
@@ -590,6 +607,7 @@
         effectiveLengthZInputError: '',
         unbracedLengthInputError: '',
         ltbModFactorInputError: '',
+        stiffenerDistanceInputError: '',
         maxToZeroShearDistanceInputError: '',
         
       }
@@ -779,11 +797,19 @@
       },
 
       shearInputDisplay() {
-        return this.shearCalcSelected;
+        return this.shearCalcSelected && (this.considerTransverseStiffenerSelectionDisplay || this.maxToZeroShearDistanceInputDisplay);
+      },
+
+      considerTransverseStiffenerSelectionDisplay() {
+        return this.selectedGradeValid && ['W', 'M', 'S', 'HP', 'C', 'MC'].includes(this.selectedShapeType);
+      },
+
+      stiffenerDistanceInputDisplay() {
+        return this.selectedConsiderTransverseStiffener;
       },
 
       maxToZeroShearDistanceInputDisplay() {
-        return this.selectedGradeValid;
+        return this.selectedGradeValid && ['HSS Round', 'PIPE'].includes(this.selectedShapeType);
       },
 
       // output display variable
@@ -892,6 +918,14 @@
         }
       },
 
+      validatedStiffenerDistance() {
+        if (this.stiffenerDistanceInputError || !this.selectedConsiderTransverseStiffener) {
+          return 0;
+        } else {
+          return this.enteredStiffenerDistance;
+        }
+      },
+
       validatedMaxToZeroShearDistance() {
         if (this.maxToZeroShearDistanceInputError) {
           return 0;
@@ -925,7 +959,7 @@
       },
 
       selectedShapeMajorShearCapacity() {
-        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedMaxToZeroShearDistance);
+        return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.selectedConsiderTransverseStiffener, this.validatedStiffenerDistance, this.validatedMaxToZeroShearDistance);
       },
 
       selectedShapeMajorShearCriticalCapacity() {
@@ -974,6 +1008,10 @@
 
       ltbModFactorInputValidator() {
         this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
+      },
+
+      stiffenerDistanceInputValidator() {
+        this.stiffenerDistanceInputError = nonnegativeNumberInputValidator(this.enteredStiffenerDistance);
       },
 
       maxToZeroShearDistanceInputValidator() {

@@ -1,6 +1,6 @@
 // A360 Chapter G
 
-export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lv) {
+export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass, considerStiffener, stiffenerDistance, Lv) {
   if (shapeData && shapeType && astmSpecProp && slenderClass) {
     const { Fy, E } = astmSpecProp;
     const {
@@ -13,12 +13,22 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     } = slenderClass;
 
     let result = {
-      'Vn_3': {'isApplicable': false, 'value': 0, 'html': null},
-      'Vn_4': {'isApplicable': false, 'value': 0, 'html': null},
-      'Vn_5': {'isApplicable': false, 'value': 0, 'html': null},
+      'Vn_2_1': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
+      'Vn_3': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
+      'Vn_4': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
+      'Vn_5': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+      // G2
+
+      const { d, tw } = shapeData;
+
+      result['Vn_2_1']['isApplicable'] = true;
+      const [phi_2_1, Vn_2_1, html_2_1] = G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, considerStiffener, stiffenerDistance)
+      result['Vn_2_1']['phi'] = phi_2_1;
+      result['Vn_2_1']['value'] = Vn_2_1;
+      result['Vn_2_1']['html'] = html_2_1;
 
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       // G3
@@ -26,7 +36,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       const { d, tw } = shapeData;
 
       result['Vn_3']['isApplicable'] = true;
-      const [Vn_3, html_3] = G3Tee(Fy, E, d, tw, lambdaw);
+      const [phi_3, Vn_3, html_3] = G3Tee(Fy, E, d, tw, lambdaw);
+      result['Vn_3']['phi'] = phi_3;
       result['Vn_3']['value'] = Vn_3;
       result['Vn_3']['html'] = html_3;
 
@@ -36,7 +47,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       const { h, tdes } = shapeData;
 
       result['Vn_4']['isApplicable'] = true;
-      const [Vn_4, html_4] = G4RectangularHollowSection(Fy, E, h, tdes, lambdaw);
+      const [phi_4, Vn_4, html_4] = G4RectangularHollowSection(Fy, E, h, tdes, lambdaw);
+      result['Vn_4']['phi'] = phi_4;
       result['Vn_4']['value'] = Vn_4;
       result['Vn_4']['html'] = html_4;
 
@@ -46,7 +58,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       const { A, OD } = shapeData;
 
       result['Vn_5']['isApplicable'] = true;
-      const [Vn_5, html_5] = G5CircularHollowSection(Fy, E, A, OD, lambdaf, Lv);
+      const [phi_5, Vn_5, html_5] = G5CircularHollowSection(Fy, E, A, OD, lambdaf, Lv);
+      result['Vn_5']['phi'] = phi_5;
       result['Vn_5']['value'] = Vn_5;
       result['Vn_5']['html'] = html_5;
 
@@ -64,15 +77,88 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 
 // G2 I-Shaped Members and Channels
 
+// G2.1 I-Shaped Members and Channels without Tension Field Action
+function G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, considerStiffener, a) {
+  let phi = 0;
+  let Vn = 0;
+  let html = '';
+
+  const Aw = d * tw;
+  html += `<p>Area of web</p>
+           <p>${Aw_} = ${d_} ${tw_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
+  
+  let Cv1 = 0;
+  if (['W', 'M', 'S', 'HP'].includes(shapeType) && lambdaw <= 2.24 * Math.sqrt(E / Fy)) {
+    phi = 1;
+    Cv1 = 1;
+    html += `<p>For I-shaped members with ${lambdaw_} &le; 2.24 &radic;(${E_} / ${Fy_})</p>
+             <p>${phiv_} = 1.00</p>
+             <p>${Cv1_} = 1.0</p>
+             <p>Shear yielding governs</p>`;
+  
+  } else if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+    phi = 0.9;
+
+    if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
+      html += `<p>For I-shaped members with ${lambdaw_} &gt; 2.24 &radic;(${E_} / ${Fy_})</p>`;
+    } else if (['C', 'MC'].includes(shapeType)) {
+      html += `<p>For channels</p>`;
+    }
+
+    let kv = 0;
+    if (considerStiffener && a > 0) {
+      const h = lambdaw * tw;
+      html += `<p>For webs with transverse stiffeners</p>
+               <p>${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</p>`;
+      if (a / h <= 3.0) {
+        kv = 5 + 5 / (a / h)**2;
+        html += `<p>For ${a_} / ${h_} &le; 3.0</p>
+                 <p>${kv_} = 5 + 5 / (${a_} / ${h_})<sup>2</sup> = ${kv.toFixed(2)}</p>`;
+      } else {
+        kv = 5.34;
+        html += `<p>For ${a_} / ${h_} &gt; 3.0</p>
+                 <p>${kv_} = 5.34</p>`;
+      }
+
+    } else {
+      kv = 5.34;
+      html += `<p>For webs without transverse stiffeners</p>
+               <p>Web plate shear buckling coefficient</p>
+               <p>${kv_} = ${kv.toFixed(2)}</p>`;
+    }
+    
+    const calcTerm1 = 1.10 * Math.sqrt(kv * E / Fy);
+    const calcTerm1_ = `1.10 &radic;(${kv_} ${E_} / ${Fy_})`;
+    if (lambdaw <= calcTerm1) {
+      Cv1 = 1.0;
+      html += `<p>For ${lambdaw_} &le; ${calcTerm1_}</p>
+               <p>${Cv1_} = 1.0</p>
+               <p>Shear yielding governs</p>`;
+
+    } else {
+      Cv1 = calcTerm1 / lambdaw;
+      html += `<p>For ${lambdaw_} &gt; ${calcTerm1_}</p>
+               <p>${Cv1_} = ${calcTerm1_} / ${lambdaw_} = ${Cv1.toFixed(2)}</p>
+               <p>Shear buckling governs</p>`;
+    }
+  }
+
+  Vn = 0.6 * Fy * Aw * Cv1;
+  html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} ${Cv1_} = ${Vn.toFixed(2)} k</p>
+           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+  
+  return [phi, Vn, html];
+}
 
 // G3 Single Angles and Tees
 function G3Tee(Fy, E, b, t, lambdaw) {
+  let phi = 0.9;
   let Vn = 0;
   let html = '';
 
   const kv = 1.2;
   const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
-  html += `<p>Web shear buckling strength coefficient</p>
+  html += `<p>Web plate shear buckling coefficient</p>
            <p>${kv_} = 1.2</p>`;
   html += Cv2Html;
 
@@ -80,11 +166,12 @@ function G3Tee(Fy, E, b, t, lambdaw) {
   html += `<p>${Vn_} = 0.6 ${Fy_} ${d_} ${tw_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
            <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
 
-  return [Vn, html];
+  return [phi, Vn, html];
 }
 
 // G4 Rectangular HSS, Box Sections, and Other Singly and Doubly Symmetric Members
 function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
+  let phi = 0.9;
   let Vn = 0;
   let html = '';
 
@@ -95,7 +182,7 @@ function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
 
   const kv = 5;
   const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
-  html += `<p>Web shear buckling strength coefficient</p>
+  html += `<p>Web plate shear buckling coefficient</p>
            <p>${kv_} = 5</p>`;
   html += Cv2Html;
 
@@ -103,7 +190,7 @@ function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
   html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
            <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
 
-  return [Vn, html];
+  return [phi, Vn, html];
 }
 
 // Web Shear Buckling Strength Coefficient, Cv2, Calculator
@@ -138,6 +225,7 @@ function webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw) {
 
 // G5 Round HSS
 function G5CircularHollowSection(Fy, E, Ag, D, lambda, Lv) {
+  let phi = 0.9;
   let Vn = 0;
   let html = '';
 
@@ -166,7 +254,7 @@ function G5CircularHollowSection(Fy, E, Ag, D, lambda, Lv) {
   html += `<p>${Vn_} = ${Fcr_} ${Ag_} / 2 = ${Vn.toFixed(2)} k</p>
            <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
 
-  return [Vn, html];
+  return [phi, Vn, html];
 }
 
 // G6 Weak-Axis Shear in Doubly Symmetric and Singly Symmetric Shapes
@@ -219,7 +307,9 @@ const Fcr_ = 'F<sub>cr</sub>';
 
 const Aw_ = 'A<sub>w</sub>';
 const kv_ = 'k<sub>v</sub>';
+const Cv1_ = 'C<sub>v1</sub>';
 const Cv2_ = 'C<sub>v2</sub>';
+const a_ = 'a';
 
 const Ag_ = 'A<sub>g</sub>';
 
@@ -228,3 +318,5 @@ const Vn_ = 'V<sub>n</sub>';
 const lambda_ = '&lambda;';
 const lambdaf_ = '&lambda;<sub>f</sub>';
 const lambdaw_ = '&lambda;<sub>w</sub>';
+
+const phiv_ = '&phi;<sub>v</sub>';

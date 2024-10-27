@@ -125,6 +125,12 @@
     }
   },
   "shear": {
+    "Vn_2_1": {
+      "section": "G2.1",
+      "title": "I-Shaped Members and Channels without Tension Field Action",
+      "notation": "V<sub>n</sub>",
+      "unit": "k"
+    },
     "Vn_3": {
       "section": "G3",
       "title": "Single Angles and Tees",
