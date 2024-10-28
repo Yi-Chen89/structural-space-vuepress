@@ -100,6 +100,14 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
       // G6
 
+      const { bf, tf } = shapeData;
+
+      result['Vn_6']['isApplicable'] = true;
+      const [phi_6, Vn_6, html_6] = G6DoublyAndSinglySymmetricShape(shapeType, Fy, E, bf, tf, lambdaf);
+      result['Vn_6']['phi'] = phi_6;
+      result['Vn_6']['value'] = Vn_6;
+      result['Vn_6']['html'] = html_6;
+
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // G4
 
@@ -238,7 +246,7 @@ function G2_2IShapedAndChannelWithTFA(Fy, E, d, bf, tw, tf, lambdaw, considerSti
 
       } else {
         html += `<p>For ${lambdaw_} &gt; ${calcTerm2_}</p>`;
-        const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
+        const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
         html += Cv2Html;
 
         const Afc = bf * tf;
@@ -292,9 +300,9 @@ function G3Tee(Fy, E, b, t, lambdaw) {
   let html = '';
 
   const kv = 1.2;
-  const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
+  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
   html += `<p>Web plate shear buckling coefficient</p>
-           <p>${kv_} = 1.2</p>`;
+           <p>${kv_} = ${kv.toFixed(1)}</p>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * b * t * Cv2;
@@ -316,9 +324,9 @@ function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
            <p>${Aw_} = 2 ${h_} ${tdes_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
 
   const kv = 5;
-  const [Cv2, Cv2Html] = webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw);
+  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
   html += `<p>Web plate shear buckling coefficient</p>
-           <p>${kv_} = 5</p>`;
+           <p>${kv_} = ${kv.toFixed(0)}</p>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * Aw * Cv2;
@@ -326,36 +334,6 @@ function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
            <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
 
   return [phi, Vn, html];
-}
-
-// Web Shear Buckling Strength Coefficient, Cv2, Calculator
-function webShearBucklingStrengthCoefficientCalculator(Fy, E, kv, lambdaw) {
-  let Cv2 = 0;
-  let html = '<p>Web shear buckling coefficient</p>';
-
-  const calcTerm1 = Math.sqrt(kv * E / Fy);
-  const calcTerm1_ = `&radic;(${kv_} ${E_} / ${Fy_})`;
-
-  if (lambdaw <= 1.10 * calcTerm1) {
-    Cv2 = 1.0;
-    html += `<p>For ${lambdaw_} &le; 1.10 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.0</p>
-             <p>Shear yielding governs</p>`;
-
-  } else if (lambdaw <= 1.37 * calcTerm1) {
-    Cv2 = 1.10 * calcTerm1 / lambdaw;
-    html += `<p>For 1.10 ${calcTerm1_} &lt; ${lambdaw_} &le; 1.37 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.10 ${calcTerm1_} / ${lambdaw_} = ${Cv2.toFixed(2)}</p>
-             <p>Shear buckling governs</p>`;
-
-  } else {
-    Cv2 = 1.51 * kv * E / (lambdaw**2 * Fy);
-    html += `<p>For ${lambdaw_} &gt; 1.37 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.51 ${kv_} ${E_} / (${lambdaw_}<sup>2</sup> ${Fy_}) = ${Cv2.toFixed(2)}</p>
-             <p>Shear buckling governs</p>`;
-  }
-
-  return [Cv2, html];
 }
 
 // G5 Round HSS
@@ -393,6 +371,61 @@ function G5CircularHollowSection(Fy, E, Ag, D, lambda, Lv) {
 }
 
 // G6 Weak-Axis Shear in Doubly Symmetric and Singly Symmetric Shapes
+function G6DoublyAndSinglySymmetricShape(shapeType, Fy, E, bf, tf, lambdaf) {
+  let phi = 0.9;
+  let Vn = 0;
+  let html = '';
+
+  const kv = 1.2;
+  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('y', Fy, E, kv, lambdaf);
+  html += `<p>Web plate shear buckling coefficient</p>
+           <p>${kv_} = ${kv.toFixed(1)}</p>`;
+  html += Cv2Html;
+
+  Vn = 0.6 * Fy * bf * tf * Cv2;
+  html += `<p>For each shear resisting element</p>
+           <p>${Vn_} = 0.6 ${Fy_} ${bf_} ${tf_} ${Cv2_} = ${Vn.toFixed(2)} k</p>`;
+  
+  if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
+    Vn *= 2;
+    html += `<p>${Vn_} = 2 ${Vn_} = ${Vn.toFixed(2)} k</p>`;
+  }
+  html += `<p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+
+  return [phi, Vn, html];
+}
+
+// Web Shear Buckling Coefficient, Cv2, Calculator
+function webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda) {
+  let Cv2 = 0;
+  let html = '<p>Web shear buckling coefficient</p>';
+
+  let lambdawf_ = axis === 'x' ? lambdaw_ : lambdaf_;
+
+  const calcTerm1 = Math.sqrt(kv * E / Fy);
+  const calcTerm1_ = `&radic;(${kv_} ${E_} / ${Fy_})`;
+
+  if (lambda <= 1.10 * calcTerm1) {
+    Cv2 = 1.0;
+    html += `<p>For ${lambdawf_} &le; 1.10 ${calcTerm1_}</p>
+             <p>${Cv2_} = ${Cv2.toFixed(1)}</p>
+             <p>Shear yielding governs</p>`;
+
+  } else if (lambda <= 1.37 * calcTerm1) {
+    Cv2 = 1.10 * calcTerm1 / lambda;
+    html += `<p>For 1.10 ${calcTerm1_} &lt; ${lambdawf_} &le; 1.37 ${calcTerm1_}</p>
+             <p>${Cv2_} = 1.10 ${calcTerm1_} / ${lambdawf_} = ${Cv2.toFixed(2)}</p>
+             <p>Shear buckling governs</p>`;
+
+  } else {
+    Cv2 = 1.51 * kv * E / (lambda**2 * Fy);
+    html += `<p>For ${lambdawf_} &gt; 1.37 ${calcTerm1_}</p>
+             <p>${Cv2_} = 1.51 ${kv_} ${E_} / (${lambdawf_}<sup>2</sup> ${Fy_}) = ${Cv2.toFixed(2)}</p>
+             <p>Shear buckling governs</p>`;
+  }
+
+  return [Cv2, html];
+}
 
 
 // html notation

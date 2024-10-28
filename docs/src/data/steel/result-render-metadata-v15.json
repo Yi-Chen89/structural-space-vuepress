@@ -154,6 +154,12 @@
       "title": "Round HSS",
       "notation": "V<sub>n</sub>",
       "unit": "k"
+    },
+    "Vn_6": {
+      "section": "G6",
+      "title": "Weak-Axis Shear in Doubly Symmetric and Singly Symmetric Shapes",
+      "notation": "V<sub>n</sub>",
+      "unit": "k"
     }
   }
 }

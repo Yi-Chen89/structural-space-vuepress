@@ -164,7 +164,7 @@ function slenderRatioParser(shapeType, shapeSlenderRatio) {
     result['flange']['notation'] = 'Flange';
     result['flange']['ratio']['notation'] = `${lambdaf_}`;
     result['flange']['ratio']['value'] = lambdaf;
-    result['flange']['ratio']['html'] = `${b_} / ${t_} = ${lambdaf.toFixed(2)}`;
+    result['flange']['ratio']['html'] = `${bf_} / ${tf_} = ${lambdaf.toFixed(2)}`;
 
     lambdaw = shapeSlenderRatio['h/tw'];
     result['web']['isApplicable'] = true;
