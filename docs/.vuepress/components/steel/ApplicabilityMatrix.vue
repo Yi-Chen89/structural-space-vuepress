@@ -57,11 +57,11 @@
         </tr>
         <tr>
           <td class="row-header">Shear Minor</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
           <td></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
           <td></td>
           <td></td>
         </tr>
