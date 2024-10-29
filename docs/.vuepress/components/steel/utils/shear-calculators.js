@@ -13,11 +13,11 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     } = slenderClass;
 
     let result = {
-      'Vn_2_1': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
-      'Vn_2_2': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
-      'Vn_3': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
-      'Vn_4': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
-      'Vn_5': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
+      'Vn_2_1': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Vn_2_2': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Vn_3': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Vn_4': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Vn_5': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
@@ -26,16 +26,18 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       const { d, bf, tw, tf } = shapeData;
 
       result['Vn_2_1']['isApplicable'] = true;
-      const [phi_2_1, Vn_2_1, html_2_1] = G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, considerStiffener, stiffenerDistance)
+      const [phi_2_1, Vn_2_1, html_2_1] = G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, considerStiffener, stiffenerDistance);
       result['Vn_2_1']['phi'] = phi_2_1;
-      result['Vn_2_1']['value'] = Vn_2_1;
+      result['Vn_2_1']['nominalValue'] = Vn_2_1;
+      result['Vn_2_1']['designValue'] = phi_2_1 * Vn_2_1;
       result['Vn_2_1']['html'] = html_2_1;
 
       if (considerTFA) {
         result['Vn_2_2']['isApplicable'] = true;
         const [phi_2_2, Vn_2_2, html_2_2] = G2_2IShapedAndChannelWithTFA(Fy, E, d, bf, tw, tf, lambdaw, considerStiffener, stiffenerDistance);
         result['Vn_2_2']['phi'] = phi_2_2;
-        result['Vn_2_2']['value'] = Vn_2_2;
+        result['Vn_2_2']['nominalValue'] = Vn_2_2;
+        result['Vn_2_2']['designValue'] = phi_2_2 * Vn_2_2;
         result['Vn_2_2']['html'] = html_2_2;
       }
 
@@ -47,7 +49,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_3']['isApplicable'] = true;
       const [phi_3, Vn_3, html_3] = G3Tee(Fy, E, d, tw, lambdaw);
       result['Vn_3']['phi'] = phi_3;
-      result['Vn_3']['value'] = Vn_3;
+      result['Vn_3']['nominalValue'] = Vn_3;
+      result['Vn_3']['designValue'] = phi_3 * Vn_3;
       result['Vn_3']['html'] = html_3;
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
@@ -58,7 +61,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_4']['isApplicable'] = true;
       const [phi_4, Vn_4, html_4] = G4RectangularHollowSection('x', Fy, E, h, tdes, lambdaw);
       result['Vn_4']['phi'] = phi_4;
-      result['Vn_4']['value'] = Vn_4;
+      result['Vn_4']['nominalValue'] = Vn_4;
+      result['Vn_4']['designValue'] = phi_4 * Vn_4;
       result['Vn_4']['html'] = html_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
@@ -69,7 +73,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_5']['isApplicable'] = true;
       const [phi_5, Vn_5, html_5] = G5CircularHollowSection(Fy, E, A, OD, lambdaf, Lv);
       result['Vn_5']['phi'] = phi_5;
-      result['Vn_5']['value'] = Vn_5;
+      result['Vn_5']['nominalValue'] = Vn_5;
+      result['Vn_5']['designValue'] = phi_5 * Vn_5;
       result['Vn_5']['html'] = html_5;
     }
     return result;
@@ -92,9 +97,9 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     } = slenderClass;
 
     let result = {
-      'Vn_4': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
-      'Vn_5': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
-      'Vn_6': {'isApplicable': false, 'phi': 0, 'value': 0, 'html': null},
+      'Vn_4': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Vn_5': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Vn_6': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
@@ -105,7 +110,8 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_6']['isApplicable'] = true;
       const [phi_6, Vn_6, html_6] = G6DoublyAndSinglySymmetricShape(shapeType, Fy, E, bf, tf, lambdaf);
       result['Vn_6']['phi'] = phi_6;
-      result['Vn_6']['value'] = Vn_6;
+      result['Vn_6']['nominalValue'] = Vn_6;
+      result['Vn_6']['designValue'] = phi_6 * Vn_6;
       result['Vn_6']['html'] = html_6;
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
@@ -116,7 +122,8 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_4']['isApplicable'] = true;
       const [phi_4, Vn_4, html_4] = G4RectangularHollowSection('y', Fy, E, b, tdes, lambdaf);
       result['Vn_4']['phi'] = phi_4;
-      result['Vn_4']['value'] = Vn_4;
+      result['Vn_4']['nominalValue'] = Vn_4;
+      result['Vn_4']['designValue'] = phi_4 * Vn_4;
       result['Vn_4']['html'] = html_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
@@ -127,7 +134,8 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_5']['isApplicable'] = true;
       const [phi_5, Vn_5, html_5] = G5CircularHollowSection(Fy, E, A, OD, lambdaf, Lv);
       result['Vn_5']['phi'] = phi_5;
-      result['Vn_5']['value'] = Vn_5;
+      result['Vn_5']['nominalValue'] = Vn_5;
+      result['Vn_5']['designValue'] = phi_5 * Vn_5;
       result['Vn_5']['html'] = html_5;
     }
     return result;
