@@ -56,7 +56,7 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       const { h, tdes } = shapeData;
 
       result['Vn_4']['isApplicable'] = true;
-      const [phi_4, Vn_4, html_4] = G4RectangularHollowSection(Fy, E, h, tdes, lambdaw);
+      const [phi_4, Vn_4, html_4] = G4RectangularHollowSection('x', Fy, E, h, tdes, lambdaw);
       result['Vn_4']['phi'] = phi_4;
       result['Vn_4']['value'] = Vn_4;
       result['Vn_4']['html'] = html_4;
@@ -110,6 +110,14 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // G4
+
+      const { b, tdes } = shapeData;
+
+      result['Vn_4']['isApplicable'] = true;
+      const [phi_4, Vn_4, html_4] = G4RectangularHollowSection('y', Fy, E, b, tdes, lambdaf);
+      result['Vn_4']['phi'] = phi_4;
+      result['Vn_4']['value'] = Vn_4;
+      result['Vn_4']['html'] = html_4;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
       // G5
@@ -313,24 +321,28 @@ function G3Tee(Fy, E, b, t, lambdaw) {
 }
 
 // G4 Rectangular HSS, Box Sections, and Other Singly and Doubly Symmetric Members
-function G4RectangularHollowSection(Fy, E, h, t, lambdaw) {
+function G4RectangularHollowSection(axis, Fy, E, h, t, lambda) {
   let phi = 0.9;
   let Vn = 0;
   let html = '';
 
+  let hshear_ = axis === 'x' ? h_ : b_;
+  let Ashear_ = axis === 'x' ? Aw_ : Af_;
+
+  html += `<p>Area of ${axis === 'x' ? 'web' : 'flange'}</p>`;
+
   const Aw = 2 * h * t;
-  html += `<p>Area of web</p>
-           <p>${h_} = ${h.toFixed(2)} in.</p>
-           <p>${Aw_} = 2 ${h_} ${tdes_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
+  html += `<p>${hshear_} = ${h.toFixed(2)} in.</p>
+           <p>${Ashear_} = 2 ${hshear_} ${tdes_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
 
   const kv = 5;
-  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
+  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda);
   html += `<p>Web plate shear buckling coefficient</p>
            <p>${kv_} = ${kv.toFixed(0)}</p>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * Aw * Cv2;
-  html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
+  html += `<p>${Vn_} = 0.6 ${Fy_} ${Ashear_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
            <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
 
   return [phi, Vn, html];
@@ -474,6 +486,7 @@ const Lv_ = 'L<sub>v</sub>';
 const Fcr_ = 'F<sub>cr</sub>';
 
 const Aw_ = 'A<sub>w</sub>';
+const Af_ = 'A<sub>f</sub>';
 const kv_ = 'k<sub>v</sub>';
 const Cv1_ = 'C<sub>v1</sub>';
 const Cv2_ = 'C<sub>v2</sub>';
