@@ -1,3 +1,5 @@
+import { resultRenderDataConstructor } from './render-data-constructors';
+
 // A360 Chapter G
 
 export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slenderClass, considerTFA, considerStiffener, stiffenerDistance, Lv) {
@@ -77,6 +79,8 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_5']['designValue'] = phi_5 * Vn_5;
       result['Vn_5']['html'] = html_5;
     }
+
+    result = resultRenderDataConstructor(result, 'shear');
     return result;
 
   } else {
@@ -138,12 +142,35 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_5']['designValue'] = phi_5 * Vn_5;
       result['Vn_5']['html'] = html_5;
     }
+
+    result = resultRenderDataConstructor(result, 'shear');
     return result;
 
   } else {
     return null;
   }
 }
+
+export function criticalShearResultProcessor(result) {
+  if (result) {
+    // filter out objects where isApplicable is false or designValue is 0
+    const filteredResultAsList = Object.entries(result).filter(([, item]) => item['isApplicable'] && item['designValue'] !== 0);
+
+    if (filteredResultAsList.length > 0) {
+      const criticalResult = filteredResultAsList.reduce((min, item) =>
+        item[1]['designValue'] < min[1]['designValue'] ? item : min
+      );
+
+      return { [criticalResult[0]]: JSON.parse(JSON.stringify(criticalResult[1])) };
+
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
+
 
 // Helper Function
 

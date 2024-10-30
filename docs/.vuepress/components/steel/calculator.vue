@@ -511,15 +511,33 @@
           @click="showShearCalcContent()">
         </span>
       </h2>
-
+      
       <div v-if="shearCalcContentDisplay === '-'">
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
           <div>
-            <div v-for="(item, key) in selectedShapeMajorShearCapacityRenderData" :key="key">
+            <div v-for="(item, key) in selectedShapeMajorShearCapacity" :key="key">
               <p><strong>{{ item.section }} {{ item.title }}</strong></p>
               <div style="margin-left: 1em;">
                 <div v-html="item.html"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p><strong>Governing Limit State</strong></p>
+            <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
+              <div style="margin-left: 1em;">
+                <p><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p>
+                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+                </p>
+                <p>
+                  &phi;<sub>v</sub> = {{ item.phi.toFixed(1) }}
+                </p>
+                <p><strong>
+                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+                </strong></p>
               </div>
             </div>
           </div>
@@ -528,10 +546,28 @@
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
           <div>
-            <div v-for="(item, key) in selectedShapeMinorShearCapacityRenderData" :key="key">
+            <div v-for="(item, key) in selectedShapeMinorShearCapacity" :key="key">
               <p><strong>{{ item.section }} {{ item.title }}</strong></p>
               <div style="margin-left: 1em;">
                 <div v-html="item.html"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p><strong>Governing Limit State</strong></p>
+            <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
+              <div style="margin-left: 1em;">
+                <p><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p>
+                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+                </p>
+                <p>
+                  &phi;<sub>v</sub> = {{ item.phi.toFixed(1) }}
+                </p>
+                <p><strong>
+                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+                </strong></p>
               </div>
             </div>
           </div>
@@ -539,7 +575,39 @@
       </div>
 
       <div v-else>
+        <div v-if="true">
+          <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
+          <div>
+            <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
+              <div style="margin-left: 1em;">
+                <p><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p>
+                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+                </p>
+                <p><strong>
+                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+                </strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div v-if="true">
+          <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
+          <div>
+            <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
+              <div style="margin-left: 1em;">
+                <p><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p>
+                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+                </p>
+                <p><strong>
+                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+                </strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -578,6 +646,7 @@
 
   import { majorShearCalculator } from './utils/shear-calculators.js';
   import { minorShearCalculator } from './utils/shear-calculators.js';
+  import { criticalShearResultProcessor } from './utils/shear-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
@@ -733,22 +802,6 @@
         return criticalResultRenderDataConstructor(this.selectedShapeMinorFlexureCriticalCapacity, 'flexure');
       },
 
-      selectedShapeMajorShearCapacityRenderData() {
-        return resultRenderDataConstructor(this.selectedShapeMajorShearCapacity, 'shear');
-      },
-
-      selectedShapeMajorShearCriticalCapacityRenderData() {
-        return criticalResultRenderDataConstructor(this.selectedShapeMajorShearCriticalCapacity, 'shear');
-      },
-
-      selectedShapeMinorShearCapacityRenderData() {
-        return resultRenderDataConstructor(this.selectedShapeMinorShearCapacity, 'shear');
-      },
-
-      selectedShapeMinorShearCriticalCapacityRenderData() {
-        return criticalResultRenderDataConstructor(this.selectedShapeMinorShearCriticalCapacity, 'shear');
-      },
-
 
       // valid variable
 
@@ -775,7 +828,6 @@
       shearCalcValid() {
         return !!this.selectedShapeMajorShearCapacity || !!this.selectedShapeMinorShearCapacity;
       },
-
 
       // input display variable
 
@@ -982,7 +1034,7 @@
       },
 
       selectedShapeMajorShearCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeMajorShearCapacity, 'shear');
+        return criticalShearResultProcessor(this.selectedShapeMajorShearCapacity);
       },
 
       selectedShapeMinorShearCapacity() {
@@ -990,7 +1042,7 @@
       },
 
       selectedShapeMinorShearCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeMinorShearCapacity, 'shear');
+        return criticalShearResultProcessor(this.selectedShapeMinorShearCapacity);
       },
 
     },
