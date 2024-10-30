@@ -4,14 +4,14 @@ export function criticalResultProcessor(result, category) {
 
     if (['compression', 'shear'].includes(category)) {
       // filter out objects where isApplicable is false or value is 0
-      const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['value']);
+      const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['designValue']);
     
       if (filteredResultAsList.length > 0) {
         let criticalKey = null;
         let criticalResult = 0;
         
         filteredResultAsList.forEach(([key, item]) => {
-          const value = item['value'];
+          const value = item['designValue'];
           
           if (value !== 0 && (criticalResult === 0 || value < criticalResult)) {
             criticalKey = key;

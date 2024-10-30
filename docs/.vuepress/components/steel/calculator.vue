@@ -348,7 +348,7 @@
       </h2>
       
       <div v-if="compressionCalcContentDisplay === '-'">
-        <div v-for="(item, key) in selectedShapeCompressionCapacityRenderData" :key="key">
+        <div v-for="(item, key) in selectedShapeCompressionCapacity" :key="key">
           <p><strong>{{ item.section }} {{ item.title }}</strong></p>
             <div style="margin-left: 1em;">
               <div v-html="item.html"></div>
@@ -357,17 +357,17 @@
         
         <div>
           <p><strong>Governing Limit State</strong></p>
-          <div v-for="data in selectedShapeCompressionCriticalCapacityRenderData">
+          <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
             <div style="margin-left: 1em;">
-              <p><strong>Compressive Strength ({{ data.section }})</strong></p>
+              <p><strong>Compressive Strength ({{ item.section }})</strong></p>
               <p>
-                P<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }}
+                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
               </p>
               <p>
-                &phi;<sub>c</sub> = 0.9
+                &phi;<sub>c</sub> = {{ item.phi.toFixed(1) }}
               </p>
               <p><strong>
-                &phi;<sub>c</sub>P<sub>n</sub> = {{ (0.9 * data.value).toFixed(1) }} {{ data.unit }}
+                &phi;<sub>c</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
               </strong></p>
             </div>
           </div>
@@ -376,14 +376,14 @@
 
       <div v-else>
         <div>
-          <div v-for="data in selectedShapeCompressionCriticalCapacityRenderData">
+          <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
             <div style="margin-left: 1em;">
-              <p><strong>Compressive Strength ({{ data.section }})</strong></p>
+              <p><strong>Compressive Strength ({{ item.section }})</strong></p>
               <p>
-                P<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }}
+                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
               </p>
               <p><strong>
-                &phi;<sub>c</sub>P<sub>n</sub> = {{ (0.9 * data.value).toFixed(1) }} {{ data.unit }}
+                &phi;<sub>c</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
               </strong></p>
             </div>
           </div>
@@ -571,6 +571,7 @@
   import { criticalResultProcessor } from './utils/general-calculators.js';
 
   import { compressionCalculator } from './utils/compression-calculators.js';
+  import { criticalCompressionResultProcessor } from './utils/compression-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
@@ -714,14 +715,6 @@
 
       selectedASTMSpecPropRenderData() {
         return astmSpecPropRenderDataFetcher(this.selectedGrade);
-      },
-
-      selectedShapeCompressionCapacityRenderData() {
-        return resultRenderDataConstructor(this.selectedShapeCompressionCapacity, 'compression');
-      },
-
-      selectedShapeCompressionCriticalCapacityRenderData() {
-        return criticalResultRenderDataConstructor(this.selectedShapeCompressionCriticalCapacity, 'compression');
       },
 
       selectedShapeMajorFlexureCapacityRenderData() {
@@ -963,9 +956,9 @@
       selectedShapeCompressionCapacity() {
         return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
       },
-
+      
       selectedShapeCompressionCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeCompressionCapacity, 'compression');
+        return criticalCompressionResultProcessor(this.selectedShapeCompressionCapacity);
       },
 
       selectedShapeMajorFlexureCapacity() {

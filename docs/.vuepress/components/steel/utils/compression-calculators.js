@@ -1,3 +1,5 @@
+import { resultRenderDataConstructor } from './render-data-constructors';
+
 // A360 Chapter E
 
 export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lcx, Lcy, Lcz) {
@@ -17,32 +19,36 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
     } = slenderClass;
 
     let result = {
-      'Pn_3': {'isApplicable': false, 'value': 0, 'html': null},
-      'Pn_4': {'isApplicable': false, 'value': 0, 'html': null},
-      'Pn_3_7': {'isApplicable': false, 'value': 0, 'html': null},
-      'Pn_4_7': {'isApplicable': false, 'value': 0, 'html': null},
+      'Pn_3': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_4': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_3_7': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_4_7': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
       const { A, d, bf, tw, tf, Ix, rx, Iy, ry, J, Cw } = shapeData;
 
       // E3 Flexural Buckling
-      const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
+      const [phi_3, Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
 
       // E4 Torsional Buckling
-      const [Fcr_4, FcrHtml_4] = E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lcz);
+      const [phi_4, Fcr_4, FcrHtml_4] = E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lcz);
 
       if (flange === 'nonslender' && web === 'nonslender') {
         // E3 E4
         // limit state: FB TB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['value'] = Pn_3;
+        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['nominalValue'] = Pn_3;
+        result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
 
         result['Pn_4']['isApplicable'] = true;
         const [Pn_4, PnHtml_4] = capacityCalculator(Fcr_4, A, 'gross');
-        result['Pn_4']['value'] = Pn_4;
+        result['Pn_4']['phi'] = phi_4;
+        result['Pn_4']['nominalValue'] = Pn_4;
+        result['Pn_4']['designValue'] = phi_4 * Pn_4;
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
 
       } else if (flange === 'slender' || web === 'slender') {
@@ -51,13 +57,17 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['value'] = Pn_3_7;
+        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['nominalValue'] = Pn_3_7;
+        result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
 
         result['Pn_4_7']['isApplicable'] = true;
         const [Ae_4, AeHtml_4] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_4, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_4_7, PnHtml_4_7] = capacityCalculator(Fcr_4, Ae_4, 'effective');
-        result['Pn_4_7']['value'] = Pn_4_7;
+        result['Pn_4_7']['phi'] = phi_4;
+        result['Pn_4_7']['nominalValue'] = Pn_4_7;
+        result['Pn_4_7']['designValue'] = phi_4 * Pn_4_7;
         result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
       }
 
@@ -65,22 +75,26 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       const { A, d, bf, tw, tf, rx, ry, J, Cw, ro, H } = shapeData;
 
       // E3 Flexural Buckling
-      const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
+      const [phi_3, Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
 
       // E4 Flexural-Torsional Buckling
-      const [Fcr_4, FcrHtml_4] = E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G, A, rx, ry, J, Cw, ro, H, Lcx, Lcy, Lcz);
+      const [phi_4, Fcr_4, FcrHtml_4] = E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G, A, rx, ry, J, Cw, ro, H, Lcx, Lcy, Lcz);
 
       if (flange === 'nonslender' && web === 'nonslender') {
         // E3 E4
         // limit state: FB FTB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['value'] = Pn_3;
+        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['nominalValue'] = Pn_3;
+        result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
 
         result['Pn_4']['isApplicable'] = true;
         const [Pn_4, PnHtml_4] = capacityCalculator(Fcr_4, A, 'gross');
-        result['Pn_4']['value'] = Pn_4;
+        result['Pn_4']['phi'] = phi_4;
+        result['Pn_4']['nominalValue'] = Pn_4;
+        result['Pn_4']['designValue'] = phi_4 * Pn_4;
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
 
       } else if (flange === 'slender' || web === 'slender') {
@@ -89,13 +103,17 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['value'] = Pn_3_7;
+        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['nominalValue'] = Pn_3_7;
+        result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
 
         result['Pn_4_7']['isApplicable'] = true;
         const [Ae_4, AeHtml_4] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_4, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_4_7, PnHtml_4_7] = capacityCalculator(Fcr_4, Ae_4, 'effective');
-        result['Pn_4_7']['value'] = Pn_4_7;
+        result['Pn_4_7']['phi'] = phi_4;
+        result['Pn_4_7']['nominalValue'] = Pn_4_7;
+        result['Pn_4_7']['designValue'] = phi_4 * Pn_4_7;
         result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
       }
 
@@ -103,14 +121,16 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       const { A, h, b, tdes, rx, ry } = shapeData;
 
       // E3 Flexural Buckling
-      const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
+      const [phi_3, Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
 
       if (flange === 'nonslender' && web === 'nonslender') {
         // E3
         // limit state: FB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['value'] = Pn_3;
+        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['nominalValue'] = Pn_3;
+        result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
 
       } else if (flange === 'slender' || web === 'slender') {
@@ -119,7 +139,9 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, b, h, tdes, tdes, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['value'] = Pn_3_7;
+        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['nominalValue'] = Pn_3_7;
+        result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
       }
 
@@ -127,14 +149,16 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       const { A, rx, ry } = shapeData;
 
       // E3 Flexural Buckling
-      const [Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
+      const [phi_3, Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
 
       if (flange === 'nonslender') {
         // E3
         // limit state: FB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['value'] = Pn_3;
+        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['nominalValue'] = Pn_3;
+        result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
         
       } else if (flange === 'slender') {
@@ -143,12 +167,36 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, 0, 0, 0, 0, Fcr_3, lambdaf, 0, lambdarf, 0, flange, null);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['value'] = Pn_3_7;
+        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['nominalValue'] = Pn_3_7;
+        result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
       }
     }
+
+    result = resultRenderDataConstructor(result, 'compression');
     return result;
 
+  } else {
+    return null;
+  }
+}
+
+export function criticalCompressionResultProcessor(result) {
+  if (result) {
+    // filter out objects where isApplicable is false or designValue is 0
+    const filteredResultAsList = Object.entries(result).filter(([, item]) => item['isApplicable'] && item['designValue'] !== 0);
+
+    if (filteredResultAsList.length > 0) {
+      const criticalResult = filteredResultAsList.reduce((min, item) =>
+        item[1]['designValue'] < min[1]['designValue'] ? item : min
+      );
+
+      return { [criticalResult[0]]: JSON.parse(JSON.stringify(criticalResult[1])) };
+
+    } else {
+      return null;
+    }
   } else {
     return null;
   }
@@ -159,6 +207,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
 
 // E3 Flexural Buckling of Members without Slender Elements
 function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
+  let phi = 0.9;
   let Fcr = 0;
   let html = '';
 
@@ -207,19 +256,20 @@ function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
     html += FcrHtml;
   }
 
-  return [Fcr, html];
+  return [phi, Fcr, html];
 }
 
 // E4 Torsional and Flexural-Torsional Buckling of Single Angles and Members without Slender Elements
 
 // E4 Torsional Buckling of Members without Slender Elements
 function E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lcz) {
+  let phi = 0.9;
   let Fcr = 0;
   let html = '';
 
   if (Lcz === 0) {
     html += `<p>For sections with continuous torsional bracing, torsional buckling does not apply</p>`;
-    return [Fcr, html];
+    return [phi, Fcr, html];
 
   } else {
     const Fe = (Math.PI**2 * E * Cw / Lcz**2 + G * J) / (Ix + Iy);
@@ -231,17 +281,18 @@ function E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lc
     html += FcrHtml;
   }
 
-  return [Fcr, html];
+  return [phi, Fcr, html];
 }
 
 // E4 Flexural-Torsional Buckling of Members without Slender Elements
 function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G, Ag, rx, ry, J, Cw, ro, H, Lcx, Lcy, Lcz) {
+  let phi = 0.9;
   let Fcr = 0;
   let html = '';
 
   if (Lcz === 0) {
     html += `<p>For sections with continuous torsional bracing, flexural-torsional buckling does not apply</p>`;
-    return [Fcr, html];
+    return [phi, Fcr, html];
 
   } else {
     let Fe = 0;
@@ -249,7 +300,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
     if (['C', 'MC'].includes(shapeType)) {
       if (Lcx === 0) {
         html += `<p>${Lcx_} must not be 0</p>`;
-        return [Fcr, html];
+        return [phi, Fcr, html];
       } else {
         [Fe, FeHtml] = flexuralTorsionalElasticBucklingStressCalculator('x', E, G, Ag, rx, J, Cw, ro, H, Lcx, Lcz);
       }
@@ -257,7 +308,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       if (Lcy === 0) {
         html += `<p>${Lcy_} must not be 0</p>`;
-        return [Fcr, html];
+        return [phi, Fcr, html];
       } else {
         [Fe, FeHtml] = flexuralTorsionalElasticBucklingStressCalculator('y', E, G, Ag, ry, J, 0, ro, H, Lcy, Lcz);
       }
@@ -270,7 +321,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
     html += FcrHtml;
   }
 
-  return [Fcr, html];
+  return [phi, Fcr, html];
 }
 
 // Flexural-Torsional Elastic Buckling Stress Calculator
