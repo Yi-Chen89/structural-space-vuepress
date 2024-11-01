@@ -415,17 +415,17 @@
 
           <div>
             <p><strong>Governing Limit State</strong></p>
-            <div v-for="data in selectedShapeMajorFlexureCriticalCapacityRenderData">
+            <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
-                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p><strong>{{ item.sign }} Flexural Strength ({{ item.section }})</strong></p>
                 <p>
-                  M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
+                  M<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }} = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
                 </p>
                 <p>
-                  &phi;<sub>b</sub> = 0.9
+                  &phi;<sub>b</sub> = {{ item.phi.toFixed(1) }}
                 </p>
                 <p><strong>
-                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
                 </strong></p>
               </div>
             </div>
@@ -445,17 +445,17 @@
 
           <div>
             <p><strong>Governing Limit State</strong></p>
-            <div v-for="data in selectedShapeMinorFlexureCriticalCapacityRenderData">
+            <div v-for="(item, key) in selectedShapeMinorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
-                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p><strong>{{ item.sign }} Flexural Strength ({{ item.section }})</strong></p>
                 <p>
-                  M<sub>n</sub> = {{ data.value.toFixed(1) }} {{ data.unit }} = {{ (data.value / 12).toFixed(1) }} k-ft
+                  M<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }} = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
                 </p>
                 <p>
-                  &phi;<sub>b</sub> = 0.9
+                  &phi;<sub>b</sub> = {{ item.phi.toFixed(1) }}
                 </p>
                 <p><strong>
-                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
                 </strong></p>
               </div>
             </div>
@@ -468,14 +468,14 @@
           <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
 
           <div>
-            <div v-for="data in selectedShapeMajorFlexureCriticalCapacityRenderData">
+            <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
-                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p><strong>{{ item.sign }} Flexural Strength ({{ item.section }})</strong></p>
                 <p>
-                  M<sub>n</sub> = {{ (data.value / 12).toFixed(1) }} k-ft
+                  M<sub>n</sub> = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
                 </p>
                 <p><strong>
-                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
                 </strong></p>
               </div>
             </div>
@@ -486,14 +486,14 @@
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
 
           <div>
-            <div v-for="data in selectedShapeMinorFlexureCriticalCapacityRenderData">
+            <div v-for="(item, key) in selectedShapeMinorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
-                <p><strong>{{ data.sign }} Flexural Strength ({{ data.section }})</strong></p>
+                <p><strong>{{ item.sign }} Flexural Strength ({{ item.section }})</strong></p>
                 <p>
-                  M<sub>n</sub> = {{ (data.value / 12).toFixed(1) }} k-ft
+                  M<sub>n</sub> = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
                 </p>
                 <p><strong>
-                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (0.9 * data.value / 12).toFixed(1) }} k-ft
+                  &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
                 </strong></p>
               </div>
             </div>
@@ -656,8 +656,6 @@
   import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
-  
-  import { criticalResultRenderDataConstructor } from './utils/render-data-constructors.js';
 
   
   export default {
@@ -781,14 +779,6 @@
 
       selectedASTMSpecPropRenderData() {
         return astmSpecPropRenderDataFetcher(this.selectedGrade);
-      },
-
-      selectedShapeMajorFlexureCriticalCapacityRenderData() {
-        return criticalResultRenderDataConstructor(this.selectedShapeMajorFlexureCriticalCapacity, 'flexure');
-      },
-
-      selectedShapeMinorFlexureCriticalCapacityRenderData() {
-        return criticalResultRenderDataConstructor(this.selectedShapeMinorFlexureCriticalCapacity, 'flexure');
       },
 
 

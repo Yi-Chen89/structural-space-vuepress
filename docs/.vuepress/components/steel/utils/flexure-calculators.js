@@ -369,7 +369,24 @@ export function criticalFlexureResultProcessor(result) {
           }
         });
       });
-      return [criticalKeys, criticalResults];
+
+      const results = {};
+      const momentSign = ['Sagging', 'Hogging'];
+
+      criticalKeys.forEach((value, index) => {
+        if (value) {
+          results[value] = result[value];
+          results[value]['nominalValue'] = result[value]['nominalValues'][index];
+          results[value]['designValue'] = result[value]['designValues'][index];
+          results[value]['sign'] = momentSign[index];
+        }
+      });
+
+      if (Object.keys(results).length === 1) {
+        const key = Object.keys(results)[0];
+        results[key]['sign'] = '';
+      }
+      return results;
 
     } else {
       return null;
