@@ -267,7 +267,7 @@
             </div>
           </div>
         </div>
-
+        
         <div v-if="flexureSlenderClassDisplay">
           <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
           
@@ -312,7 +312,7 @@
             </div>
           </div>
         </div>
-
+        
         <div v-if="flexureSlenderClassDisplay">
           <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
           

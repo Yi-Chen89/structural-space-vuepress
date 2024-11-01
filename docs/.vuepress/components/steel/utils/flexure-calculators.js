@@ -29,6 +29,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       'Mn_2_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
       'Mn_3_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
       'Mn_7_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
       'Mn_7_3': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
       'Mn_7_4': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
       'Mn_8_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
