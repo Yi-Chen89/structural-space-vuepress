@@ -405,7 +405,7 @@
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
           <div>
-            <div v-for="(item, key) in selectedShapeMajorFlexureCapacityRenderData" :key="key">
+            <div v-for="(item, key) in selectedShapeMajorFlexureCapacity" :key="key">
               <p><strong>{{ item.section }} {{ item.title }}</strong></p>
               <div style="margin-left: 1em;">
                 <div v-html="item.html"></div>
@@ -435,7 +435,7 @@
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
           <div>
-            <div v-for="(item, key) in selectedShapeMinorFlexureCapacityRenderData" :key="key">
+            <div v-for="(item, key) in selectedShapeMinorFlexureCapacity" :key="key">
               <p><strong>{{ item.section }} {{ item.title }}</strong></p>
               <div style="margin-left: 1em;">
                 <div v-html="item.html"></div>
@@ -636,13 +636,12 @@
   import { axialSlenderClassifier } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
-  import { criticalResultProcessor } from './utils/general-calculators.js';
-
   import { compressionCalculator } from './utils/compression-calculators.js';
   import { criticalCompressionResultProcessor } from './utils/compression-calculators.js';
 
   import { majorFlexureCalculator } from './utils/flexure-calculators.js';
   import { minorFlexureCalculator } from './utils/flexure-calculators.js';
+  import { criticalFlexureResultProcessor } from './utils/flexure-calculators.js';
 
   import { majorShearCalculator } from './utils/shear-calculators.js';
   import { minorShearCalculator } from './utils/shear-calculators.js';
@@ -657,9 +656,7 @@
   import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
-  import { resultRenderDataFilterer } from './utils/data-filterers.js';
   
-  import { resultRenderDataConstructor } from './utils/render-data-constructors.js';
   import { criticalResultRenderDataConstructor } from './utils/render-data-constructors.js';
 
   
@@ -786,16 +783,8 @@
         return astmSpecPropRenderDataFetcher(this.selectedGrade);
       },
 
-      selectedShapeMajorFlexureCapacityRenderData() {
-        return resultRenderDataConstructor(this.selectedShapeMajorFlexureCapacity, 'flexure');
-      },
-
       selectedShapeMajorFlexureCriticalCapacityRenderData() {
         return criticalResultRenderDataConstructor(this.selectedShapeMajorFlexureCriticalCapacity, 'flexure');
-      },
-
-      selectedShapeMinorFlexureCapacityRenderData() {
-        return resultRenderDataConstructor(this.selectedShapeMinorFlexureCapacity, 'flexure');
       },
 
       selectedShapeMinorFlexureCriticalCapacityRenderData() {
@@ -1018,7 +1007,7 @@
       },
 
       selectedShapeMajorFlexureCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeMajorFlexureCapacity, 'flexure');
+        return criticalFlexureResultProcessor(this.selectedShapeMajorFlexureCapacity);
       },
 
       selectedShapeMinorFlexureCapacity() {
@@ -1026,7 +1015,7 @@
       },
 
       selectedShapeMinorFlexureCriticalCapacity() {
-        return criticalResultProcessor(this.selectedShapeMinorFlexureCapacity, 'flexure');
+        return criticalFlexureResultProcessor(this.selectedShapeMinorFlexureCapacity);
       },
 
       selectedShapeMajorShearCapacity() {
