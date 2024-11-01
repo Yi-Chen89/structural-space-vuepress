@@ -781,7 +781,6 @@
         return astmSpecPropRenderDataFetcher(this.selectedGrade);
       },
 
-
       // valid variable
 
       selectedDescShapeTypeValid() {

@@ -10,9 +10,9 @@ export function resultRenderDataConstructor(result, category) {
     );
     
     for (let key in filteredResult) {
-      filteredResult[key] = resultMetadata[category][key];
+      Object.assign(filteredResult[key], resultMetadata[category][key]);
     }
-
+    
     return filteredResult;
   } else {
     return null;
