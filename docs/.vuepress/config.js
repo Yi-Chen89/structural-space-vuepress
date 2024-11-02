@@ -56,8 +56,8 @@ export default defineUserConfig({
           text: 'Steel',
           children: [
             '',
+            'member-calculator',
             'release',
-            'development',
           ],
         }
       ],
