@@ -349,11 +349,16 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
 
 export function criticalFlexureResultProcessor(result) {
   if (result) {
-    const resultAsList = Object.entries(result);
-
     // filter out objects where isApplicable is false or all values are 0
-    const filteredResultAsList = resultAsList.filter(([, item]) => item['isApplicable'] && item['designValues'].some(value => value !== 0));
-
+    // [
+    //   [ "Mn_2_1", { "isApplicable": true, "phi": 0.9, ... } ],
+    //   [ "Mn_2_2", { "isApplicable": true, "phi": 0.9, ... } ]
+    // ]
+    const filteredResultAsList = Object.entries(result)
+      .filter(([, item]) =>
+        item['isApplicable'] && item['designValues'].some(value => value !== 0)
+      );
+    
     if (filteredResultAsList.length > 0) {
       const criticalKeys = [null, null];
       const criticalResults = [0, 0];
@@ -371,23 +376,23 @@ export function criticalFlexureResultProcessor(result) {
         });
       });
 
-      const results = {};
+      const output = {};
       const momentSign = ['Sagging', 'Hogging'];
 
       criticalKeys.forEach((value, index) => {
         if (value) {
-          results[value] = result[value];
-          results[value]['nominalValue'] = result[value]['nominalValues'][index];
-          results[value]['designValue'] = result[value]['designValues'][index];
-          results[value]['sign'] = momentSign[index];
+          output[value] = result[value];
+          output[value]['nominalValue'] = result[value]['nominalValues'][index];
+          output[value]['designValue'] = result[value]['designValues'][index];
+          output[value]['sign'] = momentSign[index];
         }
       });
 
-      if (Object.keys(results).length === 1) {
-        const key = Object.keys(results)[0];
-        results[key]['sign'] = '';
+      if (Object.keys(output).length === 1) {
+        const key = Object.keys(output)[0];
+        output[key]['sign'] = '';
       }
-      return results;
+      return output;
 
     } else {
       return null;
