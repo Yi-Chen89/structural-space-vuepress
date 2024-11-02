@@ -523,13 +523,13 @@
               </div>
             </div>
           </div>
-
+          
           <div>
-            <p><strong>Governing Limit State</strong></p>
             <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
+              <p v-if="item.isMultiState"><strong>Governing Limit State</strong></p>
               <div style="margin-left: 1em;">
-                <p><strong>Shear Strength ({{ item.section }})</strong></p>
-                <p>
+                <p v-if="item.isMultiState"><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p v-if="item.isMultiState">
                   V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
                 </p>
                 <p>
@@ -555,11 +555,11 @@
           </div>
 
           <div>
-            <p><strong>Governing Limit State</strong></p>
             <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
+              <p v-if="item.isMultiState"><strong>Governing Limit State</strong></p>
               <div style="margin-left: 1em;">
-                <p><strong>Shear Strength ({{ item.section }})</strong></p>
-                <p>
+                <p v-if="item.isMultiState"><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p v-if="item.isMultiState">
                   V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
                 </p>
                 <p>
@@ -1098,12 +1098,12 @@
       },
 
       resetContentDisplay() {
-        this.shapeDataContentDisplay = '-';
-        this.gradeDataContentDisplay = '-';
-        this.slenderClassContentDisplay = '-';
-        this.compressionCalcContentDisplay = '-';
-        this.flexureCalcContentDisplay = '-';
-        this.shearCalcContentDisplay = '-';
+        // this.shapeDataContentDisplay = '-';
+        // this.gradeDataContentDisplay = '-';
+        // this.slenderClassContentDisplay = '-';
+        // this.compressionCalcContentDisplay = '-';
+        // this.flexureCalcContentDisplay = '-';
+        // this.shearCalcContentDisplay = '-';
       },
     },
   };

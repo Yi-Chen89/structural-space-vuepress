@@ -154,14 +154,34 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
 export function criticalShearResultProcessor(result) {
   if (result) {
     // filter out objects where isApplicable is false or designValue is 0
-    const filteredResultAsList = Object.entries(result).filter(([, item]) => item['isApplicable'] && item['designValue'] !== 0);
-
-    if (filteredResultAsList.length > 0) {
-      const criticalResult = filteredResultAsList.reduce((min, item) =>
-        item[1]['designValue'] < min[1]['designValue'] ? item : min
+    // filteredResultAsList data structure
+    // [
+    //   [ "Vn_2_1", { "isApplicable": true, "phi": 0.9, ... } ],
+    //   [ "Vn_2_2", { "isApplicable": true, "phi": 0.9, ... } ]
+    // ]
+    const filteredResultAsList = Object.entries(result)
+      .filter(([, item]) => 
+        item['isApplicable'] && item['designValue'] !== 0
       );
 
-      return { [criticalResult[0]]: JSON.parse(JSON.stringify(criticalResult[1])) };
+    if (filteredResultAsList.length > 0) {
+      const criticalResult = filteredResultAsList.reduce(
+        (min, item) =>
+          item[1]['designValue'] < min[1]['designValue'] ? item : min
+      );
+
+      // convert list back to dictionary
+      // output data structure
+      // {
+      //   "Vn_2_1": { "isApplicable": true, "phi": 0.9, ... }
+      // }
+      const output = Object.fromEntries([criticalResult]);
+
+      // add isMultiState property
+      for (const key in output) {
+        output[key]['isMultiState'] = Object.keys(result).length > 1;
+      }
+      return output;
 
     } else {
       return null;

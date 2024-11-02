@@ -6,6 +6,7 @@ export function resultRenderDataConstructor(result, category) {
 
   if (result && category && category in resultMetadata) {
     const filteredResult = Object.fromEntries(
+      // filter out objects where isApplicable is false
       Object.entries(result).filter(([key, value]) => value['isApplicable'])
     );
     
