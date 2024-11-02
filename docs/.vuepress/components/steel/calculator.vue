@@ -357,7 +357,7 @@
             </div>
         </div>
         
-        <!-- <div>
+        <div>
           <p v-if="Object.values(selectedShapeTensionCriticalCapacity).some(item => item.isMultiState)">
             <strong>Governing Limit State</strong>
           </p>
@@ -375,11 +375,11 @@
               </strong></p>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
 
       <div v-else>
-        <!-- <div>
+        <div>
           <div v-for="(item, key) in selectedShapeTensionCriticalCapacity">
             <div style="margin-left: 1em;">
               <p><strong>Tensile Strength ({{ item.section }})</strong></p>
@@ -391,7 +391,7 @@
               </strong></p>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
     
@@ -764,7 +764,6 @@
         ltbModFactorInputError: '',
         transverseStiffenerDistanceInputError: '',
         maxToZeroShearDistanceInputError: '',
-        
       }
     },
 
@@ -968,9 +967,7 @@
         return this.shearCalcValid && this.shearCalcSelected;
       },
 
-
       // calc variable
-      // value in a dict format for 1 selected input value
 
       selectedShapeData() {
         return shapeDataFetcher(this.unit, this.selectedShape);
@@ -1087,7 +1084,6 @@
       selectedShapeMinorShearCriticalCapacity() {
         return criticalShearResultProcessor(this.selectedShapeMinorShearCapacity);
       },
-
     },
 
     watch: {
