@@ -177,7 +177,7 @@ export function criticalShearResultProcessor(result) {
       // }
       const output = Object.fromEntries([criticalResult]);
 
-      // add isMultiState property
+      // add isMultiState attribute
       for (const key in output) {
         output[key]['isMultiState'] = Object.keys(result).length > 1;
       }

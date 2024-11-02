@@ -356,11 +356,11 @@
         </div>
         
         <div>
-          <p><strong>Governing Limit State</strong></p>
           <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
+            <p v-if="item.isMultiState"><strong>Governing Limit State</strong></p>
             <div style="margin-left: 1em;">
-              <p><strong>Compressive Strength ({{ item.section }})</strong></p>
-              <p>
+              <p v-if="item.isMultiState"><strong>Compressive Strength ({{ item.section }})</strong></p>
+              <p v-if="item.isMultiState">
                 P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
               </p>
               <p>
@@ -822,41 +822,34 @@
       },
 
       compressionInputDisplay() {
-        return this.compressionCalcSelected;
+        return this.selectedGradeValid && this.compressionCalcSelected;
       },
-
       effectiveLengthInputDisplay() {
         return this.selectedGradeValid;
       },
 
       flexureInputDisplay() {
-        return this.flexureCalcSelected;
+        return this.selectedGradeValid && this.flexureCalcSelected;
       },
-
       unbracedLengthInputDisplay() {
         return this.selectedGradeValid;
       },
-
       ltbModFactorInputDisplay() {
         return this.selectedGradeValid;
       },
 
       shearInputDisplay() {
-        return this.shearCalcSelected && (this.considerTransverseStiffenerSelectionDisplay || this.maxToZeroShearDistanceInputDisplay);
+        return this.selectedGradeValid && this.shearCalcSelected && (this.considerTransverseStiffenerSelectionDisplay || this.maxToZeroShearDistanceInputDisplay);
       },
-
       considerTensionFieldActionSelectionDisplay() {
         return this.selectedGradeValid && ['W', 'M', 'S', 'HP', 'C', 'MC'].includes(this.selectedShapeType);
       },
-
       considerTransverseStiffenerSelectionDisplay() {
         return this.selectedGradeValid && ['W', 'M', 'S', 'HP', 'C', 'MC'].includes(this.selectedShapeType);
       },
-
       transverseStiffenerDistanceInputDisplay() {
         return this.selectedConsiderTransverseStiffener;
       },
-
       maxToZeroShearDistanceInputDisplay() {
         return this.selectedGradeValid && ['HSS Round', 'PIPE'].includes(this.selectedShapeType);
       },
@@ -934,7 +927,6 @@
           return this.enteredEffectiveLengthX * 12;
         }
       },
-
       validatedEffectiveLengthY() {
         if (this.effectiveLengthYInputError) {
           return 0;
@@ -942,7 +934,6 @@
           return this.enteredEffectiveLengthY * 12;
         }
       },
-
       validatedEffectiveLengthZ() {
         if (this.effectiveLengthZInputError) {
           return 0;
@@ -958,7 +949,6 @@
           return this.enteredUnbracedLength * 12;
         }
       },
-
       validatedLTBModFactor() {
         if (this.ltbModFactorInputError) {
           return 1;
@@ -974,7 +964,6 @@
           return this.enteredTransverseStiffenerDistance;
         }
       },
-
       validatedMaxToZeroShearDistance() {
         if (this.maxToZeroShearDistanceInputError) {
           return 0;
@@ -986,7 +975,6 @@
       selectedShapeCompressionCapacity() {
         return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
       },
-      
       selectedShapeCompressionCriticalCapacity() {
         return criticalCompressionResultProcessor(this.selectedShapeCompressionCapacity);
       },
@@ -994,15 +982,12 @@
       selectedShapeMajorFlexureCapacity() {
         return majorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
       },
-
       selectedShapeMajorFlexureCriticalCapacity() {
         return criticalFlexureResultProcessor(this.selectedShapeMajorFlexureCapacity);
       },
-
       selectedShapeMinorFlexureCapacity() {
         return minorFlexureCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedUnbracedLength, this.validatedLTBModFactor);
       },
-
       selectedShapeMinorFlexureCriticalCapacity() {
         return criticalFlexureResultProcessor(this.selectedShapeMinorFlexureCapacity);
       },
@@ -1010,15 +995,12 @@
       selectedShapeMajorShearCapacity() {
         return majorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.selectedConsiderTensionFieldAction, this.selectedConsiderTransverseStiffener, this.validatedTransverseStiffenerDistance, this.validatedMaxToZeroShearDistance);
       },
-
       selectedShapeMajorShearCriticalCapacity() {
         return criticalShearResultProcessor(this.selectedShapeMajorShearCapacity);
       },
-
       selectedShapeMinorShearCapacity() {
         return minorShearCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedMaxToZeroShearDistance);
       },
-
       selectedShapeMinorShearCriticalCapacity() {
         return criticalShearResultProcessor(this.selectedShapeMinorShearCapacity);
       },
@@ -1029,7 +1011,6 @@
       selectedDescShapeType(newDescShapeType) {
         if (!this.shapeList.includes(this.selectedShape)) {
           this.selectedShape = null;
-          this.resetContentDisplay();
         }
       },
 
@@ -1048,11 +1029,9 @@
       effectiveLengthXInputValidator() {
         this.effectiveLengthXInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthX);
       },
-
       effectiveLengthYInputValidator() {
         this.effectiveLengthYInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthY);
       },
-
       effectiveLengthZInputValidator() {
         this.effectiveLengthZInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthZ);
       },
@@ -1060,7 +1039,6 @@
       unbracedLengthInputValidator() {
         this.unbracedLengthInputError = nonnegativeNumberInputValidator(this.enteredUnbracedLength);
       },
-
       ltbModFactorInputValidator() {
         this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
       },
@@ -1068,7 +1046,6 @@
       transverseStiffenerDistanceInputValidator() {
         this.transverseStiffenerDistanceInputError = nonnegativeNumberInputValidator(this.enteredTransverseStiffenerDistance);
       },
-
       maxToZeroShearDistanceInputValidator() {
         this.maxToZeroShearDistanceInputError = nonnegativeNumberInputValidator(this.enteredMaxToZeroShearDistance);
       },
@@ -1097,13 +1074,27 @@
         this.shearCalcContentDisplay = this.shearCalcContentDisplay === '-' ? '+' : '-';
       },
 
-      resetContentDisplay() {
-        // this.shapeDataContentDisplay = '-';
-        // this.gradeDataContentDisplay = '-';
-        // this.slenderClassContentDisplay = '-';
-        // this.compressionCalcContentDisplay = '-';
-        // this.flexureCalcContentDisplay = '-';
-        // this.shearCalcContentDisplay = '-';
+      reset() {
+        this.selectedDescShapeType = 'All';
+        this.selectedShape = null;
+        this.selectedGrade = null;
+        this.selectedCalcs = [];
+        this.enteredEffectiveLengthX = 0;
+        this.enteredEffectiveLengthY = 0;
+        this.enteredEffectiveLengthZ = 0;
+        this.enteredUnbracedLength = 0;
+        this.enteredLTBModFactor = 1;
+        this.selectedConsiderTensionFieldAction = false;
+        this.selectedConsiderTransverseStiffener = false;
+        this.enteredTransverseStiffenerDistance = 0;
+        this.enteredMaxToZeroShearDistance = 0;
+
+        this.shapeDataContentDisplay = '-';
+        this.gradeDataContentDisplay = '-';
+        this.slenderClassContentDisplay = '-';
+        this.compressionCalcContentDisplay = '-';
+        this.flexureCalcContentDisplay = '-';
+        this.shearCalcContentDisplay = '-';
       },
     },
   };
