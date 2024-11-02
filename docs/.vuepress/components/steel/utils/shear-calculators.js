@@ -164,28 +164,41 @@ export function criticalShearResultProcessor(result) {
         item['isApplicable'] && item['designValue'] !== 0
       );
 
-    if (filteredResultAsList.length > 0) {
-      const criticalResult = filteredResultAsList.reduce(
-        (min, item) =>
-          item[1]['designValue'] < min[1]['designValue'] ? item : min
-      );
-
+    let output = null;
+    if (filteredResultAsList.length === 1) {
       // convert list back to dictionary
       // output data structure
       // {
       //   "Vn_2_1": { "isApplicable": true, "phi": 0.9, ... }
       // }
-      const output = Object.fromEntries([criticalResult]);
+      output = Object.fromEntries(filteredResultAsList);
 
-      // add isMultiState attribute
+    } else if (filteredResultAsList.length === 2) {
+      const designValue_2_1 = filteredResultAsList[0][1]['designValue'];
+      const designValue_2_2 = filteredResultAsList[1][1]['designValue'];
+
+      if (designValue_2_1 >= designValue_2_2) {
+        // convert list back to dictionary
+        output = Object.fromEntries([filteredResultAsList[0]]);
+        
+      } else {
+        const panel = ['End Web Panel', 'Interior Web Panel'];
+        filteredResultAsList.forEach((value, index) => {
+          value[1]['panel'] = panel[index];
+        });
+
+        output = Object.fromEntries(filteredResultAsList);
+      }
+    }
+
+    // add isMultiState attribute
+    if (output) {
       for (const key in output) {
         output[key]['isMultiState'] = Object.keys(result).length > 1;
       }
-      return output;
-
-    } else {
-      return null;
     }
+    return output;
+
   } else {
     return null;
   }

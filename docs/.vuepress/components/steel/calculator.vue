@@ -356,8 +356,10 @@
         </div>
         
         <div>
+          <p v-if="Object.values(selectedShapeCompressionCriticalCapacity).some(item => item.isMultiState)">
+            <strong>Governing Limit State</strong>
+          </p>
           <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
-            <p v-if="item.isMultiState"><strong>Governing Limit State</strong></p>
             <div style="margin-left: 1em;">
               <p v-if="item.isMultiState"><strong>Compressive Strength ({{ item.section }})</strong></p>
               <p v-if="item.isMultiState">
@@ -525,10 +527,12 @@
           </div>
           
           <div>
+            <p v-if="Object.values(selectedShapeMajorShearCriticalCapacity).some(item => item.isMultiState)">
+              <strong>Governing Limit State</strong>
+            </p>
             <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
-              <p v-if="item.isMultiState"><strong>Governing Limit State</strong></p>
               <div style="margin-left: 1em;">
-                <p v-if="item.isMultiState"><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p v-if="item.isMultiState"><strong>{{ item.panel }} Shear Strength ({{ item.section }})</strong></p>
                 <p v-if="item.isMultiState">
                   V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
                 </p>
@@ -555,8 +559,10 @@
           </div>
 
           <div>
+            <p v-if="Object.values(selectedShapeMinorShearCriticalCapacity).some(item => item.isMultiState)">
+              <strong>Governing Limit State</strong>
+            </p>
             <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
-              <p v-if="item.isMultiState"><strong>Governing Limit State</strong></p>
               <div style="margin-left: 1em;">
                 <p v-if="item.isMultiState"><strong>Shear Strength ({{ item.section }})</strong></p>
                 <p v-if="item.isMultiState">
@@ -580,7 +586,7 @@
           <div>
             <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
               <div style="margin-left: 1em;">
-                <p><strong>Shear Strength ({{ item.section }})</strong></p>
+                <p><strong>{{ item.panel }} Shear Strength ({{ item.section }})</strong></p>
                 <p>
                   V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
                 </p>
