@@ -44,6 +44,12 @@
         
         <p>
           <label>
+            <input type="checkbox" v-model="selectedCalcs" value="tension" />
+            Tensile Strength
+          </label>
+        </p>
+        <p>
+          <label>
             <input type="checkbox" v-model="selectedCalcs" value="compression" />
             Compressive Strength
           </label>
@@ -334,7 +340,59 @@
   
 
     <div v-if="tensionCalcDisplay">
-      <h2>Tensile Strength</h2>
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Tensile Strength</span>
+        <span
+          v-html="tensionCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showTensionCalcContent()">
+        </span>
+      </h2>
+
+      <div v-if="tensionCalcContentDisplay === '-'">
+        <div v-for="(item, key) in selectedShapeTensionCapacity" :key="key">
+          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+            <div style="margin-left: 1em;">
+              <div v-html="item.html"></div>
+            </div>
+        </div>
+        
+        <!-- <div>
+          <p v-if="Object.values(selectedShapeTensionCriticalCapacity).some(item => item.isMultiState)">
+            <strong>Governing Limit State</strong>
+          </p>
+          <div v-for="(item, key) in selectedShapeTensionCriticalCapacity">
+            <div style="margin-left: 1em;">
+              <p v-if="item.isMultiState"><strong>Tensile Strength ({{ item.section }})</strong></p>
+              <p v-if="item.isMultiState">
+                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+              </p>
+              <p>
+                &phi;<sub>t</sub> = {{ item.phi.toFixed(1) }}
+              </p>
+              <p><strong>
+                &phi;<sub>t</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+              </strong></p>
+            </div>
+          </div>
+        </div> -->
+      </div>
+
+      <div v-else>
+        <!-- <div>
+          <div v-for="(item, key) in selectedShapeTensionCriticalCapacity">
+            <div style="margin-left: 1em;">
+              <p><strong>Tensile Strength ({{ item.section }})</strong></p>
+              <p>
+                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+              </p>
+              <p><strong>
+                &phi;<sub>t</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+              </strong></p>
+            </div>
+          </div>
+        </div> -->
+      </div>
     </div>
     
     <div v-if="compressionCalcDisplay">
@@ -642,6 +700,9 @@
   import { axialSlenderClassifier } from './utils/slender-calculators.js';
   import { flexureSlenderClassifier } from './utils/slender-calculators.js';
 
+  import { tensionCalculator } from './utils/tension-calculators.js';
+  import { criticalTensionResultProcessor } from './utils/tension-calculators.js';
+
   import { compressionCalculator } from './utils/compression-calculators.js';
   import { criticalCompressionResultProcessor } from './utils/compression-calculators.js';
 
@@ -690,6 +751,7 @@
         shapeDataContentDisplay: '-',
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
+        tensionCalcContentDisplay: '-',
         compressionCalcContentDisplay: '-',
         flexureCalcContentDisplay: '-',
         shearCalcContentDisplay: '-',
@@ -749,6 +811,10 @@
 
       // calculation selection variable
 
+      tensionCalcSelected() {
+        return this.selectedCalcs.includes('tension');
+      },
+
       compressionCalcSelected() {
         return this.selectedCalcs.includes('compression');
       },
@@ -799,6 +865,10 @@
 
       selectedGradeValid() {
         return selectionValidator(this.selectedGrade);
+      },
+
+      tensionCalcValid() {
+        return !!this.selectedShapeTensionCapacity;
       },
 
       compressionCalcValid() {
@@ -883,7 +953,7 @@
       },
 
       tensionCalcDisplay() {
-        return false;
+        return this.tensionCalcValid && this.tensionCalcSelected;;
       },
 
       compressionCalcDisplay() {
@@ -978,6 +1048,13 @@
         }
       },
 
+      selectedShapeTensionCapacity() {
+        return tensionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp);
+      },
+      selectedShapeTensionCriticalCapacity() {
+        return criticalTensionResultProcessor(this.selectedShapeTensionCapacity);
+      },
+
       selectedShapeCompressionCapacity() {
         return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
       },
@@ -1068,6 +1145,10 @@
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
       },
 
+      showTensionCalcContent() {
+        this.tensionCalcContentDisplay = this.tensionCalcContentDisplay === '-' ? '+' : '-';
+      },
+
       showCompressionCalcContent() {
         this.compressionCalcContentDisplay = this.compressionCalcContentDisplay === '-' ? '+' : '-';
       },
@@ -1098,6 +1179,7 @@
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
+        this.tensionCalcContentDisplay = '-';
         this.compressionCalcContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
         this.shearCalcContentDisplay = '-';

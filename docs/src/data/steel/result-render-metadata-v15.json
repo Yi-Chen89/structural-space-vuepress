@@ -1,5 +1,18 @@
 {
-  "tension": {},
+  "tension": {
+    "Pn_2_a": {
+      "section": "D2 (a)",
+      "title": "Tensile Yielding in Gross Section",
+      "notation": "P<sub>n</sub>",
+      "unit": "k"
+    },
+    "Pn_2_b": {
+      "section": "D2 (b)",
+      "title": "Tensile Rupture in Net Section",
+      "notation": "P<sub>n</sub>",
+      "unit": "k"
+    }
+  },
   "compression": {
     "Pn_3": {
       "section": "E3",
