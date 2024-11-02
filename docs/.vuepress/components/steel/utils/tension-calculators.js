@@ -11,9 +11,10 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
       'Pn_2_b': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
-    if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
+    if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square', 'HSS Round', 'PIPE'].includes(shapeType)) {
       const { A } = shapeData;
 
+      // D2(a) Tension Yielding
       result['Pn_2_a']['isApplicable'] = true;
       const [phi_2_a, Pn_2_a, PnHtml_2_a] = D2_aYielding(Fy, A);
       result['Pn_2_a']['phi'] = phi_2_a;
@@ -21,6 +22,7 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
       result['Pn_2_a']['designValue'] = phi_2_a * Pn_2_a;
       result['Pn_2_a']['html'] = PnHtml_2_a;
 
+      // D2(b) Tension Rupture
       result['Pn_2_b']['isApplicable'] = true;
       const [phi_2_b, Pn_2_b, PnHtml_2_b] = D2_bRupture(Fu, A);
       result['Pn_2_b']['phi'] = phi_2_b;
@@ -80,7 +82,7 @@ export function criticalTensionResultProcessor(result) {
 
 // Helper Function
 
-// D2 (a) Tension Yielding
+// D2(a) Tension Yielding
 function D2_aYielding(Fy, Ag) {
   const phi = 0.9;
   const Pn = Fy * Ag;
@@ -89,7 +91,7 @@ function D2_aYielding(Fy, Ag) {
   return [phi, Pn, html];
 }
 
-// D2 (b) Tension Rupture
+// D2(b) Tension Rupture
 function D2_bRupture(Fu, Ag) {
   const phi = 0.75;
   let Pn = 0;
