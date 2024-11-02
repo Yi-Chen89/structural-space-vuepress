@@ -16,6 +16,16 @@
 
       <tbody>
         <tr>
+          <td class="row-header">Tension</td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td class="row-header">Compression</td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
