@@ -368,7 +368,7 @@
                 P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
               </p>
               <p>
-                &phi;<sub>t</sub> = {{ item.phi.toFixed(1) }}
+                &phi;<sub>t</sub> = {{ item.phi.toFixed(2) }}
               </p>
               <p><strong>
                 &phi;<sub>t</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
@@ -424,7 +424,7 @@
                 P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
               </p>
               <p>
-                &phi;<sub>c</sub> = {{ item.phi.toFixed(1) }}
+                &phi;<sub>c</sub> = {{ item.phi.toFixed(2) }}
               </p>
               <p><strong>
                 &phi;<sub>c</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
@@ -482,7 +482,7 @@
                   M<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }} = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
                 </p>
                 <p>
-                  &phi;<sub>b</sub> = {{ item.phi.toFixed(1) }}
+                  &phi;<sub>b</sub> = {{ item.phi.toFixed(2) }}
                 </p>
                 <p><strong>
                   &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
@@ -512,7 +512,7 @@
                   M<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }} = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
                 </p>
                 <p>
-                  &phi;<sub>b</sub> = {{ item.phi.toFixed(1) }}
+                  &phi;<sub>b</sub> = {{ item.phi.toFixed(2) }}
                 </p>
                 <p><strong>
                   &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
@@ -595,7 +595,7 @@
                   V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
                 </p>
                 <p>
-                  &phi;<sub>v</sub> = {{ item.phi.toFixed(1) }}
+                  &phi;<sub>v</sub> = {{ item.phi.toFixed(2) }}
                 </p>
                 <p><strong>
                   &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
@@ -627,7 +627,7 @@
                   V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
                 </p>
                 <p>
-                  &phi;<sub>v</sub> = {{ item.phi.toFixed(1) }}
+                  &phi;<sub>v</sub> = {{ item.phi.toFixed(2) }}
                 </p>
                 <p><strong>
                   &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}

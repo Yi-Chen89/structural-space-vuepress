@@ -20,6 +20,13 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
       result['Pn_2_a']['nominalValue'] = Pn_2_a;
       result['Pn_2_a']['designValue'] = phi_2_a * Pn_2_a;
       result['Pn_2_a']['html'] = PnHtml_2_a;
+
+      result['Pn_2_b']['isApplicable'] = true;
+      const [phi_2_b, Pn_2_b, PnHtml_2_b] = D2_bRupture(Fu, A);
+      result['Pn_2_b']['phi'] = phi_2_b;
+      result['Pn_2_b']['nominalValue'] = Pn_2_b;
+      result['Pn_2_b']['designValue'] = phi_2_b * Pn_2_b;
+      result['Pn_2_b']['html'] = PnHtml_2_b;
     }
 
     result = resultRenderDataConstructor(result, 'tension');
@@ -80,6 +87,33 @@ function D2_aYielding(Fy, Ag) {
   const html = `<p>${Pn_} = ${Fy_} ${Ag_} = ${Pn.toFixed(2)} k</p>
                 <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
   return [phi, Pn, html];
+}
+
+// D2 (b) Tension Rupture
+function D2_bRupture(Fu, Ag) {
+  const phi = 0.75;
+  let Pn = 0;
+  let html = '';
+
+  const [Ae, AeHtml] = effectiveNetAreaCalculator(Ag);
+  html += AeHtml;
+
+  Pn = Fu * Ae;
+  html += `<p>${Pn_} = ${Fu_} ${Ae_} = ${Pn.toFixed(2)} k</p>
+           <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
+  return [phi, Pn, html];
+}
+
+// Effective Net Area, Ae, Calculator
+function effectiveNetAreaCalculator(Ag) {
+  let Ae = 0;
+  let html = '';
+
+  Ae = 0.75 * Ag;
+  html += `<p>Effective net area</p>
+           <p>${Ae_} = 0.75 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+
+  return [Ae, html];
 }
 
 

@@ -224,8 +224,8 @@ function G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, consi
     phi = 1;
     Cv1 = 1;
     html += `<p>For I-shaped members with ${lambdaw_} &le; 2.24 &radic;(${E_} / ${Fy_})</p>
-             <p>${phiv_} = 1.00</p>
-             <p>${Cv1_} = 1.0</p>
+             <p>${phiv_} = ${phi.toFixed(2)}</p>
+             <p>${Cv1_} = ${Cv1.toFixed(1)}</p>
              <p>Shear yielding governs</p>`;
   
   } else if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
