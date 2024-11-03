@@ -13,7 +13,7 @@ export default defineUserConfig({
   lang: 'en-US',
 
   title: 'Structural Space',
-  description: 'A Site for Structural Design',
+  description: 'A Site for Structural Calculation',
 
   base: '/structural-space-vuepress/',
 
@@ -78,7 +78,7 @@ export default defineUserConfig({
     editLink: false,
 
     // configure 'Last Updated'
-    lastUpdated: true,
+    lastUpdated: false,
 
     // configure 'Contributors'
     contributors: false,
