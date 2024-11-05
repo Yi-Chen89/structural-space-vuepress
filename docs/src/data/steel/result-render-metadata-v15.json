@@ -174,5 +174,19 @@
       "notation": "V<sub>n</sub>",
       "unit": "k"
     }
+  },
+  "torsion": {
+    "Tn_H3_1_a": {
+      "section": "H3.1(a)",
+      "title": "Round HSS Subject to Torsion",
+      "notation": "T<sub>n</sub>",
+      "unit": "k-in"
+    },
+    "Tn_H3_1_b": {
+      "section": "H3.1(b)",
+      "title": "Rectangular HSS Subject to Torsion",
+      "notation": "T<sub>n</sub>",
+      "unit": "k-in"
+    }
   }
 }

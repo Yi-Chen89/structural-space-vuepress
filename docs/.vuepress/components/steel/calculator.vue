@@ -66,6 +66,12 @@
             Shear Strength
           </label>
         </p>
+        <p>
+          <label>
+            <input type="checkbox" v-model="selectedCalcs" value="torsion" />
+            Torsional Strength
+          </label>
+        </p>
       </div>
       
       <div v-if="compressionInputDisplay">
@@ -676,6 +682,62 @@
 
     </div>
 
+    <div v-if="torsionCalcDisplay">
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Torsional Strength</span>
+        <span
+          v-html="torsionCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
+          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
+          @click="showTorsionCalcContent()">
+        </span>
+      </h2>
+
+      <div v-if="torsionCalcContentDisplay === '-'">
+        <div v-for="(item, key) in selectedShapeTorsionCapacity" :key="key">
+          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
+            <div style="margin-left: 1em;">
+              <div v-html="item.html"></div>
+            </div>
+        </div>
+        
+        <div>
+          <!-- <p v-if="Object.values(selectedShapeTorsionCriticalCapacity).some(item => item.isMultiState)">
+            <strong>Governing Limit State</strong>
+          </p>
+          <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
+            <div style="margin-left: 1em;">
+              <p v-if="item.isMultiState"><strong>Torsional Strength ({{ item.section }})</strong></p>
+              <p v-if="item.isMultiState">
+                T<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+              </p>
+              <p>
+                &phi;<sub>T</sub> = {{ item.phi.toFixed(2) }}
+              </p>
+              <p><strong>
+                &phi;<sub>T</sub>T<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+              </strong></p>
+            </div>
+          </div> -->
+        </div>
+      </div>
+
+      <div v-else>
+        <!-- <div>
+          <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
+            <div style="margin-left: 1em;">
+              <p><strong>Torsional Strength ({{ item.section }})</strong></p>
+              <p>
+                T<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+              </p>
+              <p><strong>
+                &phi;<sub>T</sub>T<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+              </strong></p>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
     <footer style="font-size: 0.75em; margin-top: 50px;">
       <hr>
       <div>Steel Construction Manual 15th Edition</div>
@@ -713,6 +775,9 @@
   import { majorShearCalculator } from './utils/shear-calculators.js';
   import { minorShearCalculator } from './utils/shear-calculators.js';
   import { criticalShearResultProcessor } from './utils/shear-calculators.js';
+
+  import { torsionCalculator } from './utils/torsion-calculators.js';
+  import { criticalTorsionResultProcessor } from './utils/torsion-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
   import { positiveNumberInputValidator } from '../utils/validators.js';
@@ -755,6 +820,7 @@
         compressionCalcContentDisplay: '-',
         flexureCalcContentDisplay: '-',
         shearCalcContentDisplay: '-',
+        torsionCalcContentDisplay: '-',
 
         // error variable
         effectiveLengthXInputError: '',
@@ -826,6 +892,10 @@
         return this.selectedCalcs.includes('shear');
       },
 
+      torsionCalcSelected() {
+        return this.selectedCalcs.includes('torsion');
+      },
+
       // rendering variable
 
       selectedGradeDesig() {
@@ -880,6 +950,10 @@
 
       shearCalcValid() {
         return !!this.selectedShapeMajorShearCapacity || !!this.selectedShapeMinorShearCapacity;
+      },
+
+      torsionCalcValid() {
+        return !!this.selectedShapeTorsionCapacity;
       },
 
       // input display variable
@@ -940,7 +1014,7 @@
       },
 
       slenderClassDisplay() {
-        return (this.selectedShapeValid && this.selectedGradeValid) && (this.compressionCalcSelected || this.flexureCalcSelected || this.shearCalcSelected);
+        return (this.selectedShapeValid && this.selectedGradeValid) && (this.compressionCalcSelected || this.flexureCalcSelected || this.shearCalcSelected || this.torsionCalcSelected);
       },
 
       compressionSlenderClassDisplay() {
@@ -965,6 +1039,10 @@
 
       shearCalcDisplay() {
         return this.shearCalcValid && this.shearCalcSelected;
+      },
+
+      torsionCalcDisplay() {
+        return this.torsionCalcValid && this.torsionCalcSelected;;
       },
 
       // calc variable
@@ -1084,6 +1162,13 @@
       selectedShapeMinorShearCriticalCapacity() {
         return criticalShearResultProcessor(this.selectedShapeMinorShearCapacity);
       },
+
+      selectedShapeTorsionCapacity() {
+        return torsionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, 0);
+      },
+      selectedShapeTorsionCriticalCapacity() {
+        return criticalTorsionResultProcessor(this.selectedShapeTorsionCapacity);
+      },
     },
 
     watch: {
@@ -1157,6 +1242,10 @@
         this.shearCalcContentDisplay = this.shearCalcContentDisplay === '-' ? '+' : '-';
       },
 
+      showTorsionCalcContent() {
+        this.torsionCalcContentDisplay = this.torsionCalcContentDisplay === '-' ? '+' : '-';
+      },
+
       reset() {
         this.selectedDescShapeType = 'All';
         this.selectedShape = null;
@@ -1179,6 +1268,7 @@
         this.compressionCalcContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
         this.shearCalcContentDisplay = '-';
+        this.torsionCalcContentDisplay = '-';
       },
     },
   };
