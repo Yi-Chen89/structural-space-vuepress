@@ -28,7 +28,12 @@ export function torsionCalculator(shapeData, shapeType, astmSpecProp, slenderCla
 
       const { C } = shapeData;
 
-
+      result['Tn_H3_1_b']['isApplicable'] = true;
+      const [phi_H3_1_b, Tn_H3_1_b, html_H3_1_b] = H3_1bRectangularHollowSection(Fy, E, C, lambdaw);
+      result['Tn_H3_1_b']['phi'] = phi_H3_1_b;
+      result['Tn_H3_1_b']['nominalValue'] = Tn_H3_1_b;
+      result['Tn_H3_1_b']['designValue'] = phi_H3_1_b * Tn_H3_1_b;
+      result['Tn_H3_1_b']['html'] = html_H3_1_b;
 
     } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
       // H3.1(a)
@@ -99,6 +104,40 @@ function H3_1aCircularHollowSection(Fy, E, D, C, lambda, L) {
 }
 
 // H3.1(b) Rectangular HSS Subject to Torsion
+function H3_1bRectangularHollowSection(Fy, E, C, lambdaw) {
+  let phi = 0.9;
+  let Tn = 0;
+  let html = '';
+
+  const calcTerm1 = Math.sqrt(E / Fy);
+  const calcTerm1_ = `&radic;(${E_} / ${Fy_})`;
+
+  let Fcr = 0;
+  if (lambdaw <= 2.45 * calcTerm1) {
+    Fcr = 0.6 * Fy;
+    html += `<p>For ${lambdaw_} &le; 2.45 ${calcTerm1_}</p>
+             <p>Torsional yielding governs</p>
+             <p>${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+
+  } else if (lambdaw <= 3.07 * calcTerm1) {
+    Fcr = 0.6 * Fy * (2.45 * calcTerm1) / lambdaw;
+    html += `<p>For 2.45 ${calcTerm1_} &lt; ${lambdaw_} &le; 3.07 ${calcTerm1_}</p>
+             <p>Torsional buckling governs</p>
+             <p>${Fcr_} = 0.6 ${Fy_} (2.45 ${calcTerm1_}) / ${lambdaw_} = ${Fcr.toFixed(2)} ksi</p>`;
+
+  } else if (lambdaw <= 260) {
+    Fcr = 0.458 * Math.PI**2 * E / lambdaw**2;
+    html += `<p>For 3.07 ${calcTerm1_} &lt; ${lambdaw_} &le; 260</p>
+             <p>Torsional buckling governs</p>
+             <p>${Fcr_} = 0.458 &pi;<sup>2</sup> ${E_} / ${lambdaw_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>`;
+  }
+
+  Tn = Fcr * C;
+  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>
+           <p>${Tn_} = ${Tn.toFixed(1)} k-in</p>`;
+
+  return [phi, Tn, html];
+}
 
 
 // html notation
