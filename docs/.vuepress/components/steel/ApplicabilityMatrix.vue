@@ -75,6 +75,16 @@
           <td></td>
           <td></td>
         </tr>
+        <tr>
+          <td class="row-header">Torsion</td>
+          <td></td>
+          <td></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
   </div>
