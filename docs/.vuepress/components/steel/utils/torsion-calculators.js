@@ -58,7 +58,39 @@ export function torsionCalculator(shapeData, shapeType, astmSpecProp, slenderCla
 
 export function criticalTorsionResultProcessor(result) {
   if (result) {
-    return null;
+    // filter out objects where isApplicable is false or designValue is 0
+    // filteredResultAsList data structure
+    // [
+    //   [ "Tn_H3_1_a", { "isApplicable": true, "phi": 0.9, ... } ],
+    //   [ "Tn_H3_1_b", { "isApplicable": true, "phi": 0.9, ... } ]
+    // ]
+    const filteredResultAsList = Object.entries(result)
+      .filter(([, item]) =>
+        item['isApplicable'] && item['designValue'] !== 0
+      );
+
+    if (filteredResultAsList.length > 0) {
+      const criticalResult = filteredResultAsList.reduce(
+        (min, item) =>
+          item[1]['designValue'] < min[1]['designValue'] ? item : min
+      );
+
+      // convert list back to dictionary
+      // output data structure
+      // {
+      //   "Tn_H3_1_a": { "isApplicable": true, "phi": 0.9, ... }
+      // }
+      const output = Object.fromEntries([criticalResult]);
+
+      // add isMultiState attribute
+      for (const key in output) {
+        output[key]['isMultiState'] = Object.keys(result).length > 1;
+      }
+      return output;
+
+    } else {
+      return null;
+    }
   } else {
     return null;
   }
@@ -98,7 +130,7 @@ function H3_1aCircularHollowSection(Fy, E, D, C, lambda, L) {
 
   Tn = Fcr * C;
   html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>
-           <p>${Tn_} = ${Tn.toFixed(1)} k-in</p>`;
+           <p>${Tn_} = ${Tn.toFixed(1)} k-in = ${(Tn / 12).toFixed(1)} k-ft</p>`;
 
   return [phi, Tn, html];
 }
@@ -134,7 +166,7 @@ function H3_1bRectangularHollowSection(Fy, E, C, lambdaw) {
 
   Tn = Fcr * C;
   html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>
-           <p>${Tn_} = ${Tn.toFixed(1)} k-in</p>`;
+           <p>${Tn_} = ${Tn.toFixed(1)} k-in = ${(Tn / 12).toFixed(1)} k-ft</p>`;
 
   return [phi, Tn, html];
 }

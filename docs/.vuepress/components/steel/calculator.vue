@@ -701,7 +701,7 @@
         </div>
         
         <div>
-          <!-- <p v-if="Object.values(selectedShapeTorsionCriticalCapacity).some(item => item.isMultiState)">
+          <p v-if="Object.values(selectedShapeTorsionCriticalCapacity).some(item => item.isMultiState)">
             <strong>Governing Limit State</strong>
           </p>
           <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
@@ -714,27 +714,27 @@
                 &phi;<sub>T</sub> = {{ item.phi.toFixed(2) }}
               </p>
               <p><strong>
-                &phi;<sub>T</sub>T<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+                &phi;<sub>T</sub>T<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
               </strong></p>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
 
       <div v-else>
-        <!-- <div>
+        <div>
           <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
             <div style="margin-left: 1em;">
               <p><strong>Torsional Strength ({{ item.section }})</strong></p>
               <p>
-                T<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+                T<sub>n</sub> = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
               </p>
               <p><strong>
-                &phi;<sub>T</sub>T<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+                &phi;<sub>T</sub>T<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
               </strong></p>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
 
