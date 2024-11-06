@@ -363,7 +363,7 @@
             </div>
         </div>
         
-        <div>
+        <div v-if="selectedShapeTensionCriticalCapacity">
           <p v-if="Object.values(selectedShapeTensionCriticalCapacity).some(item => item.isMultiState)">
             <strong>Governing Limit State</strong>
           </p>
@@ -382,10 +382,15 @@
             </div>
           </div>
         </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
+          </div>
+        </div>
       </div>
 
       <div v-else>
-        <div>
+        <div v-if="selectedShapeTensionCriticalCapacity">
           <div v-for="(item, key) in selectedShapeTensionCriticalCapacity">
             <div style="margin-left: 1em;">
               <p><strong>Tensile Strength ({{ item.section }})</strong></p>
@@ -396,6 +401,11 @@
                 &phi;<sub>t</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
               </strong></p>
             </div>
+          </div>
+        </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
           </div>
         </div>
       </div>
@@ -419,7 +429,7 @@
             </div>
         </div>
         
-        <div>
+        <div v-if="selectedShapeCompressionCriticalCapacity">
           <p v-if="Object.values(selectedShapeCompressionCriticalCapacity).some(item => item.isMultiState)">
             <strong>Governing Limit State</strong>
           </p>
@@ -438,10 +448,15 @@
             </div>
           </div>
         </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
+          </div>
+        </div>
       </div>
 
       <div v-else>
-        <div>
+        <div v-if="selectedShapeCompressionCriticalCapacity">
           <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
             <div style="margin-left: 1em;">
               <p><strong>Compressive Strength ({{ item.section }})</strong></p>
@@ -452,6 +467,11 @@
                 &phi;<sub>c</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
               </strong></p>
             </div>
+          </div>
+        </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
           </div>
         </div>
       </div>
@@ -479,7 +499,7 @@
             </div>
           </div>
 
-          <div>
+          <div v-if="selectedShapeMajorFlexureCriticalCapacity">
             <p><strong>Governing Limit State</strong></p>
             <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
@@ -494,6 +514,11 @@
                   &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
                 </strong></p>
               </div>
+            </div>
+          </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
             </div>
           </div>
         </div>
@@ -509,7 +534,7 @@
             </div>
           </div>
 
-          <div>
+          <div v-if="selectedShapeMinorFlexureCriticalCapacity">
             <p><strong>Governing Limit State</strong></p>
             <div v-for="(item, key) in selectedShapeMinorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
@@ -526,6 +551,11 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -533,7 +563,7 @@
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
 
-          <div>
+          <div v-if="selectedShapeMajorFlexureCriticalCapacity">
             <div v-for="(item, key) in selectedShapeMajorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
                 <p><strong>{{ item.sign }} Flexural Strength ({{ item.section }})</strong></p>
@@ -546,12 +576,17 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
+            </div>
+          </div>
         </div>
       
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
 
-          <div>
+          <div v-if="selectedShapeMinorFlexureCriticalCapacity">
             <div v-for="(item, key) in selectedShapeMinorFlexureCriticalCapacity">
               <div style="margin-left: 1em;">
                 <p><strong>{{ item.sign }} Flexural Strength ({{ item.section }})</strong></p>
@@ -562,6 +597,11 @@
                   &phi;<sub>b</sub>M<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
                 </strong></p>
               </div>
+            </div>
+          </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
             </div>
           </div>
         </div>
@@ -590,7 +630,7 @@
             </div>
           </div>
           
-          <div>
+          <div v-if="selectedShapeMajorShearCriticalCapacity">
             <p v-if="Object.values(selectedShapeMajorShearCriticalCapacity).some(item => item.isMultiState)">
               <strong>Governing Limit State</strong>
             </p>
@@ -609,6 +649,11 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
+            </div>
+          </div>
         </div>
 
         <div v-if="true">
@@ -622,7 +667,7 @@
             </div>
           </div>
 
-          <div>
+          <div v-if="selectedShapeMinorShearCriticalCapacity">
             <p v-if="Object.values(selectedShapeMinorShearCriticalCapacity).some(item => item.isMultiState)">
               <strong>Governing Limit State</strong>
             </p>
@@ -641,13 +686,19 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
+            </div>
+          </div>
         </div>
       </div>
 
       <div v-else>
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
-          <div>
+
+          <div v-if="selectedShapeMajorShearCriticalCapacity">
             <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
               <div style="margin-left: 1em;">
                 <p><strong>{{ item.panel }} Shear Strength ({{ item.section }})</strong></p>
@@ -660,11 +711,17 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
+            </div>
+          </div>
         </div>
 
         <div v-if="true">
           <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
-          <div>
+
+          <div v-if="selectedShapeMinorShearCriticalCapacity">
             <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
               <div style="margin-left: 1em;">
                 <p><strong>Shear Strength ({{ item.section }})</strong></p>
@@ -677,9 +734,13 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div style="margin-left: 1em;">
+              <p>Not available</p>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
 
     <div v-if="torsionCalcDisplay">
@@ -700,7 +761,7 @@
             </div>
         </div>
         
-        <div>
+        <div v-if="selectedShapeTorsionCriticalCapacity">
           <p v-if="Object.values(selectedShapeTorsionCriticalCapacity).some(item => item.isMultiState)">
             <strong>Governing Limit State</strong>
           </p>
@@ -719,10 +780,15 @@
             </div>
           </div>
         </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
+          </div>
+        </div>
       </div>
 
       <div v-else>
-        <div>
+        <div v-if="selectedShapeTorsionCriticalCapacity">
           <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
             <div style="margin-left: 1em;">
               <p><strong>Torsional Strength ({{ item.section }})</strong></p>
@@ -733,6 +799,11 @@
                 &phi;<sub>T</sub>T<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
               </strong></p>
             </div>
+          </div>
+        </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
           </div>
         </div>
       </div>

@@ -156,7 +156,8 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
         result['Mn_8_2']['html'] = html_8_2;
       }
 
-    } else if (['WT', 'MT', 'ST', '2L'].includes(shapeType)) {
+    } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    // } else if (['WT', 'MT', 'ST', '2L'].includes(shapeType)) {
       // F9
       // limit state: Y, LTB, FLB, WLB
 
@@ -203,12 +204,12 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       const { Sx } = shapeData;
 
       // F10.1 Yielding
-      result['Mn_10_1']['isApplicable'] = true;
-      const [phi_10_1, Mn_10_1, html_10_1] = F10_1Yielding(Fy, Sx);
-      result['Mn_10_1']['phi'] = phi_10_1;
-      result['Mn_10_1']['nominalValues'][0] = Mn_10_1;
-      result['Mn_10_1']['designValues'][0] = phi_10_1 * Mn_10_1;
-      result['Mn_10_1']['html'] = html_10_1;
+      // result['Mn_10_1']['isApplicable'] = true;
+      // const [phi_10_1, Mn_10_1, html_10_1] = F10_1Yielding(Fy, Sx);
+      // result['Mn_10_1']['phi'] = phi_10_1;
+      // result['Mn_10_1']['nominalValues'][0] = Mn_10_1;
+      // result['Mn_10_1']['designValues'][0] = phi_10_1 * Mn_10_1;
+      // result['Mn_10_1']['html'] = html_10_1;
     }
 
     result = resultRenderDataConstructor(result, 'flexure');
