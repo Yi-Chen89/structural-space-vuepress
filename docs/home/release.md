@@ -5,19 +5,28 @@
 
 ## Current
 
-::: tip Site v1.0
+::: tabs
+
+@tab Note
+
+**Site v1.0**
+
 **Release Date**:
 
 ---
 
-**Note**
+@tab Software
+
+**Site v1.0**
+
+**Release Date**:
 
 ---
 
-**Software**
-  - VuePress v2.0.0-rc.18
-  - Vue v3.5.12
+- VuePress v2.0.0-rc.18
+- Vue v3.5.12
+
 :::
 
 
-## Older
+<!-- ## Older -->
