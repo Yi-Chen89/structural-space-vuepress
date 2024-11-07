@@ -4,6 +4,7 @@ import { viteBundler } from '@vuepress/bundler-vite'
 
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
+import { searchPlugin } from '@vuepress/plugin-search'
 
 import { getDirname, path } from 'vuepress/utils'
 
@@ -96,6 +97,13 @@ export default defineUserConfig({
     }),
     googleAnalyticsPlugin({
       id: 'G-R88JJMTX06',
+    }),
+    searchPlugin({
+      locales: {
+        '/': {
+          placeholder: 'Search',
+        },
+      }
     }),
   ],
 
