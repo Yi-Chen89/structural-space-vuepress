@@ -21,7 +21,7 @@ export default defineUserConfig({
     logo: 'https://vuejs.press/images/hero.png',
 
     // configure GitHub link on navbar
-    repo: 'https://github.com/Yi-Chen89/structural-space-vuepress.git',
+    // repo: 'https://github.com/Yi-Chen89/structural-space-vuepress.git',
 
     // configure navbar
     navbar: [
