@@ -15,8 +15,8 @@ export function torsionCalculator(shapeData, shapeType, astmSpecProp, slenderCla
     } = slenderClass;
     
     let result = {
-      'Tn_H3_1_a': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
-      'Tn_H3_1_b': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Tn_H3_1_a': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Tn_H3_1_b': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
@@ -30,7 +30,7 @@ export function torsionCalculator(shapeData, shapeType, astmSpecProp, slenderCla
 
       result['Tn_H3_1_b']['isApplicable'] = true;
       const [phi_H3_1_b, Tn_H3_1_b, html_H3_1_b] = H3_1bRectangularHollowSection(Fy, E, C, lambdaw);
-      result['Tn_H3_1_b']['phi'] = phi_H3_1_b;
+      result['Tn_H3_1_b']['phiValue'] = phi_H3_1_b;
       result['Tn_H3_1_b']['nominalValue'] = Tn_H3_1_b;
       result['Tn_H3_1_b']['designValue'] = phi_H3_1_b * Tn_H3_1_b;
       result['Tn_H3_1_b']['html'] = html_H3_1_b;
@@ -42,7 +42,7 @@ export function torsionCalculator(shapeData, shapeType, astmSpecProp, slenderCla
       
       result['Tn_H3_1_a']['isApplicable'] = true;
       const [phi_H3_1_a, Tn_H3_1_a, html_H3_1_a] = H3_1aCircularHollowSection(Fy, E, OD, C, lambdaf, L);
-      result['Tn_H3_1_a']['phi'] = phi_H3_1_a;
+      result['Tn_H3_1_a']['phiValue'] = phi_H3_1_a;
       result['Tn_H3_1_a']['nominalValue'] = Tn_H3_1_a;
       result['Tn_H3_1_a']['designValue'] = phi_H3_1_a * Tn_H3_1_a;
       result['Tn_H3_1_a']['html'] = html_H3_1_a;
@@ -61,8 +61,8 @@ export function criticalTorsionResultProcessor(result) {
     // filter out objects where isApplicable is false or designValue is 0
     // filteredResultAsList data structure
     // [
-    //   [ "Tn_H3_1_a", { "isApplicable": true, "phi": 0.9, ... } ],
-    //   [ "Tn_H3_1_b", { "isApplicable": true, "phi": 0.9, ... } ]
+    //   [ "Tn_H3_1_a", { "isApplicable": true, "phiValue": 0.9, ... } ],
+    //   [ "Tn_H3_1_b", { "isApplicable": true, "phiValue": 0.9, ... } ]
     // ]
     const filteredResultAsList = Object.entries(result)
       .filter(([, item]) =>
@@ -78,7 +78,7 @@ export function criticalTorsionResultProcessor(result) {
       // convert list back to dictionary
       // output data structure
       // {
-      //   "Tn_H3_1_a": { "isApplicable": true, "phi": 0.9, ... }
+      //   "Tn_H3_1_a": { "isApplicable": true, "phiValue": 0.9, ... }
       // }
       const output = Object.fromEntries([criticalResult]);
 

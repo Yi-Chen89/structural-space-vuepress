@@ -19,10 +19,10 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
     } = slenderClass;
 
     let result = {
-      'Pn_3': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
-      'Pn_4': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
-      'Pn_3_7': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
-      'Pn_4_7': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_3': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_4': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_3_7': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_4_7': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
@@ -39,14 +39,14 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         // limit state: FB TB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['phiValue'] = phi_3;
         result['Pn_3']['nominalValue'] = Pn_3;
         result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
 
         result['Pn_4']['isApplicable'] = true;
         const [Pn_4, PnHtml_4] = capacityCalculator(Fcr_4, A, 'gross');
-        result['Pn_4']['phi'] = phi_4;
+        result['Pn_4']['phiValue'] = phi_4;
         result['Pn_4']['nominalValue'] = Pn_4;
         result['Pn_4']['designValue'] = phi_4 * Pn_4;
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
@@ -57,7 +57,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['phiValue'] = phi_3;
         result['Pn_3_7']['nominalValue'] = Pn_3_7;
         result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
@@ -65,7 +65,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_4_7']['isApplicable'] = true;
         const [Ae_4, AeHtml_4] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_4, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_4_7, PnHtml_4_7] = capacityCalculator(Fcr_4, Ae_4, 'effective');
-        result['Pn_4_7']['phi'] = phi_4;
+        result['Pn_4_7']['phiValue'] = phi_4;
         result['Pn_4_7']['nominalValue'] = Pn_4_7;
         result['Pn_4_7']['designValue'] = phi_4 * Pn_4_7;
         result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
@@ -85,14 +85,14 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         // limit state: FB FTB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['phiValue'] = phi_3;
         result['Pn_3']['nominalValue'] = Pn_3;
         result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
 
         result['Pn_4']['isApplicable'] = true;
         const [Pn_4, PnHtml_4] = capacityCalculator(Fcr_4, A, 'gross');
-        result['Pn_4']['phi'] = phi_4;
+        result['Pn_4']['phiValue'] = phi_4;
         result['Pn_4']['nominalValue'] = Pn_4;
         result['Pn_4']['designValue'] = phi_4 * Pn_4;
         result['Pn_4']['html'] = FcrHtml_4 + PnHtml_4;
@@ -103,7 +103,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['phiValue'] = phi_3;
         result['Pn_3_7']['nominalValue'] = Pn_3_7;
         result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
@@ -111,7 +111,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_4_7']['isApplicable'] = true;
         const [Ae_4, AeHtml_4] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, bf, d, tf, tw, Fcr_4, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_4_7, PnHtml_4_7] = capacityCalculator(Fcr_4, Ae_4, 'effective');
-        result['Pn_4_7']['phi'] = phi_4;
+        result['Pn_4_7']['phiValue'] = phi_4;
         result['Pn_4_7']['nominalValue'] = Pn_4_7;
         result['Pn_4_7']['designValue'] = phi_4 * Pn_4_7;
         result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
@@ -128,7 +128,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         // limit state: FB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['phiValue'] = phi_3;
         result['Pn_3']['nominalValue'] = Pn_3;
         result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
@@ -139,7 +139,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, b, h, tdes, tdes, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['phiValue'] = phi_3;
         result['Pn_3_7']['nominalValue'] = Pn_3_7;
         result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
@@ -156,7 +156,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         // limit state: FB
         result['Pn_3']['isApplicable'] = true;
         const [Pn_3, PnHtml_3] = capacityCalculator(Fcr_3, A, 'gross');
-        result['Pn_3']['phi'] = phi_3;
+        result['Pn_3']['phiValue'] = phi_3;
         result['Pn_3']['nominalValue'] = Pn_3;
         result['Pn_3']['designValue'] = phi_3 * Pn_3;
         result['Pn_3']['html'] = FcrHtml_3 + PnHtml_3;
@@ -167,7 +167,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_3_7']['isApplicable'] = true;
         const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, 0, 0, 0, 0, Fcr_3, lambdaf, 0, lambdarf, 0, flange, null);
         const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
-        result['Pn_3_7']['phi'] = phi_3;
+        result['Pn_3_7']['phiValue'] = phi_3;
         result['Pn_3_7']['nominalValue'] = Pn_3_7;
         result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
         result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
@@ -187,8 +187,8 @@ export function criticalCompressionResultProcessor(result) {
     // filter out objects where isApplicable is false or designValue is 0
     // filteredResultAsList data structure
     // [
-    //   [ "Pn_3", { "isApplicable": true, "phi": 0.9, ... } ],
-    //   [ "Pn_4", { "isApplicable": true, "phi": 0.9, ... } ]
+    //   [ "Pn_3", { "isApplicable": true, "phiValue": 0.9, ... } ],
+    //   [ "Pn_4", { "isApplicable": true, "phiValue": 0.9, ... } ]
     // ]
     const filteredResultAsList = Object.entries(result)
       .filter(([, item]) =>
@@ -204,7 +204,7 @@ export function criticalCompressionResultProcessor(result) {
       // convert list back to dictionary
       // output data structure
       // {
-      //   "Pn_3": { "isApplicable": true, "phi": 0.9, ... }
+      //   "Pn_3": { "isApplicable": true, "phiValue": 0.9, ... }
       // }
       const output = Object.fromEntries([criticalResult]);
 

@@ -7,8 +7,8 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
     const { Fy, Fu, E } = astmSpecProp;
 
     let result = {
-      'Pn_2_a': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
-      'Pn_2_b': {'isApplicable': false, 'phi': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_2_a': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
+      'Pn_2_b': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square', 'HSS Round', 'PIPE'].includes(shapeType)) {
@@ -17,7 +17,7 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
       // D2(a) Tension Yielding
       result['Pn_2_a']['isApplicable'] = true;
       const [phi_2_a, Pn_2_a, PnHtml_2_a] = D2_aYielding(Fy, A);
-      result['Pn_2_a']['phi'] = phi_2_a;
+      result['Pn_2_a']['phiValue'] = phi_2_a;
       result['Pn_2_a']['nominalValue'] = Pn_2_a;
       result['Pn_2_a']['designValue'] = phi_2_a * Pn_2_a;
       result['Pn_2_a']['html'] = PnHtml_2_a;
@@ -25,7 +25,7 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
       // D2(b) Tension Rupture
       result['Pn_2_b']['isApplicable'] = true;
       const [phi_2_b, Pn_2_b, PnHtml_2_b] = D2_bRupture(Fu, A);
-      result['Pn_2_b']['phi'] = phi_2_b;
+      result['Pn_2_b']['phiValue'] = phi_2_b;
       result['Pn_2_b']['nominalValue'] = Pn_2_b;
       result['Pn_2_b']['designValue'] = phi_2_b * Pn_2_b;
       result['Pn_2_b']['html'] = PnHtml_2_b;
@@ -44,8 +44,8 @@ export function criticalTensionResultProcessor(result) {
     // filter out objects where isApplicable is false or designValue is 0
     // filteredResultAsList data structure
     // [
-    //   [ "Pn_2_a", { "isApplicable": true, "phi": 0.9, ... } ],
-    //   [ "Pn_2_b", { "isApplicable": true, "phi": 0.9, ... } ]
+    //   [ "Pn_2_a", { "isApplicable": true, "phiValue": 0.9, ... } ],
+    //   [ "Pn_2_b", { "isApplicable": true, "phiValue": 0.9, ... } ]
     // ]
     const filteredResultAsList = Object.entries(result)
       .filter(([, item]) =>
@@ -61,7 +61,7 @@ export function criticalTensionResultProcessor(result) {
       // convert list back to dictionary
       // output data structure
       // {
-      //   "Pn_2_a": { "isApplicable": true, "phi": 0.9, ... }
+      //   "Pn_2_a": { "isApplicable": true, "phiValue": 0.9, ... }
       // }
       const output = Object.fromEntries([criticalResult]);
     

@@ -25,20 +25,20 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
     } = slenderClass;
 
     let result = {
-      'Mn_2_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_2_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_3_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_3': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_4': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_8_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_8_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_9_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_9_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_9_3': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_9_4': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_10_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_2_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_2_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_3_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_3': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_4': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_8_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_8_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_9_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_9_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_9_3': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_9_4': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_10_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType) && flange === 'compact' && web === 'compact') {
@@ -50,7 +50,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
       const [phi_2_1, Mp, html_2_1] = F2_1Yielding(Fy, Zx);
-      result['Mn_2_1']['phi'] = phi_2_1;
+      result['Mn_2_1']['phiValue'] = phi_2_1;
       result['Mn_2_1']['nominalValues'][0] = Mp;
       result['Mn_2_1']['designValues'][0] = phi_2_1 * Mp;
       result['Mn_2_1']['html'] = html_2_1;
@@ -58,7 +58,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2']['isApplicable'] = true;
       const [phi_2_2, Mn_2_2, html_2_2] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
-      result['Mn_2_2']['phi'] = phi_2_2;
+      result['Mn_2_2']['phiValue'] = phi_2_2;
       result['Mn_2_2']['nominalValues'][0] = Mn_2_2;
       result['Mn_2_2']['designValues'][0] = phi_2_2 * Mn_2_2;
       result['Mn_2_2']['html'] = html_2_2;
@@ -72,7 +72,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F2.1 Yielding
       result['Mn_2_1']['isApplicable'] = true;
       const [phi_2_1, Mp, html_2_1] = F2_1Yielding(Fy, Zx);
-      result['Mn_2_1']['phi'] = phi_2_1;
+      result['Mn_2_1']['phiValue'] = phi_2_1;
       result['Mn_2_1']['nominalValues'][0] = Mp;
       result['Mn_2_1']['designValues'][0] = phi_2_1 * Mp;
       result['Mn_2_1']['html'] = html_2_1;
@@ -80,7 +80,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F2.2 Lateral-Torsional Buckling
       result['Mn_2_2']['isApplicable'] = true;
       const [phi_2_2, Mn_2_2, html_2_2] = F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, rts, ho, Lb, Cb);
-      result['Mn_2_2']['phi'] = phi_2_2;
+      result['Mn_2_2']['phiValue'] = phi_2_2;
       result['Mn_2_2']['nominalValues'][0] = Mn_2_2;
       result['Mn_2_2']['designValues'][0] = phi_2_2 * Mn_2_2;
       result['Mn_2_2']['html'] = html_2_2;
@@ -88,7 +88,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F3.2 Compression Flange Local Buckling
       result['Mn_3_2']['isApplicable'] = true;
       const [phi_3_2, Mn_3_2, html_3_2] = F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lambdapf, lambdarf, flange);
-      result['Mn_3_2']['phi'] = phi_3_2;
+      result['Mn_3_2']['phiValue'] = phi_3_2;
       result['Mn_3_2']['nominalValues'][0] = Mn_3_2;
       result['Mn_3_2']['designValues'][0] = phi_3_2 * Mn_3_2;
       result['Mn_3_2']['html'] = html_3_2;
@@ -102,7 +102,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.1 Yielding
       result['Mn_7_1']['isApplicable'] = true;
       const [phi_7_1, Mp, html_7_1] = F7_1Yielding('x', Fy, Zx);
-      result['Mn_7_1']['phi'] = phi_7_1;
+      result['Mn_7_1']['phiValue'] = phi_7_1;
       result['Mn_7_1']['nominalValues'][0] = Mp;
       result['Mn_7_1']['designValues'][0] = phi_7_1 * Mp;
       result['Mn_7_1']['html'] = html_7_1;
@@ -110,7 +110,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.2 Flange Local Buckling
       result['Mn_7_2']['isApplicable'] = true;
       const [phi_7_2, Mn_7_2, html_7_2] = F7_2FlangeLocalBuckling('x', Mp, Fy, E, Ht, b, tdes, Ix, Sx, flange);
-      result['Mn_7_2']['phi'] = phi_7_2;
+      result['Mn_7_2']['phiValue'] = phi_7_2;
       result['Mn_7_2']['nominalValues'][0] = Mn_7_2;
       result['Mn_7_2']['designValues'][0] = phi_7_2 * Mn_7_2;
       result['Mn_7_2']['html'] = html_7_2;
@@ -118,7 +118,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.3 Web Local Buckling
       result['Mn_7_3']['isApplicable'] = true;
       const [phi_7_3, Mn_7_3, html_7_3] = F7_3WebLocalBuckling('x', Mp, Fy, E, h, b, tdes, tdes, Sx, web);
-      result['Mn_7_3']['phi'] = phi_7_3;
+      result['Mn_7_3']['phiValue'] = phi_7_3;
       result['Mn_7_3']['nominalValues'][0] = Mn_7_3;
       result['Mn_7_3']['designValues'][0] = phi_7_3 * Mn_7_3;
       result['Mn_7_3']['html'] = html_7_3;
@@ -126,7 +126,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.4 Lateral-Torsional Buckling
       result['Mn_7_4']['isApplicable'] = true;
       const [phi_7_4, Mn_7_4, html_7_4] = F7_4LateralTorsionalBuckling('x', shapeType, Mp, Fy, E, A, Sx, ry, J, Lb, Cb);
-      result['Mn_7_4']['phi'] = phi_7_4;
+      result['Mn_7_4']['phiValue'] = phi_7_4;
       result['Mn_7_4']['nominalValues'][0] = Mn_7_4;
       result['Mn_7_4']['designValues'][0] = phi_7_4 * Mn_7_4;
       result['Mn_7_4']['html'] = html_7_4;
@@ -142,7 +142,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
         // F8.1 Yielding
         result['Mn_8_1']['isApplicable'] = true;
         const [phi_8_1, Mp, html_8_1] = F8_1Yielding('x', Fy, Zx);
-        result['Mn_8_1']['phi'] = phi_8_1;
+        result['Mn_8_1']['phiValue'] = phi_8_1;
         result['Mn_8_1']['nominalValues'][0] = Mp;
         result['Mn_8_1']['designValues'][0] = phi_8_1 * Mp;
         result['Mn_8_1']['html'] = html_8_1;
@@ -150,7 +150,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
         const [phi_8_2, Mn_8_2, html_8_2] = F8_2LocalBuckling('x', Fy, E, Sx, lambdaf, flange);
-        result['Mn_8_2']['phi'] = phi_8_2;
+        result['Mn_8_2']['phiValue'] = phi_8_2;
         result['Mn_8_2']['nominalValues'][0] = Mn_8_2;
         result['Mn_8_2']['designValues'][0] = phi_8_2 * Mn_8_2;
         result['Mn_8_2']['html'] = html_8_2;
@@ -166,7 +166,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F9.1 Yielding
       result['Mn_9_1']['isApplicable'] = true;
       const [phi_9_1, Mp_pos, Mp_neg, html_9_1] = F9_1Yielding(shapeType, Fy, Zx, Sx);
-      result['Mn_9_1']['phi'] = phi_9_1;
+      result['Mn_9_1']['phiValue'] = phi_9_1;
       result['Mn_9_1']['nominalValues'] = [Mp_pos, Mp_neg];
       result['Mn_9_1']['designValues'] = [phi_9_1 * Mp_pos, phi_9_1 * Mp_neg];
       result['Mn_9_1']['html'] = html_9_1;
@@ -174,7 +174,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F9.2 Lateral-Torsional Buckling
       result['Mn_9_2']['isApplicable'] = true;
       const [phi_9_2, Mn_9_2_pos, Mn_9_2_neg, html_9_2] = F9_2LateralTorsionalBuckling(shapeType, Mp_pos, Fy, E, d, Sx, Iy, ry, J, Lb);
-      result['Mn_9_2']['phi'] = phi_9_2;
+      result['Mn_9_2']['phiValue'] = phi_9_2;
       result['Mn_9_2']['nominalValues'] = [Mn_9_2_pos, Mn_9_2_neg];
       result['Mn_9_2']['designValues'] = [phi_9_2 * Mn_9_2_pos, phi_9_2 * Mn_9_2_neg];
       result['Mn_9_2']['html'] = html_9_2;
@@ -183,7 +183,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // only sagging
       result['Mn_9_3']['isApplicable'] = true;
       const [phi_9_3, Mn_9_3_pos, Mn_9_3_neg, html_9_3] = F9_3FlangeLocalBuckling(shapeType, Mp_pos, Fy, E, y, Ix, Sx, lambdaf, lambdapf, lambdarf, flange);
-      result['Mn_9_3']['phi'] = phi_9_3;
+      result['Mn_9_3']['phiValue'] = phi_9_3;
       result['Mn_9_3']['nominalValues'] = [Mn_9_3_pos, Mn_9_3_neg];
       result['Mn_9_3']['designValues'] = [phi_9_3 * Mn_9_3_pos, phi_9_3 * Mn_9_3_neg];
       result['Mn_9_3']['html'] = html_9_3;
@@ -192,7 +192,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // only hogging
       result['Mn_9_4']['isApplicable'] = true;
       const [phi_9_4, Mn_9_4_pos, Mn_9_4_neg, html_9_4] = F9_4WebLocalBuckling(shapeType, Fy, E, Sx, lambdaw, web);
-      result['Mn_9_4']['phi'] = phi_9_4;
+      result['Mn_9_4']['phiValue'] = phi_9_4;
       result['Mn_9_4']['nominalValues'] = [Mn_9_4_pos, Mn_9_4_neg];
       result['Mn_9_4']['designValues'] = [phi_9_4 * Mn_9_4_pos, phi_9_4 * Mn_9_4_neg];
       result['Mn_9_4']['html'] = html_9_4;
@@ -206,7 +206,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F10.1 Yielding
       // result['Mn_10_1']['isApplicable'] = true;
       // const [phi_10_1, Mn_10_1, html_10_1] = F10_1Yielding(Fy, Sx);
-      // result['Mn_10_1']['phi'] = phi_10_1;
+      // result['Mn_10_1']['phiValue'] = phi_10_1;
       // result['Mn_10_1']['nominalValues'][0] = Mn_10_1;
       // result['Mn_10_1']['designValues'][0] = phi_10_1 * Mn_10_1;
       // result['Mn_10_1']['html'] = html_10_1;
@@ -243,14 +243,14 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
     } = slenderClass;
 
     let result = {
-      'Mn_6_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_6_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_3': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_7_4': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_8_1': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
-      'Mn_8_2': {'isApplicable': false, 'phi': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_6_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_6_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_3': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_7_4': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_8_1': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
+      'Mn_8_2': {'isApplicable': false, 'phiValue': 0, 'nominalValues': [0, 0], 'designValues': [0, 0], 'html': null},
     };
 
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
@@ -262,7 +262,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F6.1 Yielding
       result['Mn_6_1']['isApplicable'] = true;
       const [phi_6_1, Mp, html_6_1] = F6_1Yielding(Fy, Zy, Sy);
-      result['Mn_6_1']['phi'] = phi_6_1;
+      result['Mn_6_1']['phiValue'] = phi_6_1;
       result['Mn_6_1']['nominalValues'][0] = Mp;
       result['Mn_6_1']['designValues'][0] = phi_6_1 * Mp;
       result['Mn_6_1']['html'] = html_6_1;
@@ -270,7 +270,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F6.2 Flange Local Buckling
       result['Mn_6_2']['isApplicable'] = true;
       const [phi_6_2, Mn_6_2, html_6_2] = F6_2FlangeLocalBuckling(Mp, Fy, E, Sy, lambdaf, lambdapf, lambdarf, flange);
-      result['Mn_6_2']['phi'] = phi_6_2;
+      result['Mn_6_2']['phiValue'] = phi_6_2;
       result['Mn_6_2']['nominalValues'][0] = Mn_6_2;
       result['Mn_6_2']['designValues'][0] = phi_6_2 * Mn_6_2;
       result['Mn_6_2']['html'] = html_6_2;
@@ -284,7 +284,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.1 Yielding
       result['Mn_7_1']['isApplicable'] = true;
       const [phi_7_1, Mp, html_7_1] = F7_1Yielding('y', Fy, Zy);
-      result['Mn_7_1']['phi'] = phi_7_1;
+      result['Mn_7_1']['phiValue'] = phi_7_1;
       result['Mn_7_1']['nominalValues'][0] = Mp;
       result['Mn_7_1']['designValues'][0] = phi_7_1 * Mp;
       result['Mn_7_1']['html'] = html_7_1;
@@ -292,7 +292,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.2 Flange Local Buckling
       result['Mn_7_2']['isApplicable'] = true;
       const [phi_7_2, Mn_7_2, html_7_2] = F7_2FlangeLocalBuckling('y', Mp, Fy, E, B, h, tdes, Iy, Sy, flange);
-      result['Mn_7_2']['phi'] = phi_7_2;
+      result['Mn_7_2']['phiValue'] = phi_7_2;
       result['Mn_7_2']['nominalValues'][0] = Mn_7_2;
       result['Mn_7_2']['designValues'][0] = phi_7_2 * Mn_7_2;
       result['Mn_7_2']['html'] = html_7_2;
@@ -300,7 +300,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.3 Web Local Buckling
       result['Mn_7_3']['isApplicable'] = true;
       const [phi_7_3, Mn_7_3, html_7_3] = F7_3WebLocalBuckling('y', Mp, Fy, E, b, h, tdes, tdes, Sy, web);
-      result['Mn_7_3']['phi'] = phi_7_3;
+      result['Mn_7_3']['phiValue'] = phi_7_3;
       result['Mn_7_3']['nominalValues'][0] = Mn_7_3;
       result['Mn_7_3']['designValues'][0] = phi_7_3 * Mn_7_3;
       result['Mn_7_3']['html'] = html_7_3;
@@ -308,7 +308,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       // F7.4 Lateral-Torsional Buckling
       result['Mn_7_4']['isApplicable'] = true;
       const [phi_7_4, Mn_7_4, html_7_4] = F7_4LateralTorsionalBuckling('y', shapeType, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-      result['Mn_7_4']['phi'] = phi_7_4;
+      result['Mn_7_4']['phiValue'] = phi_7_4;
       result['Mn_7_4']['nominalValues'][0] = Mn_7_4;
       result['Mn_7_4']['designValues'][0] = phi_7_4 * Mn_7_4;
       result['Mn_7_4']['html'] = html_7_4;
@@ -325,7 +325,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
         // F8.1 Yielding
         result['Mn_8_1']['isApplicable'] = true;
         const [phi_8_1, Mp, html_8_1] = F8_1Yielding('y', Fy, Zy);
-        result['Mn_8_1']['phi'] = phi_8_1;
+        result['Mn_8_1']['phiValue'] = phi_8_1;
         result['Mn_8_1']['nominalValues'][0] = Mp;
         result['Mn_8_1']['designValues'][0] = phi_8_1 * Mp;
         result['Mn_8_1']['html'] = html_8_1;
@@ -333,7 +333,7 @@ export function minorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
         // F8.2 Local Buckling
         result['Mn_8_2']['isApplicable'] = true;
         const [phi_8_2, Mn_8_2, html_8_2] = F8_2LocalBuckling('y', Fy, E, Sy, lambdaf, flange);
-        result['Mn_8_2']['phi'] = phi_8_2;
+        result['Mn_8_2']['phiValue'] = phi_8_2;
         result['Mn_8_2']['nominalValues'][0] = Mn_8_2;
         result['Mn_8_2']['designValues'][0] = phi_8_2 * Mn_8_2;
         result['Mn_8_2']['html'] = html_8_2;
@@ -352,8 +352,8 @@ export function criticalFlexureResultProcessor(result) {
   if (result) {
     // filter out objects where isApplicable is false or all values are 0
     // [
-    //   [ "Mn_2_1", { "isApplicable": true, "phi": 0.9, ... } ],
-    //   [ "Mn_2_2", { "isApplicable": true, "phi": 0.9, ... } ]
+    //   [ "Mn_2_1", { "isApplicable": true, "phiValue": 0.9, ... } ],
+    //   [ "Mn_2_2", { "isApplicable": true, "phiValue": 0.9, ... } ]
     // ]
     const filteredResultAsList = Object.entries(result)
       .filter(([, item]) =>
