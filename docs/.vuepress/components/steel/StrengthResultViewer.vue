@@ -78,7 +78,7 @@
         required: true,
       },
       criticalCapacity: {
-        type: Object,
+        type: [Object, null],
         required: true,
       },
     },

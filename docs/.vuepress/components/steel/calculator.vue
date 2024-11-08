@@ -345,137 +345,19 @@
     </div>
   
 
-    <div v-if="tensionCalcDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Tensile Strength</span>
-        <span
-          v-html="tensionCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showTensionCalcContent()">
-        </span>
-      </h2>
-
-      <div v-if="tensionCalcContentDisplay === '-'">
-        <div v-for="(item, key) in selectedShapeTensionCapacity" :key="key">
-          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-            <div style="margin-left: 1em;">
-              <div v-html="item.html"></div>
-            </div>
-        </div>
-        
-        <div v-if="selectedShapeTensionCriticalCapacity">
-          <p v-if="Object.values(selectedShapeTensionCriticalCapacity).some(item => item.isMultiState)">
-            <strong>Governing Limit State</strong>
-          </p>
-          <div v-for="(item, key) in selectedShapeTensionCriticalCapacity">
-            <div style="margin-left: 1em;">
-              <p v-if="item.isMultiState"><strong>Tensile Strength ({{ item.section }})</strong></p>
-              <p v-if="item.isMultiState">
-                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p>
-                &phi;<sub>t</sub> = {{ item.phiValue.toFixed(2) }}
-              </p>
-              <p><strong>
-                &phi;<sub>t</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-              </strong></p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <div v-if="selectedShapeTensionCriticalCapacity">
-          <div v-for="(item, key) in selectedShapeTensionCriticalCapacity">
-            <div style="margin-left: 1em;">
-              <p><strong>Tensile Strength ({{ item.section }})</strong></p>
-              <p>
-                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p><strong>
-                &phi;<sub>t</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-              </strong></p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <StrengthResultViewer
+      v-if="tensionCalcDisplay"
+      title="Tensile Strength"
+      :capacity="selectedShapeTensionCapacity"
+      :criticalCapacity="selectedShapeTensionCriticalCapacity"
+    />
     
-    <div v-if="compressionCalcDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Compressive Strength</span>
-        <span
-          v-html="compressionCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showCompressionCalcContent()">
-        </span>
-      </h2>
-      
-      <div v-if="compressionCalcContentDisplay === '-'">
-        <div v-for="(item, key) in selectedShapeCompressionCapacity" :key="key">
-          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-            <div style="margin-left: 1em;">
-              <div v-html="item.html"></div>
-            </div>
-        </div>
-        
-        <div v-if="selectedShapeCompressionCriticalCapacity">
-          <p v-if="Object.values(selectedShapeCompressionCriticalCapacity).some(item => item.isMultiState)">
-            <strong>Governing Limit State</strong>
-          </p>
-          <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
-            <div style="margin-left: 1em;">
-              <p v-if="item.isMultiState"><strong>Compressive Strength ({{ item.section }})</strong></p>
-              <p v-if="item.isMultiState">
-                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p>
-                &phi;<sub>c</sub> = {{ item.phiValue.toFixed(2) }}
-              </p>
-              <p><strong>
-                &phi;<sub>c</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-              </strong></p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <div v-if="selectedShapeCompressionCriticalCapacity">
-          <div v-for="(item, key) in selectedShapeCompressionCriticalCapacity">
-            <div style="margin-left: 1em;">
-              <p><strong>Compressive Strength ({{ item.section }})</strong></p>
-              <p>
-                P<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p><strong>
-                &phi;<sub>c</sub>P<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-              </strong></p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <StrengthResultViewer
+      v-if="compressionCalcDisplay"
+      title="Compressive Strength"
+      :capacity="selectedShapeCompressionCapacity"
+      :criticalCapacity="selectedShapeCompressionCriticalCapacity"
+    />
 
     <div v-if="flexureCalcDisplay">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
@@ -743,71 +625,12 @@
       </div>
     </div>
 
-    <div v-if="torsionCalcDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Torsional Strength</span>
-        <span
-          v-html="torsionCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showTorsionCalcContent()">
-        </span>
-      </h2>
-
-      <div v-if="torsionCalcContentDisplay === '-'">
-        <div v-for="(item, key) in selectedShapeTorsionCapacity" :key="key">
-          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-            <div style="margin-left: 1em;">
-              <div v-html="item.html"></div>
-            </div>
-        </div>
-        
-        <div v-if="selectedShapeTorsionCriticalCapacity">
-          <p v-if="Object.values(selectedShapeTorsionCriticalCapacity).some(item => item.isMultiState)">
-            <strong>Governing Limit State</strong>
-          </p>
-          <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
-            <div style="margin-left: 1em;">
-              <p v-if="item.isMultiState"><strong>Torsional Strength ({{ item.section }})</strong></p>
-              <p v-if="item.isMultiState">
-                T<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p>
-                &phi;<sub>T</sub> = {{ item.phiValue.toFixed(2) }}
-              </p>
-              <p><strong>
-                &phi;<sub>T</sub>T<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
-              </strong></p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <div v-if="selectedShapeTorsionCriticalCapacity">
-          <div v-for="(item, key) in selectedShapeTorsionCriticalCapacity">
-            <div style="margin-left: 1em;">
-              <p><strong>Torsional Strength ({{ item.section }})</strong></p>
-              <p>
-                T<sub>n</sub> = {{ (item.nominalValue / 12).toFixed(1) }} k-ft
-              </p>
-              <p><strong>
-                &phi;<sub>T</sub>T<sub>n</sub> = {{ (item.designValue / 12).toFixed(1) }} k-ft
-              </strong></p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <StrengthResultViewer
+      v-if="torsionCalcDisplay"
+      title="Torsional Strength"
+      :capacity="selectedShapeTorsionCapacity"
+      :criticalCapacity="selectedShapeTorsionCriticalCapacity"
+    />
 
     <footer style="font-size: 0.75em; margin-top: 50px;">
       <hr>
@@ -860,8 +683,14 @@
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
 
+  import StrengthResultViewer from './StrengthResultViewer.vue';
+
   
   export default {
+    components: {
+      StrengthResultViewer,
+    },
+
     data() {
       return {
         unit: 0,   // 0 for US units, 1 for metric units
@@ -887,11 +716,8 @@
         shapeDataContentDisplay: '-',
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
-        tensionCalcContentDisplay: '-',
-        compressionCalcContentDisplay: '-',
         flexureCalcContentDisplay: '-',
         shearCalcContentDisplay: '-',
-        torsionCalcContentDisplay: '-',
 
         // error variable
         effectiveLengthXInputError: '',
@@ -1297,24 +1123,12 @@
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
       },
 
-      showTensionCalcContent() {
-        this.tensionCalcContentDisplay = this.tensionCalcContentDisplay === '-' ? '+' : '-';
-      },
-
-      showCompressionCalcContent() {
-        this.compressionCalcContentDisplay = this.compressionCalcContentDisplay === '-' ? '+' : '-';
-      },
-
       showFlexureCalcContent() {
         this.flexureCalcContentDisplay = this.flexureCalcContentDisplay === '-' ? '+' : '-';
       },
 
       showShearCalcContent() {
         this.shearCalcContentDisplay = this.shearCalcContentDisplay === '-' ? '+' : '-';
-      },
-
-      showTorsionCalcContent() {
-        this.torsionCalcContentDisplay = this.torsionCalcContentDisplay === '-' ? '+' : '-';
       },
 
       reset() {
@@ -1335,11 +1149,8 @@
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
-        this.tensionCalcContentDisplay = '-';
-        this.compressionCalcContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
         this.shearCalcContentDisplay = '-';
-        this.torsionCalcContentDisplay = '-';
       },
     },
   };
