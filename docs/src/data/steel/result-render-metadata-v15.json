@@ -238,7 +238,7 @@
       "phiNotation": "&phi;<sub>T</sub>",
       "nominalNotation": "T<sub>n</sub>",
       "designNotation": "&phi;<sub>T</sub>T<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Tn_H3_1_b": {
       "section": "H3.1(b)",
@@ -246,7 +246,7 @@
       "phiNotation": "&phi;<sub>T</sub>",
       "nominalNotation": "T<sub>n</sub>",
       "designNotation": "&phi;<sub>T</sub>T<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     }
   }
 }

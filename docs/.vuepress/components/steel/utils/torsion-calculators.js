@@ -129,10 +129,12 @@ function H3_1aCircularHollowSection(Fy, E, D, C, lambda, L) {
   }
 
   Tn = Fcr * C;
-  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>
-           <p>${Tn_} = ${Tn.toFixed(1)} k-in = ${(Tn / 12).toFixed(1)} k-ft</p>`;
+  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>`;
 
-  return [phi, Tn, html];
+  const Tn_converted = Tn / 12;
+  html += `<p>${Tn_} = ${Tn.toFixed(1)} k-in = ${Tn_converted.toFixed(1)} k-ft</p>`;
+
+  return [phi, Tn_converted, html];
 }
 
 // H3.1(b) Rectangular HSS Subject to Torsion
@@ -165,10 +167,12 @@ function H3_1bRectangularHollowSection(Fy, E, C, lambdaw) {
   }
 
   Tn = Fcr * C;
-  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>
-           <p>${Tn_} = ${Tn.toFixed(1)} k-in = ${(Tn / 12).toFixed(1)} k-ft</p>`;
+  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>`;
 
-  return [phi, Tn, html];
+  const Tn_converted = Tn / 12;
+  html += `<p>${Tn_} = ${Tn.toFixed(1)} k-in = ${Tn_converted.toFixed(1)} k-ft</p>`;
+
+  return [phi, Tn_converted, html];
 }
 
 
