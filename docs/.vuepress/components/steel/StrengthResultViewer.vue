@@ -3,13 +3,13 @@
     <h2 style="display: flex; justify-content: space-between; align-items: center;">
       <span>{{ title }}</span>
       <span
-        v-html="contentDisplay === '-' ? '&minus;' : '&plus;'"
+        v-html="contentDisplayLocal === '-' ? '&minus;' : '&plus;'"
         style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
         @click="toggleContentDisplay">
       </span>
     </h2>
 
-    <div v-if="contentDisplay === '-'">
+    <div v-if="contentDisplayLocal === '-'">
       <div v-for="(criticalCapacity, index) in criticalCapacities" :key="index">
         <p v-if="criticalCapacities.length === 2 && index === 0" style="font-size: 1.2em;">
           <strong>Major Axis</strong>
@@ -103,17 +103,22 @@
         type: Array,
         required: true,
       },
+      contentDisplay: {
+        type: String,
+        default: '-',
+      },
     },
 
     data() {
       return {
-        contentDisplay: '-',
+        contentDisplayLocal: this.contentDisplay,
       }
     },
 
     methods: {
       toggleContentDisplay() {
-        this.contentDisplay = this.contentDisplay === '-' ? '+' : '-';
+        this.contentDisplayLocal = this.contentDisplayLocal === '-' ? '+' : '-';
+        this.$emit('updateContentDisplay', { type: this.type, contentDisplay: this.contentDisplayLocal });
       },
     }
   }

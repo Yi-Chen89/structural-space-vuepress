@@ -351,6 +351,8 @@
       title="Tensile Strength"
       :capacities="[selectedShapeTensionCapacity]"
       :criticalCapacities="[selectedShapeTensionCriticalCapacity]"
+      :contentDisplay="tensionCalcContentDisplay"
+      @updateContentDisplay="calcContentDisplayHandler"
     />
     
     <StrengthResultViewer
@@ -359,6 +361,8 @@
       title="Compressive Strength"
       :capacities="[selectedShapeCompressionCapacity]"
       :criticalCapacities="[selectedShapeCompressionCriticalCapacity]"
+      :contentDisplay="compressionCalcContentDisplay"
+      @updateContentDisplay="calcContentDisplayHandler"
     />
     
     <StrengthResultViewer
@@ -367,6 +371,8 @@
       title="Flexural Strength"
       :capacities="[selectedShapeMajorFlexureCapacity, selectedShapeMinorFlexureCapacity]"
       :criticalCapacities="[selectedShapeMajorFlexureCriticalCapacity, selectedShapeMinorFlexureCriticalCapacity]"
+      :contentDisplay="flexureCalcContentDisplay"
+      @updateContentDisplay="calcContentDisplayHandler"
     />
 
     <StrengthResultViewer
@@ -375,6 +381,8 @@
       title="Shear Strength"
       :capacities="[selectedShapeMajorShearCapacity, selectedShapeMinorShearCapacity]"
       :criticalCapacities="[selectedShapeMajorShearCriticalCapacity, selectedShapeMinorShearCriticalCapacity]"
+      :contentDisplay="shearCalcContentDisplay"
+      @updateContentDisplay="calcContentDisplayHandler"
     />
 
     <StrengthResultViewer
@@ -383,6 +391,8 @@
       title="Torsional Strength"
       :capacities="[selectedShapeTorsionCapacity]"
       :criticalCapacities="[selectedShapeTorsionCriticalCapacity]"
+      :contentDisplay="torsionCalcContentDisplay"
+      @updateContentDisplay="calcContentDisplayHandler"
     />
 
     <footer style="font-size: 0.75em; margin-top: 50px;">
@@ -469,7 +479,11 @@
         shapeDataContentDisplay: '-',
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
+        tensionCalcContentDisplay: '-',
+        compressionCalcContentDisplay: '-',
         flexureCalcContentDisplay: '-',
+        shearCalcContentDisplay: '-',
+        torsionCalcContentDisplay: '-',
 
         // error variable
         effectiveLengthXInputError: '',
@@ -879,8 +893,8 @@
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
       },
 
-      showFlexureCalcContent() {
-        this.flexureCalcContentDisplay = this.flexureCalcContentDisplay === '-' ? '+' : '-';
+      calcContentDisplayHandler({ type, contentDisplay }) {
+        this[`${type}CalcContentDisplay`] = contentDisplay;
       },
 
       reset() {
@@ -901,7 +915,11 @@
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
+        this.tensionCalcContentDisplay = '-';
+        this.compressionCalcContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
+        this.shearCalcContentDisplay = '-';
+        this.torsionCalcContentDisplay = '-';
       },
     },
   };
