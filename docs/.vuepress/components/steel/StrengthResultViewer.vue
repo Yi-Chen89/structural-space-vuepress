@@ -10,56 +10,74 @@
     </h2>
 
     <div v-if="contentDisplay === '-'">
-      <div v-for="(item, key) in capacity" :key="key">
-        <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-        <div style="margin-left: 1em;">
-          <div v-html="item.html"></div>
-        </div>
-      </div>
-
-      <div v-if="criticalCapacity">
-        <p v-if="Object.values(criticalCapacity).some(item => item.isMultiState)">
-          <strong>Governing Limit State</strong>
+      <div v-for="(criticalCapacity, index) in criticalCapacities" :key="index">
+        <p v-if="criticalCapacities.length === 2 && index === 0" style="font-size: 1.2em;">
+          <strong>Major Axis</strong>
         </p>
-        <div v-for="(item, key) in criticalCapacity" :key="key">
+        <p v-if="criticalCapacities.length === 2 && index === 1" style="font-size: 1.2em;">
+          <strong>Minor Axis</strong>
+        </p>
+
+        <div v-for="(item, key) in capacities[index]" :key="key">
+          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
           <div style="margin-left: 1em;">
-            <p v-if="item.isMultiState"><strong>{{ title }} ({{ item.section }})</strong></p>
-            <p v-if="item.isMultiState">
-              <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-            </p>
-            <p>
-              <span v-html="item.phiNotation"></span> = {{ item.phiValue.toFixed(2) }}
-            </p>
-            <p><strong>
-              <span v-html="item.designNotation"></span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-            </strong></p>
+            <div v-html="item.html"></div>
           </div>
         </div>
-      </div>
-      <div v-else>
-        <div style="margin-left: 1em;">
-          <p>Not available</p>
+
+        <div v-if="criticalCapacity">
+          <p v-if="Object.values(criticalCapacity).some(item => item.isMultiState)">
+            <strong>Governing Limit State</strong>
+          </p>
+          <div v-for="(item, key) in criticalCapacity" :key="key">
+            <div style="margin-left: 1em;">
+              <p v-if="item.isMultiState"><strong>{{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})</strong></p>
+              <p v-if="item.isMultiState">
+                <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+              </p>
+              <p>
+                <span v-html="item.phiNotation"></span> = {{ item.phiValue.toFixed(2) }}
+              </p>
+              <p><strong>
+                <span v-html="item.designNotation"></span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+              </strong></p>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
+          </div>
         </div>
       </div>
     </div>
 
     <div v-else>
-      <div v-if="criticalCapacity">
-        <div v-for="(item, key) in criticalCapacity" :key="key">
-          <div style="margin-left: 1em;">
-            <p><strong>{{ title }} ({{ item.section }})</strong></p>
-            <p>
-              <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-            </p>
-            <p><strong>
-              <span v-html="item.designNotation"></span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-            </strong></p>
+      <div v-for="(criticalCapacity, index) in criticalCapacities" :key="index">
+        <p v-if="criticalCapacities.length === 2 && index === 0" style="font-size: 1.2em;">
+          <strong>Major Axis</strong>
+        </p>
+        <p v-if="criticalCapacities.length === 2 && index === 1" style="font-size: 1.2em;">
+          <strong>Minor Axis</strong>
+        </p>
+
+        <div v-if="criticalCapacity">
+          <div v-for="(item, key) in criticalCapacity" :key="key">
+            <div style="margin-left: 1em;">
+              <p><strong>{{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})</strong></p>
+              <p>
+                <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
+              </p>
+              <p><strong>
+                <span v-html="item.designNotation"></span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
+              </strong></p>
+            </div>
           </div>
         </div>
-      </div>
-      <div v-else>
-        <div style="margin-left: 1em;">
-          <p>Not available</p>
+        <div v-else>
+          <div style="margin-left: 1em;">
+            <p>Not available</p>
+          </div>
         </div>
       </div>
     </div>
@@ -73,12 +91,12 @@
         type: String,
         required: true,
       },
-      capacity: {
-        type: Object,
+      capacities: {
+        type: Array,
         required: true,
       },
-      criticalCapacity: {
-        type: [Object, null],
+      criticalCapacities: {
+        type: Array,
         required: true,
       },
     },

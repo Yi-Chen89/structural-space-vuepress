@@ -184,7 +184,7 @@ export function criticalShearResultProcessor(result) {
       } else {
         const panel = ['End Web Panel', 'Interior Web Panel'];
         filteredResultAsList.forEach((value, index) => {
-          value[1]['panel'] = panel[index];
+          value[1]['titlePrefix'] = panel[index];
         });
 
         output = Object.fromEntries(filteredResultAsList);

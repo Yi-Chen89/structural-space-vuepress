@@ -348,15 +348,15 @@
     <StrengthResultViewer
       v-if="tensionCalcDisplay"
       title="Tensile Strength"
-      :capacity="selectedShapeTensionCapacity"
-      :criticalCapacity="selectedShapeTensionCriticalCapacity"
+      :capacities="[selectedShapeTensionCapacity]"
+      :criticalCapacities="[selectedShapeTensionCriticalCapacity]"
     />
     
     <StrengthResultViewer
       v-if="compressionCalcDisplay"
       title="Compressive Strength"
-      :capacity="selectedShapeCompressionCapacity"
-      :criticalCapacity="selectedShapeCompressionCriticalCapacity"
+      :capacities="[selectedShapeCompressionCapacity]"
+      :criticalCapacities="[selectedShapeCompressionCriticalCapacity]"
     />
 
     <div v-if="flexureCalcDisplay">
@@ -490,146 +490,18 @@
       </div>
     </div>
 
-    <div v-if="shearCalcDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Shear Strength</span>
-        <span
-          v-html="shearCalcContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showShearCalcContent()">
-        </span>
-      </h2>
-      
-      <div v-if="shearCalcContentDisplay === '-'">
-        <div v-if="true">
-          <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
-          <div>
-            <div v-for="(item, key) in selectedShapeMajorShearCapacity" :key="key">
-              <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-              <div style="margin-left: 1em;">
-                <div v-html="item.html"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div v-if="selectedShapeMajorShearCriticalCapacity">
-            <p v-if="Object.values(selectedShapeMajorShearCriticalCapacity).some(item => item.isMultiState)">
-              <strong>Governing Limit State</strong>
-            </p>
-            <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
-              <div style="margin-left: 1em;">
-                <p v-if="item.isMultiState"><strong>{{ item.panel }} Shear Strength ({{ item.section }})</strong></p>
-                <p v-if="item.isMultiState">
-                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-                </p>
-                <p>
-                  &phi;<sub>v</sub> = {{ item.phiValue.toFixed(2) }}
-                </p>
-                <p><strong>
-                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-                </strong></p>
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <div style="margin-left: 1em;">
-              <p>Not available</p>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="true">
-          <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
-          <div>
-            <div v-for="(item, key) in selectedShapeMinorShearCapacity" :key="key">
-              <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-              <div style="margin-left: 1em;">
-                <div v-html="item.html"></div>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="selectedShapeMinorShearCriticalCapacity">
-            <p v-if="Object.values(selectedShapeMinorShearCriticalCapacity).some(item => item.isMultiState)">
-              <strong>Governing Limit State</strong>
-            </p>
-            <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
-              <div style="margin-left: 1em;">
-                <p v-if="item.isMultiState"><strong>Shear Strength ({{ item.section }})</strong></p>
-                <p v-if="item.isMultiState">
-                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-                </p>
-                <p>
-                  &phi;<sub>v</sub> = {{ item.phiValue.toFixed(2) }}
-                </p>
-                <p><strong>
-                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-                </strong></p>
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <div style="margin-left: 1em;">
-              <p>Not available</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <div v-if="true">
-          <p style="font-size: 1.2em;"><strong>Major Axis</strong></p>
-
-          <div v-if="selectedShapeMajorShearCriticalCapacity">
-            <div v-for="(item, key) in selectedShapeMajorShearCriticalCapacity">
-              <div style="margin-left: 1em;">
-                <p><strong>{{ item.panel }} Shear Strength ({{ item.section }})</strong></p>
-                <p>
-                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-                </p>
-                <p><strong>
-                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-                </strong></p>
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <div style="margin-left: 1em;">
-              <p>Not available</p>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="true">
-          <p style="font-size: 1.2em;"><strong>Minor Axis</strong></p>
-
-          <div v-if="selectedShapeMinorShearCriticalCapacity">
-            <div v-for="(item, key) in selectedShapeMinorShearCriticalCapacity">
-              <div style="margin-left: 1em;">
-                <p><strong>Shear Strength ({{ item.section }})</strong></p>
-                <p>
-                  V<sub>n</sub> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-                </p>
-                <p><strong>
-                  &phi;<sub>v</sub>V<sub>n</sub> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-                </strong></p>
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <div style="margin-left: 1em;">
-              <p>Not available</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <StrengthResultViewer
+      v-if="shearCalcDisplay"
+      title="Shear Strength"
+      :capacities="[selectedShapeMajorShearCapacity, selectedShapeMinorShearCapacity]"
+      :criticalCapacities="[selectedShapeMajorShearCriticalCapacity, selectedShapeMinorShearCriticalCapacity]"
+    />
 
     <StrengthResultViewer
       v-if="torsionCalcDisplay"
       title="Torsional Strength"
-      :capacity="selectedShapeTorsionCapacity"
-      :criticalCapacity="selectedShapeTorsionCriticalCapacity"
+      :capacities="[selectedShapeTorsionCapacity]"
+      :criticalCapacities="[selectedShapeTorsionCriticalCapacity]"
     />
 
     <footer style="font-size: 0.75em; margin-top: 50px;">
@@ -717,7 +589,6 @@
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
         flexureCalcContentDisplay: '-',
-        shearCalcContentDisplay: '-',
 
         // error variable
         effectiveLengthXInputError: '',
@@ -968,6 +839,8 @@
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
       },
 
+      // validated numeric input
+
       validatedEffectiveLengthX() {
         if (this.effectiveLengthXInputError) {
           return 0;
@@ -1019,6 +892,8 @@
           return this.enteredMaxToZeroShearDistance * 12;
         }
       },
+
+      // calculated capacity
 
       selectedShapeTensionCapacity() {
         return tensionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp);
@@ -1127,10 +1002,6 @@
         this.flexureCalcContentDisplay = this.flexureCalcContentDisplay === '-' ? '+' : '-';
       },
 
-      showShearCalcContent() {
-        this.shearCalcContentDisplay = this.shearCalcContentDisplay === '-' ? '+' : '-';
-      },
-
       reset() {
         this.selectedDescShapeType = 'All';
         this.selectedShape = null;
@@ -1150,7 +1021,6 @@
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
         this.flexureCalcContentDisplay = '-';
-        this.shearCalcContentDisplay = '-';
       },
     },
   };
