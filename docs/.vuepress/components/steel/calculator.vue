@@ -347,6 +347,7 @@
 
     <StrengthResultViewer
       v-if="tensionCalcDisplay"
+      type="tension"
       title="Tensile Strength"
       :capacities="[selectedShapeTensionCapacity]"
       :criticalCapacities="[selectedShapeTensionCriticalCapacity]"
@@ -354,6 +355,7 @@
     
     <StrengthResultViewer
       v-if="compressionCalcDisplay"
+      type="compression"
       title="Compressive Strength"
       :capacities="[selectedShapeCompressionCapacity]"
       :criticalCapacities="[selectedShapeCompressionCriticalCapacity]"
@@ -361,6 +363,7 @@
     
     <StrengthResultViewer
       v-if="flexureCalcDisplay"
+      type="flexure"
       title="Flexural Strength"
       :capacities="[selectedShapeMajorFlexureCapacity, selectedShapeMinorFlexureCapacity]"
       :criticalCapacities="[selectedShapeMajorFlexureCriticalCapacity, selectedShapeMinorFlexureCriticalCapacity]"
@@ -368,6 +371,7 @@
 
     <StrengthResultViewer
       v-if="shearCalcDisplay"
+      type="shear"
       title="Shear Strength"
       :capacities="[selectedShapeMajorShearCapacity, selectedShapeMinorShearCapacity]"
       :criticalCapacities="[selectedShapeMajorShearCriticalCapacity, selectedShapeMinorShearCriticalCapacity]"
@@ -375,6 +379,7 @@
 
     <StrengthResultViewer
       v-if="torsionCalcDisplay"
+      type="torsion"
       title="Torsional Strength"
       :capacities="[selectedShapeTorsionCapacity]"
       :criticalCapacities="[selectedShapeTorsionCriticalCapacity]"
