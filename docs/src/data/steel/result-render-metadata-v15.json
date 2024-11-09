@@ -58,7 +58,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>p</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_2_2": {
       "section": "F2.2",
@@ -66,7 +66,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_3_2": {
       "section": "F3.2",
@@ -74,7 +74,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_6_1": {
       "section": "F6.1",
@@ -82,7 +82,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>p</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_6_2": {
       "section": "F6.2",
@@ -90,7 +90,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_7_1": {
       "section": "F7.1",
@@ -98,7 +98,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>p</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_7_2": {
       "section": "F7.2",
@@ -106,7 +106,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_7_3": {
       "section": "F7.3",
@@ -114,7 +114,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_7_4": {
       "section": "F7.4",
@@ -122,7 +122,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_8_1": {
       "section": "F8.1",
@@ -130,7 +130,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>p</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_8_2": {
       "section": "F8.2",
@@ -138,7 +138,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_9_1": {
       "section": "F9.1",
@@ -146,7 +146,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>p</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_9_2": {
       "section": "F9.2",
@@ -154,7 +154,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_9_3": {
       "section": "F9.3",
@@ -162,7 +162,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_9_4": {
       "section": "F9.4",
@@ -170,7 +170,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     },
     "Mn_10_1": {
       "section": "F10.1",
@@ -178,7 +178,7 @@
       "phiNotation": "&phi;<sub>b</sub>",
       "nominalNotation": "M<sub>n</sub>",
       "designNotation": "&phi;<sub>b</sub>M<sub>n</sub>",
-      "unit": "k-in"
+      "unit": "k-ft"
     }
   },
   "shear": {
