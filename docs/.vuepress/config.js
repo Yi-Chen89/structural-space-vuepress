@@ -65,20 +65,22 @@ export default defineUserConfig({
             '',
             'member-calculator',
             'release',
+            'disclaimer',
           ],
         }
       ],
       // concrete page
-      '/concrete/': [
-        {
-          text: 'Concrete',
-          children: [
-            '',
-            'release',
-            'development',
-          ],
-        }
-      ],
+      // '/concrete/': [
+      //   {
+      //     text: 'Concrete',
+      //     children: [
+      //       '',
+      //       'release',
+      //       'development',
+      //       'disclaimer',
+      //     ],
+      //   }
+      // ],
     },
 
     // configure 'Edit this page' link
