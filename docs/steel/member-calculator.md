@@ -3,4 +3,4 @@
 
 # Member Calculator
 
-<steel-calculator />
+<steel-MemberCalculator />

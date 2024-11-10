@@ -151,28 +151,30 @@
       </div>
     </div>
 
-    <PropertyDataViewer
-      v-if="shapeDataDisplay"
-      type="shape"
-      title="Shape Dimension and Property"
-      :subtitle="selectedShape"
-      :sectionTitles="['Weight', 'Dimension', 'Property']"
-      :renderDataList="[selectedShapeWeightRenderData, selectedShapeDimensionRenderData, selectedShapePropertyRenderData]"
-      :contentDisplay="shapeDataContentDisplay"
-      @updateContentDisplay="dataContentDisplayHandler"
-    />
+    <div>
+      <PropertyDataViewer
+        v-if="shapeDataDisplay"
+        type="shape"
+        title="Shape Dimension and Property"
+        :subtitle="selectedShape"
+        :sectionTitles="['Weight', 'Dimension', 'Property']"
+        :renderDataList="[selectedShapeWeightRenderData, selectedShapeDimensionRenderData, selectedShapePropertyRenderData]"
+        :contentDisplay="shapeDataContentDisplay"
+        @updateContentDisplay="dataContentDisplayHandler"
+      />
 
-    <PropertyDataViewer
-      v-if="gradeDataDisplay"
-      type="grade"
-      title="Steel Property"
-      :subtitle="selectedGradeDesig"
-      :sectionTitles="['']"
-      :renderDataList="[selectedASTMSpecPropRenderData]"
-      :contentDisplay="gradeDataContentDisplay"
-      @updateContentDisplay="dataContentDisplayHandler"
-    />
-    
+      <PropertyDataViewer
+        v-if="gradeDataDisplay"
+        type="grade"
+        title="Steel Property"
+        :subtitle="selectedGradeDesig"
+        :sectionTitles="['']"
+        :renderDataList="[selectedASTMSpecPropRenderData]"
+        :contentDisplay="gradeDataContentDisplay"
+        @updateContentDisplay="dataContentDisplayHandler"
+      />
+    </div>
+
     <div v-if="slenderClassDisplay">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
         <span>Element Slenderness Class</span>
@@ -284,56 +286,57 @@
       </div>
     </div>
   
+    <div>
+      <StrengthResultViewer
+        v-if="tensionCalcDisplay"
+        type="tension"
+        title="Tensile Strength"
+        :capacities="[selectedShapeTensionCapacity]"
+        :criticalCapacities="[selectedShapeTensionCriticalCapacity]"
+        :contentDisplay="tensionCalcContentDisplay"
+        @updateContentDisplay="calcContentDisplayHandler"
+      />
+      
+      <StrengthResultViewer
+        v-if="compressionCalcDisplay"
+        type="compression"
+        title="Compressive Strength"
+        :capacities="[selectedShapeCompressionCapacity]"
+        :criticalCapacities="[selectedShapeCompressionCriticalCapacity]"
+        :contentDisplay="compressionCalcContentDisplay"
+        @updateContentDisplay="calcContentDisplayHandler"
+      />
+      
+      <StrengthResultViewer
+        v-if="flexureCalcDisplay"
+        type="flexure"
+        title="Flexural Strength"
+        :capacities="[selectedShapeMajorFlexureCapacity, selectedShapeMinorFlexureCapacity]"
+        :criticalCapacities="[selectedShapeMajorFlexureCriticalCapacity, selectedShapeMinorFlexureCriticalCapacity]"
+        :contentDisplay="flexureCalcContentDisplay"
+        @updateContentDisplay="calcContentDisplayHandler"
+      />
 
-    <StrengthResultViewer
-      v-if="tensionCalcDisplay"
-      type="tension"
-      title="Tensile Strength"
-      :capacities="[selectedShapeTensionCapacity]"
-      :criticalCapacities="[selectedShapeTensionCriticalCapacity]"
-      :contentDisplay="tensionCalcContentDisplay"
-      @updateContentDisplay="calcContentDisplayHandler"
-    />
-    
-    <StrengthResultViewer
-      v-if="compressionCalcDisplay"
-      type="compression"
-      title="Compressive Strength"
-      :capacities="[selectedShapeCompressionCapacity]"
-      :criticalCapacities="[selectedShapeCompressionCriticalCapacity]"
-      :contentDisplay="compressionCalcContentDisplay"
-      @updateContentDisplay="calcContentDisplayHandler"
-    />
-    
-    <StrengthResultViewer
-      v-if="flexureCalcDisplay"
-      type="flexure"
-      title="Flexural Strength"
-      :capacities="[selectedShapeMajorFlexureCapacity, selectedShapeMinorFlexureCapacity]"
-      :criticalCapacities="[selectedShapeMajorFlexureCriticalCapacity, selectedShapeMinorFlexureCriticalCapacity]"
-      :contentDisplay="flexureCalcContentDisplay"
-      @updateContentDisplay="calcContentDisplayHandler"
-    />
+      <StrengthResultViewer
+        v-if="shearCalcDisplay"
+        type="shear"
+        title="Shear Strength"
+        :capacities="[selectedShapeMajorShearCapacity, selectedShapeMinorShearCapacity]"
+        :criticalCapacities="[selectedShapeMajorShearCriticalCapacity, selectedShapeMinorShearCriticalCapacity]"
+        :contentDisplay="shearCalcContentDisplay"
+        @updateContentDisplay="calcContentDisplayHandler"
+      />
 
-    <StrengthResultViewer
-      v-if="shearCalcDisplay"
-      type="shear"
-      title="Shear Strength"
-      :capacities="[selectedShapeMajorShearCapacity, selectedShapeMinorShearCapacity]"
-      :criticalCapacities="[selectedShapeMajorShearCriticalCapacity, selectedShapeMinorShearCriticalCapacity]"
-      :contentDisplay="shearCalcContentDisplay"
-      @updateContentDisplay="calcContentDisplayHandler"
-    />
-
-    <StrengthResultViewer
-      v-if="torsionCalcDisplay"
-      type="torsion"
-      title="Torsional Strength"
-      :capacities="[selectedShapeTorsionCapacity]"
-      :criticalCapacities="[selectedShapeTorsionCriticalCapacity]"
-      :contentDisplay="torsionCalcContentDisplay"
-      @updateContentDisplay="calcContentDisplayHandler"
-    />
+      <StrengthResultViewer
+        v-if="torsionCalcDisplay"
+        type="torsion"
+        title="Torsional Strength"
+        :capacities="[selectedShapeTorsionCapacity]"
+        :criticalCapacities="[selectedShapeTorsionCriticalCapacity]"
+        :contentDisplay="torsionCalcContentDisplay"
+        @updateContentDisplay="calcContentDisplayHandler"
+      />
+    </div>
 
     <footer style="font-size: 0.75em; margin-top: 50px;">
       <hr>
@@ -821,10 +824,6 @@
       },
       maxToZeroShearDistanceInputValidator() {
         this.maxToZeroShearDistanceInputError = nonnegativeNumberInputValidator(this.enteredMaxToZeroShearDistance);
-      },
-
-      showShapeDataContent() {
-        this.shapeDataContentDisplay = this.shapeDataContentDisplay === '-' ? '+' : '-';
       },
 
       showSlenderClassContent() {
