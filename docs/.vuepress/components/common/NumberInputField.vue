@@ -36,6 +36,10 @@
         type: Number,
         required: true,
       },
+      defaultValue: {
+        type: Number,
+        default: 0,
+      },
       unit: {
         type: String,
         default: '',
@@ -58,8 +62,9 @@
         }
       },
       validatedValue() {
+        console.log(this.enteredValue)
         if (this.errorMessage) {
-          return 0;
+          return this.defaultValue;
         } else {
           return this.enteredValueLocal;
         }

@@ -83,6 +83,7 @@
           id="effectiveLengthX"
           label="Enter Effective Length about Major Axis (L<sub>cx</sub>)"
           :enteredValue="enteredEffectiveLengthX"
+          :defaultValue="0"
           :unit="'ft'"
           @updateValidatedValue="validatedNumberHandler"
         />
@@ -93,6 +94,7 @@
           id="effectiveLengthY"
           label="Enter Effective Length about Minor Axis (L<sub>cy</sub>)"
           :enteredValue="enteredEffectiveLengthY"
+          :defaultValue="0"
           :unit="'ft'"
           @updateValidatedValue="validatedNumberHandler"
         />
@@ -103,6 +105,7 @@
           id="effectiveLengthZ"
           label="Enter Effective Length about Longitudinal Axis (L<sub>cz</sub>)"
           :enteredValue="enteredEffectiveLengthZ"
+          :defaultValue="0"
           :unit="'ft'"
           @updateValidatedValue="validatedNumberHandler"
         />
@@ -111,18 +114,27 @@
       <div v-if="flexureInputDisplay">
         <p style="font-size: 1.2em;"><strong>For Flexure Calculation</strong></p>
 
-        <p v-if="unbracedLengthInputDisplay" class="input-container">
-          <label for="unbracedLength">Enter Unbraced Length (L<sub>b</sub>):&emsp;</label>
-          <input type="number" id="unbracedLength" v-model="enteredUnbracedLength" class="input-number-short" @input="unbracedLengthInputValidator">
-          <span>&nbsp;ft</span>
-          <div v-if="unbracedLengthInputError" class="error-message">{{ unbracedLengthInputError }}</div>
-        </p>
+        <NumberInputField
+          v-if="unbracedLengthInputDisplay"
+          type="nonnegative"
+          id="unbracedLength"
+          label="Enter Unbraced Length (L<sub>b</sub>)"
+          :enteredValue="enteredUnbracedLength"
+          :defaultValue="0"
+          :unit="'ft'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
 
-        <p v-if="ltbModFactorInputDisplay" class="input-container">
-          <label for="ltbModFactor">Enter LTB Modification Factor (C<sub>b</sub>):&emsp;</label>
-          <input type="number" id="ltbModFactor" v-model="enteredLTBModFactor" class="input-number-short" @input="ltbModFactorInputValidator">
-          <div v-if="ltbModFactorInputError" class="error-message">{{ ltbModFactorInputError }}</div>
-        </p>
+        <NumberInputField
+          v-if="ltbModFactorInputDisplay"
+          type="positive"
+          id="ltbModFactor"
+          label="Enter LTB Modification Factor (C<sub>b</sub>)"
+          :enteredValue="enteredLTBModFactor"
+          :defaultValue="1"
+          :unit="''"
+          @updateValidatedValue="validatedNumberHandler"
+        />
       </div>
 
       <div v-if="shearInputDisplay">
@@ -433,6 +445,8 @@
         validatedEffectiveLengthX: 0,
         validatedEffectiveLengthY: 0,
         validatedEffectiveLengthZ: 0,
+        validatedUnbracedLength: 0,
+        validatedLTBModFactor: 1,
 
         // display variable
         shapeTypeSelectionDisplay: true,
@@ -448,8 +462,6 @@
         torsionCalcContentDisplay: '-',
 
         // error variable
-        unbracedLengthInputError: '',
-        ltbModFactorInputError: '',
         transverseStiffenerDistanceInputError: '',
         maxToZeroShearDistanceInputError: '',
       }
@@ -695,21 +707,6 @@
 
       // validated numeric input
 
-      validatedUnbracedLength() {
-        if (this.unbracedLengthInputError) {
-          return 0;
-        } else {
-          return this.enteredUnbracedLength * 12;
-        }
-      },
-      validatedLTBModFactor() {
-        if (this.ltbModFactorInputError) {
-          return 1;
-        } else {
-          return this.enteredLTBModFactor;
-        }
-      },
-
       validatedTransverseStiffenerDistance() {
         if (this.transverseStiffenerDistanceInputError || !this.selectedConsiderTransverseStiffener) {
           return 0;
@@ -794,13 +791,6 @@
     },
 
     methods: {
-      unbracedLengthInputValidator() {
-        this.unbracedLengthInputError = nonnegativeNumberInputValidator(this.enteredUnbracedLength);
-      },
-      ltbModFactorInputValidator() {
-        this.ltbModFactorInputError = positiveNumberInputValidator(this.enteredLTBModFactor);
-      },
-
       transverseStiffenerDistanceInputValidator() {
         this.transverseStiffenerDistanceInputError = nonnegativeNumberInputValidator(this.enteredTransverseStiffenerDistance);
       },
@@ -819,6 +809,10 @@
           this.validatedEffectiveLengthY = value * 12;
         } else if (id === 'effectiveLengthZ') {
           this.validatedEffectiveLengthZ = value * 12;
+        } else if (id === 'unbracedLength') {
+          this.validatedUnbracedLength = value * 12;
+        } else if (id === 'ltbModFactor') {
+          this.validatedLTBModFactor = value;
         }
       },
 
@@ -844,6 +838,12 @@
         this.selectedConsiderTransverseStiffener = false;
         this.enteredTransverseStiffenerDistance = 0;
         this.enteredMaxToZeroShearDistance = 0;
+
+        this.validatedEffectiveLengthX = 0;
+        this.validatedEffectiveLengthY = 0;
+        this.validatedEffectiveLengthZ = 0;
+        this.validatedUnbracedLength = 0;
+        this.validatedLTBModFactor = 1;
 
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
