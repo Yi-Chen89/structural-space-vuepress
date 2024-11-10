@@ -156,19 +156,27 @@
           </select>
         </p>
 
-        <p v-if="transverseStiffenerDistanceInputDisplay" class="input-container">
-          <label for="transverseStiffenerDistance">Enter Clear Distance between Transverse Stiffeners (a):&emsp;</label>
-          <input type="number" id="transverseStiffenerDistance" v-model="enteredTransverseStiffenerDistance" class="input-number-short" @input="transverseStiffenerDistanceInputValidator">
-          <span>&nbsp;in.</span>
-          <div v-if="transverseStiffenerDistanceInputError" class="error-message">{{ transverseStiffenerDistanceInputError }}</div>
-        </p>
-
-        <p v-if="maxToZeroShearDistanceInputDisplay" class="input-container">
-          <label for="maxToZeroShearDistance">Enter Distance from Max to Zero Shear Force (L<sub>v</sub>):&emsp;</label>
-          <input type="number" id="maxToZeroShearDistance" v-model="enteredMaxToZeroShearDistance" class="input-number-short" @input="maxToZeroShearDistanceInputValidator">
-          <span>&nbsp;ft</span>
-          <div v-if="maxToZeroShearDistanceInputError" class="error-message">{{ maxToZeroShearDistanceInputError }}</div>
-        </p>
+        <NumberInputField
+          v-if="transverseStiffenerDistanceInputDisplay"
+          type="nonnegative"
+          id="transverseStiffenerDistance"
+          label="Enter Clear Distance between Transverse Stiffeners (a)"
+          :enteredValue="enteredTransverseStiffenerDistance"
+          :defaultValue="0"
+          :unit="'in.'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
+        
+        <NumberInputField
+          v-if="maxToZeroShearDistanceInputDisplay"
+          type="nonnegative"
+          id="maxToZeroShearDistance"
+          label="Enter Distance from Max to Zero Shear Force (L<sub>v</sub>)"
+          :enteredValue="enteredMaxToZeroShearDistance"
+          :defaultValue="0"
+          :unit="'ft'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
       </div>
     </div>
 
@@ -401,8 +409,6 @@
   import { criticalTorsionResultProcessor } from './utils/torsion-calculators.js';
 
   import { selectionValidator } from '../utils/validators.js';
-  import { positiveNumberInputValidator } from '../utils/validators.js';
-  import { nonnegativeNumberInputValidator } from '../utils/validators.js';
 
   import { shapeWeightRenderDataFilterer } from './utils/data-filterers.js';
   import { shapeDimensionRenderDataFilterer } from './utils/data-filterers.js';
@@ -447,6 +453,8 @@
         validatedEffectiveLengthZ: 0,
         validatedUnbracedLength: 0,
         validatedLTBModFactor: 1,
+        validatedTransverseStiffenerDistance: 0,
+        validatedMaxToZeroShearDistance: 0,
 
         // display variable
         shapeTypeSelectionDisplay: true,
@@ -460,10 +468,6 @@
         flexureCalcContentDisplay: '-',
         shearCalcContentDisplay: '-',
         torsionCalcContentDisplay: '-',
-
-        // error variable
-        transverseStiffenerDistanceInputError: '',
-        maxToZeroShearDistanceInputError: '',
       }
     },
 
@@ -705,23 +709,6 @@
         return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
       },
 
-      // validated numeric input
-
-      validatedTransverseStiffenerDistance() {
-        if (this.transverseStiffenerDistanceInputError || !this.selectedConsiderTransverseStiffener) {
-          return 0;
-        } else {
-          return this.enteredTransverseStiffenerDistance;
-        }
-      },
-      validatedMaxToZeroShearDistance() {
-        if (this.maxToZeroShearDistanceInputError) {
-          return 0;
-        } else {
-          return this.enteredMaxToZeroShearDistance * 12;
-        }
-      },
-
       // calculated capacity
 
       selectedShapeTensionCapacity() {
@@ -791,13 +778,6 @@
     },
 
     methods: {
-      transverseStiffenerDistanceInputValidator() {
-        this.transverseStiffenerDistanceInputError = nonnegativeNumberInputValidator(this.enteredTransverseStiffenerDistance);
-      },
-      maxToZeroShearDistanceInputValidator() {
-        this.maxToZeroShearDistanceInputError = nonnegativeNumberInputValidator(this.enteredMaxToZeroShearDistance);
-      },
-
       showSlenderClassContent() {
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
       },
@@ -813,6 +793,10 @@
           this.validatedUnbracedLength = value * 12;
         } else if (id === 'ltbModFactor') {
           this.validatedLTBModFactor = value;
+        } else if (id === 'transverseStiffenerDistance') {
+          this.validatedTransverseStiffenerDistance = value;
+        } else if (id === 'maxToZeroShearDistance') {
+          this.validatedMaxToZeroShearDistance = value * 12;
         }
       },
 
@@ -844,6 +828,8 @@
         this.validatedEffectiveLengthZ = 0;
         this.validatedUnbracedLength = 0;
         this.validatedLTBModFactor = 1;
+        this.validatedTransverseStiffenerDistance = 0;
+        this.validatedMaxToZeroShearDistance = 0;
 
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';

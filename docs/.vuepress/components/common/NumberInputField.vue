@@ -62,7 +62,6 @@
         }
       },
       validatedValue() {
-        console.log(this.enteredValue)
         if (this.errorMessage) {
           return this.defaultValue;
         } else {
