@@ -151,62 +151,16 @@
       </div>
     </div>
 
-    <div v-if="shapeDataDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Shape Dimension and Property</span>
-        <span
-          v-html="shapeDataContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showShapeDataContent()">
-        </span>
-      </h2>
-
-      <div v-if="shapeDataContentDisplay === '-'">
-        <div style="font-size: 1.1em;"><strong>{{ selectedShape }}</strong></div>
-
-        <div>
-          <p><strong>Weight</strong></p>
-
-          <div style="margin-left: 1em;">
-            <div v-for="(item, key) in selectedShapeWeightRenderData" :key="key">
-              <p>
-                <span v-html="item.notation" :title="item.description"></span>
-                <span> = {{ item.value }}&nbsp;</span>
-                <span v-html="item.unit"></span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <p><strong>Dimension</strong></p>
-
-          <div style="margin-left: 1em;">
-            <div v-for="(item, key) in selectedShapeDimensionRenderData" :key="key">
-              <p>
-                <span v-html="item.notation" :title="item.description"></span>
-                <span> = {{ item.value }}&nbsp;</span>
-                <span v-html="item.unit"></span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <p><strong>Property</strong></p>
-
-          <div style="margin-left: 1em;">
-            <div v-for="(item, key) in selectedShapePropertyRenderData" :key="key">
-              <p>
-                <span v-html="item.notation" :title="item.description"></span>
-                <span> = {{ item.value }}&nbsp;</span>
-                <span v-html="item.unit"></span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PropertyDataViewer
+      v-if="shapeDataDisplay"
+      type="shape"
+      title="Shape Dimension and Property"
+      :subtitle="selectedShape"
+      :sectionTitles="['Weight', 'Dimension', 'Property']"
+      :renderDataList="[selectedShapeWeightRenderData, selectedShapeDimensionRenderData, selectedShapePropertyRenderData]"
+      :contentDisplay="shapeDataContentDisplay"
+      @updateContentDisplay="dataContentDisplayHandler"
+    />
 
     <PropertyDataViewer
       v-if="gradeDataDisplay"
