@@ -208,30 +208,16 @@
       </div>
     </div>
 
-    <div v-if="gradeDataDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Steel Property</span>
-        <span
-          v-html="gradeDataContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showGradeDataContent()">
-        </span>
-      </h2>
-
-      <div v-if="gradeDataContentDisplay === '-'">
-        <div style="font-size: 1.1em;"><strong>{{ selectedGradeDesig }}</strong></div>
-
-        <div style="margin-left: 1em;">
-          <div v-for="(item, key) in selectedASTMSpecPropRenderData" :key="key">
-            <p>
-              <span v-html="item.notation" :title="item.description"></span>
-              <span> = {{ item.value }}&nbsp;</span>
-              <span v-html="item.unit"></span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PropertyDataViewer
+      v-if="gradeDataDisplay"
+      type="grade"
+      title="Steel Property"
+      :subtitle="selectedGradeDesig"
+      :sectionTitles="['']"
+      :renderDataList="[selectedASTMSpecPropRenderData]"
+      :contentDisplay="gradeDataContentDisplay"
+      @updateContentDisplay="dataContentDisplayHandler"
+    />
     
     <div v-if="slenderClassDisplay">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
@@ -446,11 +432,13 @@
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
 
+  import PropertyDataViewer from './PropertyDataViewer.vue';
   import StrengthResultViewer from './StrengthResultViewer.vue';
 
   
   export default {
     components: {
+      PropertyDataViewer,
       StrengthResultViewer,
     },
 
@@ -885,12 +873,12 @@
         this.shapeDataContentDisplay = this.shapeDataContentDisplay === '-' ? '+' : '-';
       },
 
-      showGradeDataContent() {
-        this.gradeDataContentDisplay = this.gradeDataContentDisplay === '-' ? '+' : '-';
-      },
-
       showSlenderClassContent() {
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
+      },
+
+      dataContentDisplayHandler({ type, contentDisplay }) {
+        this[`${type}DataContentDisplay`] = contentDisplay;
       },
 
       calcContentDisplayHandler({ type, contentDisplay }) {
