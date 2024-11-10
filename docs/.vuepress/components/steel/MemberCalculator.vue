@@ -204,117 +204,20 @@
       />
     </div>
 
-    <div v-if="slenderClassDisplay">
-      <h2 style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Element Slenderness Class</span>
-        <span
-          v-html="slenderClassContentDisplay === '-' ? '&minus;' : '&plus;'"
-          style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
-          @click="showSlenderClassContent()">
-        </span>
-      </h2>
-      
-      <div v-if="slenderClassContentDisplay === '-'">
-        <div>
-          <p style="font-size: 1.2em;"><strong>Element Width-to-Thickness Ratio</strong></p>
-
-          <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <div style="margin-left: 1em;">
-                <p>
-                  <span>{{ item.notation }}:&emsp;</span>
-                  <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="compressionSlenderClassDisplay">
-          <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
-
-          <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <p>
-                <strong>{{ item.notation }}</strong>
-              </p>
-              <div style="margin-left: 1em;">
-                <p>
-                  <span>Nonslender Limiting Ratio:&emsp;</span>
-                  <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
-                </p>
-                <p>
-                  <strong>{{ item.notation }} is {{ item.class }}</strong>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div v-if="flexureSlenderClassDisplay">
-          <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
-          
-          <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <p>
-                <strong>{{ item.notation }}</strong>
-              </p>
-              <div style="margin-left: 1em;">
-                <p>
-                  <span>Compact Limiting Ratio:&emsp;</span>
-                  <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
-                </p>
-                <p>
-                  <span>Noncompact Limiting Ratio:&emsp;</span>
-                  <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
-                </p>
-                <div v-if="selectedShapeType === 'HSS Rect.'">
-                  <p><strong>{{ item.notation }} is {{ item.class[0] }}</strong> (major axis bending)</p>
-                  <p><strong>{{ item.notation }} is {{ item.class[1] }}</strong> (minor axis bending)</p>
-                </div>
-                <div v-else>
-                  <p><strong>{{ item.notation }} is {{ item.class[0] }}</strong></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <div v-if="compressionSlenderClassDisplay">
-          <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
-
-          <div v-for="(item, key) in selectedShapeAxialSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <div style="margin-left: 1em;">
-                <p>
-                  {{ item.notation }} is {{ item.class }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div v-if="flexureSlenderClassDisplay">
-          <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
-          
-          <div v-for="(item, key) in selectedShapeFlexureSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <div style="margin-left: 1em;">
-                <div v-if="selectedShapeType === 'HSS Rect.'">
-                  <p>{{ item.notation }} is {{ item.class[0] }} (major) and {{ item.class[1] }} (minor)</p>
-                </div>
-                <div v-else>
-                  <p>{{ item.notation }} is {{ item.class[0] }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div>
+      <SlenderResultViewer
+        v-if="slenderClassDisplay"
+        title="Element Slenderness Class"
+        :shapeType="selectedShapeType"
+        :axialSlenderClass="selectedShapeAxialSlenderClass"
+        :flexureSlenderClass="selectedShapeFlexureSlenderClass"
+        :compressionDisplay="compressionSlenderClassDisplay"
+        :flexureDisplay="flexureSlenderClassDisplay"
+        :contentDisplay="slenderClassContentDisplay"
+        @updateContentDisplay="slenderContentDisplayHandler"
+      />
     </div>
-  
+
     <div>
       <StrengthResultViewer
         v-if="tensionCalcDisplay"
@@ -419,14 +322,18 @@
   import NumberInputField from '../common/NumberInputField.vue';
 
   import PropertyDataViewer from './PropertyDataViewer.vue';
+  import SlenderResultViewer from './SlenderResultViewer.vue';
   import StrengthResultViewer from './StrengthResultViewer.vue';
 
   
   export default {
     components: {
+      // common component
       NumberInputField,
 
+      // steel component
       PropertyDataViewer,
+      SlenderResultViewer,
       StrengthResultViewer,
     },
 
@@ -802,6 +709,10 @@
 
       dataContentDisplayHandler({ type, contentDisplay }) {
         this[`${type}DataContentDisplay`] = contentDisplay;
+      },
+
+      slenderContentDisplayHandler({ contentDisplay }) {
+        this.slenderClassContentDisplay = contentDisplay;
       },
 
       calcContentDisplayHandler({ type, contentDisplay }) {

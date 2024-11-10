@@ -69,6 +69,6 @@
         this.contentDisplayLocal = this.contentDisplayLocal === '-' ? '+' : '-';
         this.$emit('updateContentDisplay', { type: this.type, contentDisplay: this.contentDisplayLocal });
       },
-    }
+    },
   }
 </script>
