@@ -42,36 +42,10 @@
       <div v-if="calcSelectionDisplay">
         <p style="font-size: 1.2em;"><strong>Select Calculations</strong></p>
         
-        <p>
-          <label>
-            <input type="checkbox" v-model="selectedCalcs" value="tension" />
-            Tensile Strength
-          </label>
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" v-model="selectedCalcs" value="compression" />
-            Compressive Strength
-          </label>
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" v-model="selectedCalcs" value="flexure" />
-            Flexural Strength
-          </label>
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" v-model="selectedCalcs" value="shear" />
-            Shear Strength
-          </label>
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" v-model="selectedCalcs" value="torsion" />
-            Torsional Strength
-          </label>
-        </p>
+        <MultiSelector
+          :options="calcOptions"
+          v-model="selectedCalcs"
+        />
       </div>
       
       <div v-if="compressionInputDisplay">
@@ -319,6 +293,7 @@
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
 
+  import MultiSelector from '../common/MultiSelector.vue';
   import NumberInputField from '../common/NumberInputField.vue';
 
   import PropertyDataViewer from './PropertyDataViewer.vue';
@@ -329,6 +304,7 @@
   export default {
     components: {
       // common component
+      MultiSelector,
       NumberInputField,
 
       // steel component
@@ -345,6 +321,14 @@
         selectedShape: null,
         selectedGrade: null,
         selectedCalcs: [],
+        calcOptions: [
+          { value: "tension", label: "Tensile Strength" },
+          { value: "compression", label: "Compressive Strength" },
+          { value: "flexure", label: "Flexural Strength" },
+          { value: "shear", label: "Shear Strength" },
+          { value: "torsion", label: "Torsional Strength" }
+        ],
+
         enteredEffectiveLengthX: 0,
         enteredEffectiveLengthY: 0,
         enteredEffectiveLengthZ: 0,
