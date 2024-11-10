@@ -77,26 +77,35 @@
       <div v-if="compressionInputDisplay">
         <p style="font-size: 1.2em;"><strong>For Compression Calculation</strong></p>
 
-        <p v-if="effectiveLengthInputDisplay" class="input-container">
-          <label for="effectiveLengthX">Enter Effective Length about Major Axis (L<sub>cx</sub>):&emsp;</label>
-          <input type="number" id="effectiveLengthX" v-model="enteredEffectiveLengthX" class="input-number-short" @input="effectiveLengthXInputValidator">
-          <span>&nbsp;ft</span>
-          <div v-if="effectiveLengthXInputError" class="error-message">{{ effectiveLengthXInputError }}</div>
-        </p>
+        <NumberInputField
+          v-if="effectiveLengthInputDisplay"
+          type="nonnegative"
+          id="effectiveLengthX"
+          label="Enter Effective Length about Major Axis (L<sub>cx</sub>)"
+          :enteredValue="enteredEffectiveLengthX"
+          :unit="'ft'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
 
-        <p v-if="effectiveLengthInputDisplay" class="input-container">
-          <label for="effectiveLengthY">Enter Effective Length about Minor Axis (L<sub>cy</sub>):&emsp;</label>
-          <input type="number" id="effectiveLengthY" v-model="enteredEffectiveLengthY" class="input-number-short" @input="effectiveLengthYInputValidator">
-          <span>&nbsp;ft</span>
-          <div v-if="effectiveLengthYInputError" class="error-message">{{ effectiveLengthYInputError }}</div>
-        </p>
+        <NumberInputField
+          v-if="effectiveLengthInputDisplay"
+          type="nonnegative"
+          id="effectiveLengthY"
+          label="Enter Effective Length about Minor Axis (L<sub>cy</sub>)"
+          :enteredValue="enteredEffectiveLengthY"
+          :unit="'ft'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
 
-        <p v-if="effectiveLengthInputDisplay" class="input-container">
-          <label for="effectiveLengthZ">Enter Effective Length about Longitudinal Axis (L<sub>cz</sub>):&emsp;</label>
-          <input type="number" id="effectiveLengthZ" v-model="enteredEffectiveLengthZ" class="input-number-short" @input="effectiveLengthZInputValidator">
-          <span>&nbsp;ft</span>
-          <div v-if="effectiveLengthZInputError" class="error-message">{{ effectiveLengthZInputError }}</div>
-        </p>
+        <NumberInputField
+          v-if="effectiveLengthInputDisplay"
+          type="nonnegative"
+          id="effectiveLengthZ"
+          label="Enter Effective Length about Longitudinal Axis (L<sub>cz</sub>)"
+          :enteredValue="enteredEffectiveLengthZ"
+          :unit="'ft'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
       </div>
 
       <div v-if="flexureInputDisplay">
@@ -389,12 +398,16 @@
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
 
+  import NumberInputField from '../common/NumberInputField.vue';
+
   import PropertyDataViewer from './PropertyDataViewer.vue';
   import StrengthResultViewer from './StrengthResultViewer.vue';
 
   
   export default {
     components: {
+      NumberInputField,
+
       PropertyDataViewer,
       StrengthResultViewer,
     },
@@ -417,6 +430,10 @@
         enteredTransverseStiffenerDistance: 0,
         enteredMaxToZeroShearDistance: 0,
 
+        validatedEffectiveLengthX: 0,
+        validatedEffectiveLengthY: 0,
+        validatedEffectiveLengthZ: 0,
+
         // display variable
         shapeTypeSelectionDisplay: true,
 
@@ -431,9 +448,6 @@
         torsionCalcContentDisplay: '-',
 
         // error variable
-        effectiveLengthXInputError: '',
-        effectiveLengthYInputError: '',
-        effectiveLengthZInputError: '',
         unbracedLengthInputError: '',
         ltbModFactorInputError: '',
         transverseStiffenerDistanceInputError: '',
@@ -681,28 +695,6 @@
 
       // validated numeric input
 
-      validatedEffectiveLengthX() {
-        if (this.effectiveLengthXInputError) {
-          return 0;
-        } else {
-          return this.enteredEffectiveLengthX * 12;
-        }
-      },
-      validatedEffectiveLengthY() {
-        if (this.effectiveLengthYInputError) {
-          return 0;
-        } else {
-          return this.enteredEffectiveLengthY * 12;
-        }
-      },
-      validatedEffectiveLengthZ() {
-        if (this.effectiveLengthZInputError) {
-          return 0;
-        } else {
-          return this.enteredEffectiveLengthZ * 12;
-        }
-      },
-
       validatedUnbracedLength() {
         if (this.unbracedLengthInputError) {
           return 0;
@@ -802,16 +794,6 @@
     },
 
     methods: {
-      effectiveLengthXInputValidator() {
-        this.effectiveLengthXInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthX);
-      },
-      effectiveLengthYInputValidator() {
-        this.effectiveLengthYInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthY);
-      },
-      effectiveLengthZInputValidator() {
-        this.effectiveLengthZInputError = nonnegativeNumberInputValidator(this.enteredEffectiveLengthZ);
-      },
-
       unbracedLengthInputValidator() {
         this.unbracedLengthInputError = nonnegativeNumberInputValidator(this.enteredUnbracedLength);
       },
@@ -828,6 +810,16 @@
 
       showSlenderClassContent() {
         this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
+      },
+
+      validatedNumberHandler({ id, value }) {
+        if (id === 'effectiveLengthX') {
+          this.validatedEffectiveLengthX = value * 12;
+        } else if (id === 'effectiveLengthY') {
+          this.validatedEffectiveLengthY = value * 12;
+        } else if (id === 'effectiveLengthZ') {
+          this.validatedEffectiveLengthZ = value * 12;
+        }
       },
 
       dataContentDisplayHandler({ type, contentDisplay }) {
