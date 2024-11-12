@@ -244,10 +244,10 @@
       />
     </div>
 
-    <footer style="font-size: 0.75em; margin-top: 50px;">
+    <footer class="footer-container">
       <hr>
       <div>Steel Construction Manual 15th Edition</div>
-      <ul style="margin-top: 0;">
+      <ul>
         <li>AISC Shapes Database v15.0</li>
         <li>ANSI/AISC 360-16</li>
       </ul>
@@ -708,6 +708,7 @@
         this.selectedShape = null;
         this.selectedGrade = null;
         this.selectedCalcs = [];
+
         this.enteredEffectiveLengthX = 0;
         this.enteredEffectiveLengthY = 0;
         this.enteredEffectiveLengthZ = 0;
