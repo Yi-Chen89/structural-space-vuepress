@@ -1,52 +1,59 @@
 <template>
-  <div>
-    <h2 style="display: flex; justify-content: space-between; align-items: center;">
+  <div class="strength-result-container">
+    <h2 class="section-title">
       <span>{{ title }}</span>
-      <span
+      <span class="section-title-button"
         v-html="contentDisplayLocal === '-' ? '&minus;' : '&plus;'"
-        style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
         @click="toggleContentDisplay">
       </span>
     </h2>
 
     <div v-if="contentDisplayLocal === '-'">
       <div v-for="(criticalCapacity, index) in criticalCapacities" :key="index">
-        <p v-if="criticalCapacities.length === 2 && index === 0" style="font-size: 1.2em;">
-          <strong>Major Axis</strong>
-        </p>
-        <p v-if="criticalCapacities.length === 2 && index === 1" style="font-size: 1.2em;">
-          <strong>Minor Axis</strong>
-        </p>
+        <div class="subsection-title-large"
+          v-if="criticalCapacities.length === 2 && index === 0">
+          Major Axis
+        </div>
+        <div class="subsection-title-large"
+          v-if="criticalCapacities.length === 2 && index === 1">
+          Minor Axis
+        </div>
 
         <div v-for="(item, key) in capacities[index]" :key="key">
-          <p><strong>{{ item.section }} {{ item.title }}</strong></p>
-          <div style="margin-left: 1em;">
+          <div class="subsection-title-small">
+            {{ item.section }} {{ item.title }}
+          </div>
+          <div class="indented-container">
             <div v-html="item.html"></div>
           </div>
         </div>
 
         <div v-if="criticalCapacity">
-          <p v-if="Object.values(criticalCapacity).some(item => item.isMultiState)">
-            <strong>Governing Limit State</strong>
-          </p>
+          <div class="subsection-title-small"
+            v-if="Object.values(criticalCapacity).some(item => item.isMultiState)">
+            Governing Limit State
+          </div>
           <div v-for="(item, key) in criticalCapacity" :key="key">
-            <div style="margin-left: 1em;">
-              <p v-if="item.isMultiState"><strong>{{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})</strong></p>
-              <p v-if="item.isMultiState">
+            <div class="indented-container">
+              <div class="subsection-title-small"
+                v-if="item.isMultiState">
+                {{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})
+              </div>
+              <div v-if="item.isMultiState">
                 <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p>
+              </div>
+              <div>
                 <span v-html="item.phiNotation"></span> = {{ item.phiValue.toFixed(2) }}
-              </p>
-              <p><strong>
+              </div>
+              <div class="final-result">
                 <span v-html="item.designNotation"></span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-              </strong></p>
+              </div>
             </div>
           </div>
         </div>
         <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
+          <div class="indented-container">
+            <div>Not available</div>
           </div>
         </div>
       </div>
@@ -54,29 +61,33 @@
 
     <div v-else>
       <div v-for="(criticalCapacity, index) in criticalCapacities" :key="index">
-        <p v-if="criticalCapacities.length === 2 && index === 0" style="font-size: 1.2em;">
-          <strong>Major Axis</strong>
-        </p>
-        <p v-if="criticalCapacities.length === 2 && index === 1" style="font-size: 1.2em;">
-          <strong>Minor Axis</strong>
-        </p>
+        <div class="subsection-title-large"
+          v-if="criticalCapacities.length === 2 && index === 0">
+          Major Axis
+        </div>
+        <div class="subsection-title-large"
+          v-if="criticalCapacities.length === 2 && index === 1">
+          Minor Axis
+        </div>
 
         <div v-if="criticalCapacity">
           <div v-for="(item, key) in criticalCapacity" :key="key">
-            <div style="margin-left: 1em;">
-              <p><strong>{{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})</strong></p>
-              <p>
+            <div class="indented-container">
+              <div class="subsection-title-small">
+                {{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})
+              </div>
+              <div>
                 <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
-              </p>
-              <p><strong>
+              </div>
+              <div class="final-result">
                 <span v-html="item.designNotation"></span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}
-              </strong></p>
+              </div>
             </div>
           </div>
         </div>
         <div v-else>
-          <div style="margin-left: 1em;">
-            <p>Not available</p>
+          <div class="indented-container">
+            <div>Not available</div>
           </div>
         </div>
       </div>

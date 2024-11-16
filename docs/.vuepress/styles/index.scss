@@ -1,3 +1,59 @@
+.strength-result-container {
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    * {
+      margin-top: 0em;
+      margin-bottom: 0em;
+    }
+
+    .section-title-button {
+      font-size: 0.9em;
+      font-weight: normal;
+      cursor: pointer;
+    }
+  }
+
+  * {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+
+  .subsection-title-large {
+    font-size: 1.2em;
+    font-weight: bold;
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .subsection-title-small {
+    font-size: 1em;
+    font-weight: bold;
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .indented-container {
+    margin-left: 1em;
+  }
+
+  .calc-block {
+    * {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+
+  .final-result {
+    font-size: 1em;
+    font-weight: bold;
+  }
+}
+
 .footer-container {
   font-size: 0.75em;
   margin-top: 50px;

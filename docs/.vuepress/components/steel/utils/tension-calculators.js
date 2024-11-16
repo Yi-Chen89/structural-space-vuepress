@@ -86,8 +86,8 @@ export function criticalTensionResultProcessor(result) {
 function D2_aYielding(Fy, Ag) {
   const phi = 0.9;
   const Pn = Fy * Ag;
-  const html = `<p>${Pn_} = ${Fy_} ${Ag_} = ${Pn.toFixed(2)} k</p>
-                <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
+  const html = `<div>${Pn_} = ${Fy_} ${Ag_} = ${Pn.toFixed(2)} k</div>
+                <div>${Pn_} = ${Pn.toFixed(1)} k</div>`;
   return [phi, Pn, html];
 }
 
@@ -101,8 +101,8 @@ function D2_bRupture(Fu, Ag) {
   html += AeHtml;
 
   Pn = Fu * Ae;
-  html += `<p>${Pn_} = ${Fu_} ${Ae_} = ${Pn.toFixed(2)} k</p>
-           <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
+  html += `<div>${Pn_} = ${Fu_} ${Ae_} = ${Pn.toFixed(2)} k</div>
+           <div>${Pn_} = ${Pn.toFixed(1)} k</div>`;
   return [phi, Pn, html];
 }
 
@@ -112,8 +112,10 @@ function effectiveNetAreaCalculator(Ag) {
   let html = '';
 
   Ae = 0.75 * Ag;
-  html += `<p>Effective net area</p>
-           <p>${Ae_} = 0.75 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+  html += `<div class="calc-block">
+             <div>Effective net area</div>
+             <div>${Ae_} = 0.75 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>
+           </div>`;
 
   return [Ae, html];
 }
