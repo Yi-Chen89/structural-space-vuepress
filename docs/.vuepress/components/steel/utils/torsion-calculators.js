@@ -109,30 +109,30 @@ function H3_1aCircularHollowSection(Fy, E, D, C, lambda, L) {
 
   let Fcr1 = 0;
   let Fcr2 = 0;
-  html += `<p>Critical stress</p>`;
+  html += `<div>Critical stress</div>`;
   if (L > 0) {
     Fcr1 = 1.23 * E / (Math.sqrt(L / D) * lambda**(5 / 4));
-    html += `<p>${Fcr_} = 1.23 ${E_} / (&radic;(${L_} / ${OD_}) ${lambda_}<sup>5 / 4</sup>) = ${Fcr1.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">${Fcr_} = 1.23 ${E_} / (&radic;(${L_} / ${OD_}) ${lambda_}<sup>5 / 4</sup>) = ${Fcr1.toFixed(2)} ksi</div>`;
   }
   Fcr2 = 0.60 * E / lambda**(3 / 2);
-  html += `<p>${Fcr_} = 0.60 ${E_} / ${lambda_}<sup>3 / 2</sup> = ${Fcr2.toFixed(2)} ksi</p>`;
+  html += `<div class="indented-line">${Fcr_} = 0.60 ${E_} / ${lambda_}<sup>3 / 2</sup> = ${Fcr2.toFixed(2)} ksi</div>`;
 
   let Fcr = Math.max(Fcr1, Fcr2);
-  html += `<p>${Fcr_} = ${Fcr.toFixed(2)} ksi &le; 0.6 ${Fy_}</p>`;
+  html += `<div class="indented-line">${Fcr_} = ${Fcr.toFixed(2)} ksi &le; 0.6 ${Fy_}</div>`;
 
   if (Fcr <= 0.6 * Fy) {
-    html += `<p>Torsional buckling governs</p>`;
+    html += `<div class="indented-line">Torsional buckling governs</div>`;
   } else {
     Fcr = 0.6 * Fy;
-    html += `<p>Torsional yielding governs</p>
-             <p>${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">Torsional yielding governs</div>
+             <div class="indented-line">${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</div>`;
   }
 
   Tn = Fcr * C;
-  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>`;
+  html += `<div>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</div>`;
 
   const Tn_converted = Tn / 12;
-  html += `<p>${Tn_} = ${Tn.toFixed(1)} k-in = ${Tn_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Tn_} = ${Tn.toFixed(1)} k-in = ${Tn_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Tn_converted, html];
 }
@@ -147,30 +147,31 @@ function H3_1bRectangularHollowSection(Fy, E, C, lambdaw) {
   const calcTerm1_ = `&radic;(${E_} / ${Fy_})`;
 
   let Fcr = 0;
+  html += `<div>Critical stress</div>`;
   if (lambdaw <= 2.45 * calcTerm1) {
     Fcr = 0.6 * Fy;
-    html += `<p>For ${lambdaw_} &le; 2.45 ${calcTerm1_}</p>
-             <p>Torsional yielding governs</p>
-             <p>${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">For ${lambdaw_} &le; 2.45 ${calcTerm1_}</div>
+             <div class="indented-line">Torsional yielding governs</div>
+             <div class="indented-line">${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</div>`;
 
   } else if (lambdaw <= 3.07 * calcTerm1) {
     Fcr = 0.6 * Fy * (2.45 * calcTerm1) / lambdaw;
-    html += `<p>For 2.45 ${calcTerm1_} &lt; ${lambdaw_} &le; 3.07 ${calcTerm1_}</p>
-             <p>Torsional buckling governs</p>
-             <p>${Fcr_} = 0.6 ${Fy_} (2.45 ${calcTerm1_}) / ${lambdaw_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div> class="indented-line"For 2.45 ${calcTerm1_} &lt; ${lambdaw_} &le; 3.07 ${calcTerm1_}</div>
+             <div class="indented-line">Torsional buckling governs</div>
+             <div class="indented-line">${Fcr_} = 0.6 ${Fy_} (2.45 ${calcTerm1_}) / ${lambdaw_} = ${Fcr.toFixed(2)} ksi</div>`;
 
   } else if (lambdaw <= 260) {
     Fcr = 0.458 * Math.PI**2 * E / lambdaw**2;
-    html += `<p>For 3.07 ${calcTerm1_} &lt; ${lambdaw_} &le; 260</p>
-             <p>Torsional buckling governs</p>
-             <p>${Fcr_} = 0.458 &pi;<sup>2</sup> ${E_} / ${lambdaw_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">For 3.07 ${calcTerm1_} &lt; ${lambdaw_} &le; 260</div>
+             <div class="indented-line">Torsional buckling governs</div>
+             <div class="indented-line">${Fcr_} = 0.458 &pi;<sup>2</sup> ${E_} / ${lambdaw_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</div>`;
   }
 
   Tn = Fcr * C;
-  html += `<p>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</p>`;
+  html += `<div>${Tn_} = ${Fcr_} ${C_} = ${Tn.toFixed(2)} k-in</div>`;
 
   const Tn_converted = Tn / 12;
-  html += `<p>${Tn_} = ${Tn.toFixed(1)} k-in = ${Tn_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Tn_} = ${Tn.toFixed(1)} k-in = ${Tn_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Tn_converted, html];
 }

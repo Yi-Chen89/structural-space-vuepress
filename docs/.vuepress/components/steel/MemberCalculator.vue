@@ -152,6 +152,21 @@
           @updateValidatedValue="validatedNumberHandler"
         />
       </div>
+
+      <div v-if="torsionInputDisplay">
+        <p style="font-size: 1.2em;"><strong>For Torsion Calculation</strong></p>
+
+        <NumberInputField
+          v-if="memberLengthInputDisplay"
+          type="nonnegative"
+          id="memberLength"
+          label="Enter Member Length (L)"
+          :enteredValue="enteredMemberLength"
+          :defaultValue="0"
+          :unit="'ft'"
+          @updateValidatedValue="validatedNumberHandler"
+        />
+      </div>
     </div>
 
     <div>
@@ -338,6 +353,7 @@
         selectedConsiderTransverseStiffener: false,
         enteredTransverseStiffenerDistance: 0,
         enteredMaxToZeroShearDistance: 0,
+        enteredMemberLength: 0,
 
         validatedEffectiveLengthX: 0,
         validatedEffectiveLengthY: 0,
@@ -346,6 +362,7 @@
         validatedLTBModFactor: 1,
         validatedTransverseStiffenerDistance: 0,
         validatedMaxToZeroShearDistance: 0,
+        validatedMemberLength: 0,
 
         // display variable
         shapeTypeSelectionDisplay: true,
@@ -532,6 +549,13 @@
         return this.selectedGradeValid && ['HSS Round', 'PIPE'].includes(this.selectedShapeType);
       },
 
+      torsionInputDisplay() {
+        return this.selectedGradeValid && this.torsionCalcSelected && ['HSS Round', 'PIPE'].includes(this.selectedShapeType);
+      },
+      memberLengthInputDisplay() {
+        return ['HSS Round', 'PIPE'].includes(this.selectedShapeType);
+      },
+
       // output display variable
 
       shapeDataDisplay() {
@@ -643,7 +667,7 @@
       },
 
       selectedShapeTorsionCapacity() {
-        return torsionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, 0);
+        return torsionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeFlexureSlenderClass, this.validatedMemberLength);
       },
       selectedShapeTorsionCriticalCapacity() {
         return criticalTorsionResultProcessor(this.selectedShapeTorsionCapacity);
@@ -688,6 +712,8 @@
           this.validatedTransverseStiffenerDistance = value;
         } else if (id === 'maxToZeroShearDistance') {
           this.validatedMaxToZeroShearDistance = value * 12;
+        } else if (id === 'memberLength') {
+          this.validatedMemberLength = value * 12;
         }
       },
 
@@ -718,6 +744,7 @@
         this.selectedConsiderTransverseStiffener = false;
         this.enteredTransverseStiffenerDistance = 0;
         this.enteredMaxToZeroShearDistance = 0;
+        this.enteredMemberLength = 0;
 
         this.validatedEffectiveLengthX = 0;
         this.validatedEffectiveLengthY = 0;
@@ -726,6 +753,7 @@
         this.validatedLTBModFactor = 1;
         this.validatedTransverseStiffenerDistance = 0;
         this.validatedMaxToZeroShearDistance = 0;
+        this.validatedMemberLength = 0;
 
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
