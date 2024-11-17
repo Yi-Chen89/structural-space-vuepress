@@ -233,9 +233,8 @@ function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
 
   if (Lcx === 0 && Lcy === 0) {
     Fcr = Fy;
-    html += `<p>For ${Lcx_} = ${Lcy_} = 0</p>
-             <p>Critical stress</p>
-             <p>${Fcr_} = ${Fy_} = ${Fy.toFixed(2)} ksi</p>`;
+    html += `<div>Critical stress</div>
+             <div class="indented-line">For ${Lcx_} = ${Lcy_} = 0, ${Fcr_} = ${Fy_} = ${Fy.toFixed(2)} ksi</div>`;
 
   } else {
     const calcTerm1x = Lcx / rx;
@@ -243,33 +242,33 @@ function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
     const calcTerm1y = Lcy / ry;
     const calcTerm1y_ = `${Lcy_} / ${ry_}`;
 
-    html += `<p>Effective slenderness ratio</p>
-             <p>${calcTerm1x_} = ${calcTerm1x.toFixed(2)}</p>
-             <p>${calcTerm1y_} = ${calcTerm1y.toFixed(2)}</p>`;
+    html += `<div>Effective slenderness ratio</div>
+             <div class="indented-line">${calcTerm1x_} = ${calcTerm1x.toFixed(2)}</div>
+             <div class="indented-line">${calcTerm1y_} = ${calcTerm1y.toFixed(2)}</div>`;
 
     let calcTerm2 = 0;
     let calcTerm2_ = '';
     if (calcTerm1x > calcTerm1y) {
       calcTerm2 = calcTerm1x;
       calcTerm2_ = calcTerm1x_;
-      html += `<p>Major axis governs</p>`;
+      html += `<div class="indented-line">Major axis governs</div>`;
     } else if (calcTerm1x < calcTerm1y) {
       calcTerm2 = calcTerm1y;
       calcTerm2_ = calcTerm1y_;
-      html += `<p>Minor axis governs</p>`;
+      html += `<div class="indented-line">Minor axis governs</div>`;
     } else {
       calcTerm2 = calcTerm1x;
       calcTerm2_ = calcTerm1x_;
-      html += `<p>Major and minor axes govern equally</p>`;
+      html += `<div class="indented-line">Major and minor axes govern equally</div>`;
     }
 
     if (calcTerm2 > 200) {
-      html += `<p>Effective slenderness ratio preferably should not exceed 200</p>`;
+      html += `<div class="note">Effective slenderness ratio preferably should not exceed 200</div>`;
     }
   
     const Fe = Math.PI**2 * E / calcTerm2**2;
-    html += `<p>Elastic buckling stress</p>
-             <p>${Fe_} = &pi;<sup>2</sup> ${E_} / (${calcTerm2_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</p>`;
+    html += `<div>Elastic buckling stress</div>
+             <div class="indented-line">${Fe_} = &pi;<sup>2</sup> ${E_} / (${calcTerm2_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</div>`;
 
     let FcrHtml = '';
     [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
@@ -288,13 +287,12 @@ function E4TorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, Ix, Iy, J, Cw, Lc
   let html = '';
 
   if (Lcz === 0) {
-    html += `<p>For sections with continuous torsional bracing, torsional buckling does not apply</p>`;
-    return [phi, Fcr, html];
+    html += `<div>For sections with continuous torsional bracing, torsional buckling does not apply</div>`;
 
   } else {
     const Fe = (Math.PI**2 * E * Cw / Lcz**2 + G * J) / (Ix + Iy);
-    html += `<p>Torsional elastic buckling stress</p>
-             <p>${Fe_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ix_} + ${Iy_}) = ${Fe.toFixed(2)} ksi</p>`;
+    html += `<div>Torsional elastic buckling stress</div>
+             <div class="indented-line">${Fe_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ix_} + ${Iy_}) = ${Fe.toFixed(2)} ksi</div>`;
     
     let FcrHtml = '';
     [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
@@ -311,15 +309,14 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
   let html = '';
 
   if (Lcz === 0) {
-    html += `<p>For sections with continuous torsional bracing, flexural-torsional buckling does not apply</p>`;
-    return [phi, Fcr, html];
+    html += `<div>For sections with continuous torsional bracing, flexural-torsional buckling does not apply</div>`;
 
   } else {
     let Fe = 0;
     let FeHtml = '';
     if (['C', 'MC'].includes(shapeType)) {
       if (Lcx === 0) {
-        html += `<p>${Lcx_} must not be 0</p>`;
+        html += `<div>${Lcx_} must not be 0</div>`;
         return [phi, Fcr, html];
       } else {
         [Fe, FeHtml] = flexuralTorsionalElasticBucklingStressCalculator('x', E, G, Ag, rx, J, Cw, ro, H, Lcx, Lcz);
@@ -327,7 +324,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
 
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       if (Lcy === 0) {
-        html += `<p>${Lcy_} must not be 0</p>`;
+        html += `<div>${Lcy_} must not be 0</div>`;
         return [phi, Fcr, html];
       } else {
         [Fe, FeHtml] = flexuralTorsionalElasticBucklingStressCalculator('y', E, G, Ag, ry, J, 0, ro, H, Lcy, Lcz);
@@ -347,9 +344,9 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
 // Flexural-Torsional Elastic Buckling Stress Calculator
 function flexuralTorsionalElasticBucklingStressCalculator(axisOfSym, E, G, Ag, r, J, Cw, ro, H, Lc, Lcz) {
   let Fe = 0;
-  let html = `<p>Flexural-torsional elastic buckling stress</p>
-              <p>${ro_} = ${ro.toFixed(2)} in.</p>
-              <p>${H_} = ${H.toFixed(3)}</p>`;
+  let html = `<div>Flexural-torsional elastic buckling stress</div>
+              <div class="indented-line">${ro_} = ${ro.toFixed(2)} in.,&emsp;
+                                         ${H_} = ${H.toFixed(3)}</div>`;
 
   const calcTerm1 = Lc / r;
   let calcTerm1_ = '';
@@ -363,20 +360,20 @@ function flexuralTorsionalElasticBucklingStressCalculator(axisOfSym, E, G, Ag, r
   }
 
   const Fexy = Math.PI**2 * E / calcTerm1**2;
-  html += `<p>${Fexy_} = &pi;<sup>2</sup> ${E_} / (${calcTerm1_})<sup>2</sup> = ${Fexy.toFixed(2)} ksi</p>`;
+  html += `<div class="indented-line">${Fexy_} = &pi;<sup>2</sup> ${E_} / (${calcTerm1_})<sup>2</sup> = ${Fexy.toFixed(2)} ksi</div>`;
 
   let Fez = 0;
   if (Cw === 0) {
     Fez = (Math.PI**2 * E / Lcz**2 + G * J) / (Ag * ro**2);
-    html += `<p>${Fez_} = (&pi;<sup>2</sup> ${E_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ag_} ${ro_}<sup>2</sup>) = ${Fez.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">${Fez_} = (&pi;<sup>2</sup> ${E_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ag_} ${ro_}<sup>2</sup>) = ${Fez.toFixed(2)} ksi</div>`;
 
   } else {
     Fez = (Math.PI**2 * E * Cw / Lcz**2 + G * J) / (Ag * ro**2);
-    html += `<p>${Fez_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ag_} ${ro_}<sup>2</sup>) = ${Fez.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">${Fez_} = (&pi;<sup>2</sup> ${E_} ${Cw_} / ${Lcz_}<sup>2</sup> + ${G_} ${J_}) / (${Ag_} ${ro_}<sup>2</sup>) = ${Fez.toFixed(2)} ksi</div>`;
   }
 
   Fe = (Fexy + Fez) / (2 * H) * (1 - Math.sqrt(1 - 4 * Fexy * Fez * H / (Fexy + Fez)**2));
-  html += `<p>${Fe_} = (${Fexy_} + ${Fez_}) / (2 ${H_}) (1 - &radic;(1 - 4 ${Fexy_} ${Fez_} ${H_} / (${Fexy_} + ${Fez_})<sup>2</sup>)) = ${Fe.toFixed(2)} ksi</p>`;
+  html += `<div class="indented-line">${Fe_} = (${Fexy_} + ${Fez_}) / (2 ${H_}) (1 - &radic;(1 - 4 ${Fexy_} ${Fez_} ${H_} / (${Fexy_} + ${Fez_})<sup>2</sup>)) = ${Fe.toFixed(2)} ksi</div>`;
 
   return [Fe, html];
 }
@@ -389,17 +386,16 @@ function criticalStressCalculator(Fy, Fe) {
   const calcTerm1 = Fy / Fe;
   const calcTerm1_ = `${Fy_} / ${Fe_}`;
 
+  html += `<div>Critical stress</div>`;
   if (calcTerm1 <= 2.25) {
     Fcr = 0.658**calcTerm1 * Fy;
-    html += `<p>For ${calcTerm1_} &le; 2.25</p>
-             <p>Critical stress</p>
-             <p>${Fcr_} = 0.658<sup>${calcTerm1_}</sup> ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">For ${calcTerm1_} &le; 2.25</div>
+             <div class="indented-line">${Fcr_} = 0.658<sup>${calcTerm1_}</sup> ${Fy_} = ${Fcr.toFixed(2)} ksi</div>`;
 
   } else {
     Fcr = 0.877 * Fe;
-    html += `<p>For ${calcTerm1_} &gt; 2.25</p>
-             <p>Critical stress</p>
-             <p>${Fcr_} = 0.877 ${Fe_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">For ${calcTerm1_} &gt; 2.25</div>
+             <div class="indented-line">${Fcr_} = 0.877 ${Fe_} = ${Fcr.toFixed(2)} ksi</div>`;
   }
 
   return [Fcr, html];
@@ -438,12 +434,12 @@ function E7MemberWithSlenderElementAe(shapeType, Fy, E, Ag, b, h, tf, tw, Fcr, l
 
     if (lambdaf <= 0.11 * calcTerm1) {
       Ae = Ag;
-      html += `<p>For ${lambda_} &le; 0.11 ${calcTerm1_}</p>
-               <p>${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+      html += `<div>For ${lambda_} &le; 0.11 ${calcTerm1_}</div>
+               <div class="indented-line">${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
     } else if (lambdaf <= 0.45 * calcTerm1) {
       Ae = (0.038 * E / (Fy * lambdaf) + 2 / 3) * Ag;
-      html += `<p>For 0.11 ${calcTerm1_} &lt; ${lambda_} &le; 0.45 ${calcTerm1_}</p>
-               <p>${Ae_} = (0.038 ${E_} / (${Fy_} ${lambda_}) + 2 / 3) ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+      html += `<div>For 0.11 ${calcTerm1_} &lt; ${lambda_} &le; 0.45 ${calcTerm1_}</div>
+               <div class="indented-line">${Ae_} = (0.038 ${E_} / (${Fy_} ${lambda_}) + 2 / 3) ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
     }
   }
   return [Ae, html];
@@ -485,37 +481,37 @@ function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, la
   const calcTerm1_ = `${lambdar_} &radic;(${Fy_} / ${Fcr_})`;
 
   if (elementClass === 'nonslender') {
-    html += `<p>For nonslender ${elementType}s, 
-                ${beff_} = ${bfull_}</p>`;
+    html += `<div>For nonslender ${elementType}s</div>
+             <div class="indented-line">Effective width, ${beff_} = ${bfull_}</div>`;
 
   } else {
     if (lambda <= calcTerm1) {
-      html += `<p>For slender ${elementType}s when ${lambda_} &le; ${calcTerm1_}, 
-                  ${beff_} = ${bfull_}</p>`;
+      html += `<div>For slender ${elementType}s and ${lambda_} &le; ${calcTerm1_}</div>
+               <div class="indented-line">Effective width, ${beff_} = ${bfull_}</div>`;
 
     } else {
-      html += `<p>For slender ${elementType}s when ${lambda_} &gt; ${calcTerm1_}</p>`
+      html += `<div>For slender ${elementType}s and ${lambda_} &gt; ${calcTerm1_}</div>`
       
       if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
-        html += `<p>${bfull_} = ${lambda_} ${tw_} = ${b.toFixed(2)} in.</p>`;
+        html += `<div class="indented-line">${bfull_} = ${lambda_} ${tw_} = ${b.toFixed(2)} in.</div>`;
       } else {
-        html += `<p>${bfull_} = ${b.toFixed(2)} in.</p>`;
+        html += `<div class="indented-line">${bfull_} = ${b.toFixed(2)} in.</div>`;
       }
 
       const [c1, c2] = effectiveWidthImperfectionAdjustmentFactorFinder(shapeType, elementType);
-      html += `<p>Effective width imperfection adjustment factors</p>
-               <p>${c1_} = ${c1.toFixed(2)},&emsp;
-                  ${c2_} = ${c2.toFixed(2)}</p>`;
+      html += `<div class="indented-line">Effective width imperfection adjustment factors</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${c1_} = ${c1.toFixed(2)},&emsp;
+                                                                            ${c2_} = ${c2.toFixed(2)}</div>`;
 
       const Fel = (c2 * lambdar / lambda)**2 * Fy;
-      html += `<p>Elastic local buckling stress</p>
-               <p>${Fel_} = (${c2_} ${lambdar_} / ${lambda_})<sup>2</sup> ${Fy_} = ${Fel.toFixed(2)} ksi</p>`;
+      html += `<div class="indented-line">Elastic local buckling stress</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${Fel_} = (${c2_} ${lambdar_} / ${lambda_})<sup>2</sup> ${Fy_} = ${Fel.toFixed(2)} ksi</div>`;
       
       const calcTerm2 = Math.sqrt(Fel / Fcr);
       const calcTerm2_ = `&radic;(${Fel_} / ${Fcr_})`;
       be = b * (1 - c1 * calcTerm2) * calcTerm2;
-      html += `<p>Effective width</p>
-               <p>${beff_} = ${bfull_} (1 - ${c1_} ${calcTerm2_}) ${calcTerm2_} = ${be.toFixed(2)} in.</p>`;
+      html += `<div class="indented-line">Effective width</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${beff_} = ${bfull_} (1 - ${c1_} ${calcTerm2_}) ${calcTerm2_} = ${be.toFixed(2)} in.</div>`;
     }
   }
   return [be, html];
@@ -588,22 +584,22 @@ function effectiveAreaCalculator(shapeType, Ag, b, h, tf, tw, be, he) {
     calcTerm2_ = `(${hweb_} - ${he_}) ${tweb_}`;
   }
 
-  html += `<p>Effective area</p>`;
+  html += `<div>Effective area</div>`;
   if (be === 0 && he === 0) {
     Ae = Ag;
-    html += `<p>${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    html += `<div class="indented-line">${Ae_} = ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
 
   } else if (be > 0 && he === 0) {
     Ae = Ag - calcTerm1;
-    html += `<p>${Ae_} = ${Ag_} - ${calcTerm1_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    html += `<div class="indented-line">${Ae_} = ${Ag_} - ${calcTerm1_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
 
   } else if (be === 0 && he > 0) {
     Ae = Ag - calcTerm2;
-    html += `<p>${Ae_} = ${Ag_} - ${calcTerm2_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    html += `<div class="indented-line">${Ae_} = ${Ag_} - ${calcTerm2_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
 
   } else if (be > 0 && he > 0) {
     Ae = Ag - calcTerm1 - calcTerm2;
-    html += `<p>${Ae_} = ${Ag_} - ${calcTerm1_} - ${calcTerm2_} = ${Ae.toFixed(2)} in.<sup>2</sup></p>`;
+    html += `<div class="indented-line">${Ae_} = ${Ag_} - ${calcTerm1_} - ${calcTerm2_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
   }
   return [Ae, html];
 }
@@ -625,8 +621,8 @@ function capacityCalculator(Fcr, A, areaType) {
   } else if (areaType === 'effective') {
     A_ = Ae_;
   }
-  html = `<p>${Pn_} = ${Fcr_} ${A_} = ${Pn.toFixed(2)} k</p>
-          <p>${Pn_} = ${Pn.toFixed(1)} k</p>`;
+  html = `<div>${Pn_} = ${Fcr_} ${A_} = ${Pn.toFixed(2)} k</div>
+          <div>${Pn_} = ${Pn.toFixed(1)} k</div>`;
 
   return [Pn, html];
 }
