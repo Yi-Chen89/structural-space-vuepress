@@ -45,14 +45,7 @@
     margin-left: calc(var(--indented-line-level, 1) * 0.75em);
   }
 
-  .calc-block {
-    * {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
-    }
-  }
-
-  .note {
+  .note-message {
     font-style: italic;
   }
 

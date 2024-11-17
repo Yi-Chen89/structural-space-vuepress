@@ -263,7 +263,7 @@ function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
     }
 
     if (calcTerm2 > 200) {
-      html += `<div class="note">Effective slenderness ratio preferably should not exceed 200</div>`;
+      html += `<div class="note-message">Effective slenderness ratio preferably should not exceed 200</div>`;
     }
   
     const Fe = Math.PI**2 * E / calcTerm2**2;

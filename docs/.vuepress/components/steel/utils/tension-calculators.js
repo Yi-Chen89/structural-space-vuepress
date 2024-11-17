@@ -112,11 +112,9 @@ function effectiveNetAreaCalculator(Ag) {
   let html = '';
 
   Ae = 0.75 * Ag;
-  html += `<div class="calc-block">
-             <div>Effective net area</div>
-             <div>${Ae_} = 0.75 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>
-           </div>`;
-
+  html += `<div>Effective net area</div>
+           <div class="indented-line">${Ae_} = 0.75 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
+  
   return [Ae, html];
 }
 
