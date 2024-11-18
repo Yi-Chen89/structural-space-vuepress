@@ -422,11 +422,11 @@ function F2_1Yielding(Fy, Zx) {
   let html = '';
 
   Mp = Fy * Zx;
-  html += `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</p>`;
+  html += `<div>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in</div>`;
 
   // convert Mp from k-in to k-ft
   const Mp_converted = Mp / 12;
-  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Mp_converted, html];
 }
@@ -442,16 +442,16 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
 
   // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
   const Lp = 1.76 * ry * Math.sqrt(E / Fy);
-  html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
-           <p>${Lp_} = 1.76 ${ry_} &radic;(${E_} / ${Fy_}) = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
+  html += `<div>Limiting laterally unbraced length for the limit state of yielding</div>
+           <div class="indented-line">${Lp_} = 1.76 ${ry_} &radic;(${E_} / ${Fy_}) = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</div>`;
 
   if (Lb <= Lp) {
     // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
-    html += `<p>${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</p>`;
+    html += `<div>For ${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</div>`;
 
   } else {
     // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
-    html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>`;
+    html += `<div>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</div>`;
 
     const calcTerm1 = E / (0.7 * Fy);
     const calcTerm1_ = `${E_} / 0.7${Fy_}`;
@@ -459,40 +459,40 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
     let c = 0;
     if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
       c = 1;
-      html += `<p>For doubly symmetric I-shapes, c = 1</p>`;
+      html += `<div class="indented-line">For doubly symmetric I-shapes, c = 1</div>`;
     } else if (['C', 'MC'].includes(shapeType)) {
       c = (ho / 2) * Math.sqrt(Iy / Cw);
-      html += `<p>For channels, c = ${ho_} / 2 &radic;(${Iy_} / ${Cw_}) = ${c.toFixed(2)}</p>`;
+      html += `<div class="indented-line">For channels, c = ${ho_} / 2 &radic;(${Iy_} / ${Cw_}) = ${c.toFixed(2)}</div>`;
     }
 
     const calcTerm2 = (J * c) / (Sx * ho);
     const calcTerm2_ = `${J_}c / ${Sx_}${ho_}`;
 
     const Lr = 1.95 * rts * calcTerm1 * Math.sqrt(calcTerm2 + Math.sqrt(calcTerm2**2 + 6.76 * (1 / calcTerm1)**2));
-    html += `<p>${Lr_} = 1.95 ${rts_} (${calcTerm1_}) &radic;(${calcTerm2_} + &radic;((${calcTerm2_})<sup>2</sup> + 6.76 (0.7${Fy_} / ${E_})<sup>2</sup>)) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
+    html += `<div class="indented-line">${Lr_} = 1.95 ${rts_} (${calcTerm1_}) &radic;(${calcTerm2_} + &radic;((${calcTerm2_})<sup>2</sup> + 6.76 (0.7${Fy_} / ${E_})<sup>2</sup>)) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</div>`;
 
     if (Lb <= Lr) {
       // (b) when Lp < Lb ≤ Lr
-      html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
+      html += `<div>For ${Lp_} &lt; ${Lb_} &le; ${Lr_}</div>`;
 
       Mn = Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
-      html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+      html += `<div>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</div>`;
 
       Mn = Math.min(Mn, Mp);
 
     } else {
       // (c) when Lb > Lr
-      html += `<p>${Lb_} &gt; ${Lr_}</p>`;
+      html += `<div>For ${Lb_} &gt; ${Lr_}</div>`;
 
       const calcTerm3 = (Lb / rts)**2;
       const calcTerm3_ = `(${Lb_} / ${rts_})<sup>2</sup>`;
 
       const Fcr = (Cb * Math.PI**2 * E / calcTerm3) * Math.sqrt(1 + 0.078 * calcTerm2 * calcTerm3);
-      html += `<p>Critical stress</p>
-               <p>${Fcr_} = ${Cb_}&pi;<sup>2</sup>${E_} / ${calcTerm3_} &radic;(1 + 0.078 (${calcTerm2_}) ${calcTerm3_}) = ${Fcr.toFixed(2)} ksi</p>`;
+      html += `<div>Critical stress</div>
+               <div class="indented-line">${Fcr_} = ${Cb_}&pi;<sup>2</sup>${E_} / ${calcTerm3_} &radic;(1 + 0.078 (${calcTerm2_}) ${calcTerm3_}) = ${Fcr.toFixed(2)} ksi</div>`;
 
       Mn = Fcr * Sx;
-      html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+      html += `<div>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in &le; ${Mp_}</div>`;
 
       Mn = Math.min(Mn, Mp);
     }
@@ -501,7 +501,7 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [phi, Mn_converted, html];
@@ -520,26 +520,26 @@ function F3_2CompressionFlangeLocalBuckling(Mp, Fy, E, Sx, lambdaf, lambdaw, lam
 
   if (flangeClass === 'noncompact') {
     Mn = Mp - (Mp - 0.7 * Fy * Sx) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
-    html += `<p>For sections with noncompact flanges</p>
-             <p>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>For sections with noncompact flanges</div>
+             <div>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in</div>`;
 
   } else if (flangeClass === 'slender') {
-    html += `<p>For sections with slender flanges</p>`;
+    html += `<div>For sections with slender flanges</div>`;
 
     let kc = 4 / Math.sqrt(lambdaw);
     const kc_ = 'k<sub>c</sub>';
-    html += `<p>Coefficient for slender unstiffened elements (0.35 &le; ${kc_} &le; 0.76)</p>
-             <p>${kc_} = 4 / &radic;(${h_} / ${tw_}) = ${kc.toFixed(2)}</p>`;
+    html += `<div>Coefficient for slender unstiffened elements (0.35 &le; ${kc_} &le; 0.76)</div>
+             <div class="indented-line">${kc_} = 4 / &radic;(${h_} / ${tw_}) = ${kc.toFixed(2)}</div>`;
     kc = Math.max(0.35, Math.min(kc, 0.76));
-    html += `<p>${kc_} = ${kc.toFixed(2)}</p>`;
+    html += `<div class="indented-line">${kc_} = ${kc.toFixed(2)}</div>`;
 
     Mn = 0.9 * E * kc * Sx / lambdaf**2;
-    html += `<p>${Mn_} = 0.9 ${E_} ${kc_} ${Sx_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>${Mn_} = 0.9 ${E_} ${kc_} ${Sx_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(2)} k-in</div>`;
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
-  html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Mn_converted, html];
 }
@@ -557,13 +557,13 @@ function F6_1Yielding(Fy, Zy, Sy) {
   let html = '';
 
   Mp = Fy * Zy;
-  html += `<p>${Mp_} = ${Fy_} ${Zy_} = ${Mp.toFixed(2)} k-in &le; 1.6 ${Fy_} ${Sy_}</p>`;
+  html += `<div>${Mp_} = ${Fy_} ${Zy_} = ${Mp.toFixed(2)} k-in &le; 1.6 ${Fy_} ${Sy_}</div>`;
 
   Mp = Math.min(Mp, 1.6 * Fy * Sy);
 
   // convert Mp from k-in to k-ft
   const Mp_converted = Mp / 12;
-  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Mp_converted, html];
 }
@@ -578,28 +578,28 @@ function F6_2FlangeLocalBuckling(Mp, Fy, E, Sy, lambdaf, lambdapf, lambdarf, fla
   Mp = Mp * 12;
 
   if (flangeClass === 'compact') {
-    html += `<p>For sections with compact flanges, flange local buckling does not apply</p>`;
+    html += `<div>For sections with compact flanges, flange local buckling does not apply</div>`;
 
   } else if (flangeClass === 'noncompact') {
     Mn = Mp - (Mp - 0.7 * Fy * Sy) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
-    html += `<p>For sections with noncompact flanges</p>
-             <p>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sy_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>For sections with noncompact flanges</div>
+             <div>${Mn_} = ${Mp_} - (${Mp_} - 0.7${Fy_}${Sy_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in</div>`;
 
   } else if (flangeClass === 'slender') {
-    html += `<p>For sections with slender flanges</p>`;
+    html += `<div>For sections with slender flanges</div>`;
 
     const Fcr = 0.69 * E / lambdaf**2;
-    html += `<p>Critical stress</p>
-             <p>${Fcr_} = 0.69 ${E_} / ${lambdaf_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div>Critical stress</div>
+             <div class="indented-line">${Fcr_} = 0.69 ${E_} / ${lambdaf_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</div>`;
 
     Mn = Fcr * Sy;
-    html += `<p>${Mn_} = ${Fcr_} ${Sy_} = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>${Mn_} = ${Fcr_} ${Sy_} = ${Mn.toFixed(2)} k-in</div>`;
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [phi, Mn_converted, html];
@@ -616,11 +616,11 @@ function F7_1Yielding(axis, Fy, Z) {
   let Z_ = axis === 'x' ? Zx_ : Zy_;
 
   Mp = Fy * Z;
-  html += `<p>${Mp_} = ${Fy_} ${Z_} = ${Mp.toFixed(2)} k-in</p>`;
+  html += `<div>${Mp_} = ${Fy_} ${Z_} = ${Mp.toFixed(2)} k-in</div>`;
 
   // convert Mp from k-in to k-ft
   const Mp_converted = Mp / 12;
-  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Mp_converted, html];
 }
@@ -630,7 +630,7 @@ function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bflange, tflange, I, S, fla
   const phi = 0.9;
   let Mn = 0;
   let html = '';
-
+  
   // convert Mp from k-ft to k-in
   Mp = Mp * 12;
 
@@ -645,7 +645,7 @@ function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bflange, tflange, I, S, fla
   let Se_ = axis === 'x' ? Sxe_ : Sye_;
 
   if (flangeClass === 'compact') {
-    html += `<p>For sections with compact flanges, flange local buckling does not apply</p>`;
+    html += `<div>For sections with compact flanges, flange local buckling does not apply</div>`;
 
   } else {
     const calcTerm1 = bflange / tflange;
@@ -656,47 +656,47 @@ function F7_2FlangeLocalBuckling(axis, Mp, Fy, E, H, bflange, tflange, I, S, fla
 
     if (flangeClass === 'noncompact') {
       Mn = Mp - (Mp - Fy * S) * (3.57 * calcTerm1 * (1/calcTerm2) - 4.0);
-      html += `<p>For sections with noncompact flanges</p>
-               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${S_}) (3.57 ${calcTerm1_} &radic;(${Fy_} / ${E_}) - 4.0) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+      html += `<div>For sections with noncompact flanges</div>
+               <div>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${S_}) (3.57 ${calcTerm1_} &radic;(${Fy_} / ${E_}) - 4.0) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</div>`;
       
       Mn = Math.min(Mn, Mp);
 
     } else if (flangeClass === 'slender') {
-      html += `<p>For sections with slender flanges</p>
-               <p>Effective width of the compression flange</p>`;
+      html += `<div>For sections with slender flanges</div>
+               <div>Effective width of the compression flange</div>`;
       const bflangeeff = 1.92 * tflange * calcTerm2 * (1 - 0.38 / calcTerm1 * calcTerm2);
-      html += `<p>${bflangeeff_} = 1.92 ${tflange_} ${calcTerm2_} (1 - 0.38 / (${calcTerm1_}) ${calcTerm2_}) = ${bflangeeff.toFixed(2)} in. &le; ${bflange_}</p>`;
+      html += `<div class="indented-line">${bflangeeff_} = 1.92 ${tflange_} ${calcTerm2_} (1 - 0.38 / (${calcTerm1_}) ${calcTerm2_}) = ${bflangeeff.toFixed(2)} in. &le; ${bflange_}</div>`;
 
       let Se = 0;
       if (bflangeeff >= bflange) {
         Se = S;
-        html += `<p>${bflangeeff_} = ${bflange_} = ${bflange} in.</p>
-                 <p>${Se_} = ${S_} = ${S} in.<sup>3</sup></p>`;
+        html += `<div class="indented-line">${bflangeeff_} = ${bflange_} = ${bflange} in.</div>
+                 <div class="indented-line">${Se_} = ${S_} = ${S} in.<sup>3</sup></div>`;
         
       } else {
-        html += `<p>${bflangeeff_} = ${bflangeeff.toFixed(2)} in.</p>`;
+        html += `<div class="indented-line">${bflangeeff_} = ${bflangeeff.toFixed(2)} in.</div>`;
         // Simple and conservative approach to calculate effective I and S
         // removing ineffective width from top and bottom flanges
         const bflangeineff = bflange - bflangeeff;
-        html += `<p>Ineffective width of the compression flange</p>
-                 <p>${bflangeineff_} = ${bflange_} - ${bflangeeff_} = ${bflangeineff.toFixed(2)} in.</p>
-                 <p>Use <span title="exact calculation is to only remove ineffective width from the compression flange">simplified approach</span> to calculate ${Se_} (remove ineffective width symmetrically from both tension and compression flanges)</p>`;
+        html += `<div>Ineffective width of the compression flange</div>
+                 <div class="indented-line">${bflangeineff_} = ${bflange_} - ${bflangeeff_} = ${bflangeineff.toFixed(2)} in.</div>`;
 
+        html += `<div>Use <span title="exact calculation is to only remove ineffective width from the compression flange">simplified approach</span> to calculate ${Se_} (remove ineffective width symmetrically from both tension and compression flanges)</div>`;
         const Ie = I - 2 * (bflangeineff * tflange**3 / 12 + bflangeineff * tflange * ((H - tflange) / 2)**2);
-        html += `<p>${Ie_} = ${I_} - 2 (${bflangeineff_} ${tflange_}<sup>3</sup> / 12 + ${bflangeineff_} ${tflange_} ((${H_} - ${tflange_}) / 2)<sup>2</sup>) = ${Ie.toFixed(2)} in.<sup>4</sup></p>`;
+        html += `<div class="indented-line">${Ie_} = ${I_} - 2 (${bflangeineff_} ${tflange_}<sup>3</sup> / 12 + ${bflangeineff_} ${tflange_} ((${H_} - ${tflange_}) / 2)<sup>2</sup>) = ${Ie.toFixed(2)} in.<sup>4</sup></div>`;
         Se = Ie / (H / 2);
-        html += `<p>${Se_} = ${Ie_} / (${H_} / 2) = ${Se.toFixed(2)} in.<sup>3</sup></p>`;
+        html += `<div class="indented-line">${Se_} = ${Ie_} / (${H_} / 2) = ${Se.toFixed(2)} in.<sup>3</sup></div>`;
       }
 
       Mn = Fy * Se;
-      html += `<p>${Mn_} = ${Fy_} ${Se_} = ${Mn.toFixed(2)} k-in</p>`;
+      html += `<div>${Mn_} = ${Fy_} ${Se_} = ${Mn.toFixed(2)} k-in</div>`;
     }
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [phi, Mn_converted, html];
@@ -718,7 +718,7 @@ function F7_3WebLocalBuckling(axis, Mp, Fy, E, bweb, bflange, tweb, tflange, S, 
   let S_ = axis === 'x' ? Sx_ : Sy_;
 
   if (webClass === 'compact') {
-    html += `<p>For sections with compact webs, web local buckling does not apply</p>`;
+    html += `<div>For sections with compact webs, web local buckling does not apply</div>`;
 
   } else {
     const calcTerm1 = bweb / tweb;
@@ -729,47 +729,47 @@ function F7_3WebLocalBuckling(axis, Mp, Fy, E, bweb, bflange, tweb, tflange, S, 
 
     if (webClass === 'noncompact') {
       Mn = Mp - (Mp - Fy * S) * (0.305 * calcTerm1 * calcTerm2 - 0.738);
-      html += `<p>For sections with noncompact webs</p>
-               <p>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${S_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+      html += `<div>For sections with noncompact webs</div>
+               <div>${Mn_} = ${Mp_} - (${Mp_} - ${Fy_}${S_}) (0.305 ${calcTerm1_} ${calcTerm2_} - 0.738) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</div>`;
 
       Mn = Math.min(Mn, Mp);
 
     } else if (webClass === 'slender') {
-      html += `<p>For sections with slender webs</p>
-               <p>Bending strength reduction factor</p>`;
+      html += `<div>For sections with slender webs</div>
+               <div>Bending strength reduction factor</div>`;
 
       const aw = 2 * bweb * tweb / (bflange * tflange);
-      html += `<p>${aw_} = 2${bweb_}${tweb_} / (${bflange_}${tflange_}) = ${aw.toFixed(2)}</p>`;
+      html += `<div class="indented-line">${aw_} = 2${bweb_}${tweb_} / (${bflange_}${tflange_}) = ${aw.toFixed(2)}</div>`;
 
       // bending strength reduction factor
       let Rpg = 1 - aw / (1200 + 300 * aw) * (calcTerm1 - 5.7 * (1/calcTerm2));
-      html += `<p>${Rpg_} = 1 - ${aw_} / (1200 + 300${aw_}) (${calcTerm1_} - 5.7&radic;(${E_} / ${Fy_})) = ${Rpg.toFixed(2)} &le; 1.0</p>`;
+      html += `<div class="indented-line">${Rpg_} = 1 - ${aw_} / (1200 + 300${aw_}) (${calcTerm1_} - 5.7&radic;(${E_} / ${Fy_})) = ${Rpg.toFixed(2)} &le; 1.0</div>`;
 
       // Rpg less than or equal to 1.0
       Rpg = Math.min(Rpg, 1.0);
-      html += `<p>${Rpg_} = ${Rpg.toFixed(2)}</p>`;
+      html += `<div class="indented-line">${Rpg_} = ${Rpg.toFixed(2)}</div>`;
 
       // (1) compression flange yielding
       const Mn_1 = Rpg * Fy * S;
-      html += `<p>Compression flange yielding</p>
-               <p>${Mn_} = ${Rpg_} ${Fy_} ${S_} = ${Mn_1.toFixed(2)} k-in</p>`;
+      html += `<div>Compression flange yielding</div>
+               <div class="indented-line">${Mn_} = ${Rpg_} ${Fy_} ${S_} = ${Mn_1.toFixed(2)} k-in</div>`;
 
       // (2) compression flange local buckling
       const kc = 4.0;
       const Fcr = 0.9 * E * kc / (bflange / tflange)**2;
 
       const Mn_2 = Rpg * Fcr * S;
-      html += `<p>Compression flange local buckling</p>
-               <p>${kc_} = ${kc.toFixed(1)}</p>
-               <p>${Fcr_} = 0.9 ${E_} ${kc_} / (${bflange_} / ${tflange_})<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>
-               <p>${Mn_} = ${Rpg_} ${Fcr_} ${S_} = ${Mn_2.toFixed(2)} k-in</p>`;
+      html += `<div>Compression flange local buckling</div>
+               <div class="indented-line">${kc_} = ${kc.toFixed(1)}</div>
+               <div class="indented-line">${Fcr_} = 0.9 ${E_} ${kc_} / (${bflange_} / ${tflange_})<sup>2</sup> = ${Fcr.toFixed(2)} ksi</div>
+               <div class="indented-line">${Mn_} = ${Rpg_} ${Fcr_} ${S_} = ${Mn_2.toFixed(2)} k-in</div>`;
 
       if (Mn_1 <= Mn_2) {
         Mn = Mn_1;
-        html += `<p>Compression flange yielding governs</p>`;
+        html += `<div>Compression flange yielding governs</div>`;
       } else {
         Mn = Mn_2;
-        html += `<p>Compression flange local buckling governs</p>`;
+        html += `<div>Compression flange local buckling governs</div>`;
       }
     }
   }
@@ -777,7 +777,7 @@ function F7_3WebLocalBuckling(axis, Mp, Fy, E, bweb, bflange, tweb, tflange, S, 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [phi, Mn_converted, html];
@@ -799,34 +799,34 @@ function F7_4LateralTorsionalBuckling(axis, shapeType, Mp, Fy, E, Ag, Sx, ry, J,
 
       // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
       const Lp = 0.13 * E * ry * calcTerm1 / Mp;
-      html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
-               <p>${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
+      html += `<div>Limiting laterally unbraced length for the limit state of yielding</div>
+               <div class="indented-line">${Lp_} = 0.13 ${E_} ${ry_} ${calcTerm1_} / ${Mp_} = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</div>`;
 
       if (Lb <= Lp) {
         // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
-        html += `<p>${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</p>`;
+        html += `<div>For ${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</div>`;
 
       } else {
         // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
         const Lr = 2 * E * ry * calcTerm1 / (0.7 * Fy * Sx);
-        html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>
-                 <p>${Lr_} = 2 ${E_} ${ry_} ${calcTerm1_} / (0.7${Fy_}${Sx_}) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
+        html += `<div>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</div>
+                 <div class="indented-line">${Lr_} = 2 ${E_} ${ry_} ${calcTerm1_} / (0.7${Fy_}${Sx_}) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</div>`;
 
         if (Lb <= Lr) {
           // (b) when Lp < Lb ≤ Lr
-          html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
+          html += `<div>For ${Lp_} &lt; ${Lb_} &le; ${Lr_}</div>`;
 
           Mn = Cb * (Mp - (Mp - 0.7 * Fy * Sx) * (Lb - Lp) / (Lr - Lp));
-          html += `<p>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+          html += `<div>${Mn_} = ${Cb_} (${Mp_} - (${Mp_} - 0.7${Fy_}${Sx_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_})) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</div>`;
 
           Mn = Math.min(Mn, Mp);
 
         } else {
           // (c) when Lb > Lr
-          html += `<p>${Lb_} &gt; ${Lr_}</p>`;
+          html += `<div>For ${Lb_} &gt; ${Lr_}</div>`;
 
           Mn = 2 * E * Cb * calcTerm1 / (Lb / ry);
-          html += `<p>${Mn_} = 2 ${E_} ${Cb_} ${calcTerm1_} / (${Lb_} / ${ry_}) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</p>`;
+          html += `<div>${Mn_} = 2 ${E_} ${Cb_} ${calcTerm1_} / (${Lb_} / ${ry_}) = ${Mn.toFixed(2)} k-in &le; ${Mp_}</div>`;
 
           Mn = Math.min(Mn, Mp);
         }
@@ -834,18 +834,18 @@ function F7_4LateralTorsionalBuckling(axis, shapeType, Mp, Fy, E, Ag, Sx, ry, J,
 
     } else if (shapeType === 'HSS Square') {
       // LTB does not apply to square sections
-      html += `<p>Lateral-torsional buckling does not apply to square sections</p>`;
+      html += `<div>Lateral-torsional buckling does not apply to square sections</div>`;
     }
 
   } else if (axis === 'y') {
     // LTB does not apply to sections bending about their minor axis
-    html += `<p>Lateral-torsional buckling does not apply to sections bending about their minor axis</p>`;
+    html += `<div>Lateral-torsional buckling does not apply to sections bending about their minor axis</div>`;
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [phi, Mn_converted, html];
@@ -862,11 +862,11 @@ function F8_1Yielding(axis, Fy, Z) {
   let Z_ = axis === 'x' ? Zx_ : Zy_;
 
   Mp = Fy * Z;
-  html += `<p>${Mp_} = ${Fy_} ${Z_} = ${Mp.toFixed(2)} k-in</p>`;
+  html += `<div>${Mp_} = ${Fy_} ${Z_} = ${Mp.toFixed(2)} k-in</div>`;
 
   // convert Mp from k-in to k-ft
   const Mp_converted = Mp / 12;
-  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Mp_converted, html];
 }
@@ -880,26 +880,27 @@ function F8_2LocalBuckling(axis, Fy, E, S, lambda, wallClass) {
   let S_ = axis === 'x' ? Sx_ : Sy_;
 
   if (wallClass === 'compact') {
-    html += `<p>For sections with compact walls, local buckling does not apply</p>`;
+    html += `<div>For sections with compact walls, local buckling does not apply</div>`;
 
   } else if (wallClass === 'noncompact') {
     Mn = (0.021 * E / lambda + Fy) * S;
-    html += `<p>For sections with noncompact walls</p>
-             <p>${Mn_} = (0.021 ${E_} / ${lambda_} + ${Fy_}) ${S_} = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>For sections with noncompact walls</div>
+             <div>${Mn_} = (0.021 ${E_} / ${lambda_} + ${Fy_}) ${S_} = ${Mn.toFixed(2)} k-in</div>`;
 
   } else if (wallClass === 'slender') {
     const Fcr = 0.33 * E / lambda;
-    html += `<p>For sections with slender walls</p>
-             <p>${Fcr_} = 0.33 ${E_} / ${lambda_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div>For sections with slender walls</div>
+             <div>Critical stress</div>
+             <div class="indented-line">${Fcr_} = 0.33 ${E_} / ${lambda_} = ${Fcr.toFixed(2)} ksi</div>`;
     
     Mn = Fcr * S;
-    html += `<p>${Mn_} = ${Fcr_} ${S_} = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>${Mn_} = ${Fcr_} ${S_} = ${Mn.toFixed(2)} k-in</div>`;
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [phi, Mn_converted, html];
@@ -925,23 +926,23 @@ function F9_1YieldingSagging(shapeType, Fy, Zx, Sx) {
   let html = '';
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    html += `<p><strong>For tee stems in tension (sagging)</strong></p>`;
+    html += `<div><strong>For tee stems in tension (sagging)</strong></div>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p><strong>For double angles with web legs in tension (sagging)</strong></p>`;
+    html += `<div><strong>For double angles with web legs in tension (sagging)</strong></div>`;
   }
 
   const My = Fy * Sx;
-  html += `<p>Yield moment</p>
-           <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+  html += `<div>Yield moment</div>
+           <div class="indented-line">${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</div>`;
 
   Mp = Fy * Zx;
-  html += `<p>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in &le; 1.6 ${My_}</p>`;
+  html += `<div>${Mp_} = ${Fy_} ${Zx_} = ${Mp.toFixed(2)} k-in &le; 1.6 ${My_}</div>`;
 
   Mp = Math.min(Mp, 1.6 * My);
 
   // convert Mp from k-in to k-ft
   const Mp_converted = Mp / 12;
-  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</div>`;
 
   return [Mp_converted, html];
 }
@@ -952,27 +953,27 @@ function F9_1YieldingHogging(shapeType, Fy, Sx) {
   let html = '';
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    html += `<p><strong>For tee stems in compression (hogging)</strong></p>`;
+    html += `<div><strong>For tee stems in compression (hogging)</strong></div>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p><strong>For double angles with web legs in compression (hogging)</strong></p>`;
+    html += `<div><strong>For double angles with web legs in compression (hogging)</strong></div>`;
   }
 
   const My = Fy * Sx;
-  html += `<p>Yield moment</p>
-           <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+  html += `<div>Yield moment</div>
+           <div class="indented-line">${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</div>`;
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
     Mp = My;
-    html += `<p>${Mp_} = ${My_} = ${Mp.toFixed(2)} k-in</p>`;
+    html += `<div>${Mp_} = ${My_} = ${Mp.toFixed(2)} k-in</div>`;
 
   } else if (['2L'].includes(shapeType)) {
     Mp = 1.5 * My;
-    html += `<p>${Mp_} = 1.5 ${My_} = ${Mp.toFixed(2)} k-in</p>`;
+    html += `<div>${Mp_} = 1.5 ${My_} = ${Mp.toFixed(2)} k-in</div>`;
   }
 
   // convert Mp from k-in to k-ft
   const Mp_converted = Mp / 12;
-  html += `<p>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mp_} = ${Mp.toFixed(1)} k-in = ${Mp_converted.toFixed(1)} k-ft</div>`;
 
   return [Mp_converted, html];
 }
@@ -998,19 +999,19 @@ function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry
   Mp = Mp * 12;
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    html += `<p><strong>For tee stems in tension (sagging)</strong></p>`;
+    html += `<div><strong>For tee stems in tension (sagging)</strong></div>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p><strong>For double angles with web legs in tension (sagging)</strong></p>`;
+    html += `<div><strong>For double angles with web legs in tension (sagging)</strong></div>`;
   }
 
   // Lp: limiting laterally unbraced length for the limit state of yielding, in. (mm)
   const Lp = 1.76 * ry * Math.sqrt(E / Fy);
-  html += `<p>Limiting laterally unbraced length for the limit state of yielding</p>
-           <p>${Lp_} = 1.76 ${ry_} &radic;(${E_} / ${Fy_}) = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</p>`;
+  html += `<div>Limiting laterally unbraced length for the limit state of yielding</div>
+           <div class="indented-line">${Lp_} = 1.76 ${ry_} &radic;(${E_} / ${Fy_}) = ${Lp.toFixed(1)} in. = ${(Lp / 12).toFixed(1)} ft</div>`;
 
   if (Lb <= Lp) {
     // (a) when Lb ≤ Lp, limit state of lateral-torsional buckling does not apply
-    html += `<p>${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</p>`;
+    html += `<div>For ${Lb_} &le; ${Lp_}, lateral-torsional buckling does not apply</div>`;
 
   } else {
     // let J = 0;
@@ -1022,38 +1023,39 @@ function F9_2LateralTorsionalBucklingSagging(shapeType, Mp, Fy, E, d, Sx, Iy, ry
 
     // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
     const Lr = 1.95 * (E / Fy) * Math.sqrt(Iy * J) / Sx * Math.sqrt(2.36 * (Fy / E) * d * Sx / J + 1);
-    html += `<p>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</p>
-             <p>${Lr_} = 1.95 (${E_} / ${Fy_}) &radic;(${Iy_} ${J_}) / ${Sx_} &radic;(2.36 (${Fy_} / ${E_}) ${d_}${Sx_} / ${J_} + 1) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</p>`;
+    html += `<div>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</div>
+             <div class="indented-line">${Lr_} = 1.95 (${E_} / ${Fy_}) &radic;(${Iy_} ${J_}) / ${Sx_} &radic;(2.36 (${Fy_} / ${E_}) ${d_}${Sx_} / ${J_} + 1) = ${Lr.toFixed(1)} in. = ${(Lr / 12).toFixed(1)} ft</div>`;
 
     if (Lb <= Lr) {
       // (b) when Lp < Lb ≤ Lr
-      html += `<p>${Lp_} &lt; ${Lb_} &le; ${Lr_}</p>`;
+      html += `<div>For ${Lp_} &lt; ${Lb_} &le; ${Lr_}</div>`;
 
       const My = Fy * Sx;
-      html += `<p>Yield moment</p>
-               <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+      html += `<div>Yield moment</div>
+               <div class="indented-line">${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</div>`;
 
       Mn = Mp - (Mp - My) * (Lb - Lp) / (Lr - Lp);
-      html += `<p>${Mn_} = ${Mp_} - (${Mp_} - ${My_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_}) = ${Mn.toFixed(2)} k-in</p>`;
+      html += `<div>${Mn_} = ${Mp_} - (${Mp_} - ${My_}) (${Lb_} - ${Lp_}) / (${Lr_} - ${Lp_}) = ${Mn.toFixed(2)} k-in</div>`;
 
     } else {
       // (c) when Lb > Lr
-      html += `<p>${Lb_} &gt; ${Lr_}</p>`;
+      html += `<div>For ${Lb_} &gt; ${Lr_}</div>`;
 
       const B = 2.3 * (d / Lb) * Math.sqrt(Iy / J);
-      html += `<p>${B_} = 2.3 (${d_} / ${Lb_}) &radic;(${Iy_} / ${J_}) = ${B.toFixed(2)}</p>`;
+      html += `<div>Elastic lateral-torsional buckling moment</div>
+               <div class="indented-line">${B_} = 2.3 (${d_} / ${Lb_}) &radic;(${Iy_} / ${J_}) = ${B.toFixed(2)}</div>`;
 
       const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
-      html += `<p>${Mcr_} = 1.95 ${E_} / ${Lb_} &radic;(${Iy_} ${J_}) (${B_} + &radic;(1 + ${B_}<sup>2</sup>)) = ${Mcr.toFixed(2)} k-in</p>`;
+      html += `<div class="indented-line">${Mcr_} = 1.95 ${E_} / ${Lb_} &radic;(${Iy_} ${J_}) (${B_} + &radic;(1 + ${B_}<sup>2</sup>)) = ${Mcr.toFixed(2)} k-in</div>`;
       Mn = Mcr;
-      html += `<p>${Mn_} = ${Mcr_} = ${Mn.toFixed(2)} k-in</p>`;
+      html += `<div>${Mn_} = ${Mcr_} = ${Mn.toFixed(2)} k-in</div>`;
     }
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [Mn_converted, html];
@@ -1065,15 +1067,15 @@ function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb)
   let html = '';
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    html += `<p><strong>For tee stems in compression (hogging)</strong></p>`;
+    html += `<div><strong>For tee stems in compression (hogging)</strong></div>`;
   } else if (['2L'].includes(shapeType)) {
-    html += `<p><strong>For double angles with web legs in compression (hogging)</strong></p>`;
+    html += `<div><strong>For double angles with web legs in compression (hogging)</strong></div>`;
   }
 
   if (Lb > 0) {
     const My = Fy * Sx;
-    html += `<p>Yield moment</p>
-             <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+    html += `<div>Yield moment</div>
+             <div class="indented-line">${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</div>`;
 
     // let J = 0;
     // if (['WT', 'MT', 'ST'].includes(shapeType)) {
@@ -1083,13 +1085,15 @@ function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb)
     // }
 
     const B = -2.3 * (d / Lb) * Math.sqrt(Iy / J);
-    html += `<p>${B_} = -2.3 (${d_} / ${Lb_}) &radic;(${Iy_} / ${J_}) = ${B.toFixed(2)}</p>`;
+    html += `<div>Elastic lateral-torsional buckling moment</div>
+             <div class="indented-line">${B_} = -2.3 (${d_} / ${Lb_}) &radic;(${Iy_} / ${J_}) = ${B.toFixed(2)}</div>`;
+
     const Mcr = 1.95 * E / Lb * Math.sqrt(Iy * J) * (B + Math.sqrt(1 + B**2));
-    html += `<p>${Mcr_} = 1.95 ${E_} / ${Lb_} &radic;(${Iy_} ${J_}) (${B_} + &radic;(1 + ${B_}<sup>2</sup>)) = ${Mcr.toFixed(2)} k-in</p>`;
+    html += `<div class="indented-line">${Mcr_} = 1.95 ${E_} / ${Lb_} &radic;(${Iy_} ${J_}) (${B_} + &radic;(1 + ${B_}<sup>2</sup>)) = ${Mcr.toFixed(2)} k-in</div>`;
     
     if (['WT', 'MT', 'ST'].includes(shapeType)) {
       Mn = Mcr;
-      html += `<p>${Mn_} = ${Mcr_} = ${Mn.toFixed(2)} k-in &le; ${My_}</p>`;
+      html += `<div>${Mn_} = ${Mcr_} = ${Mn.toFixed(2)} k-in &le; ${My_}</div>`;
 
       Mn = Math.min(Mn, My);
     
@@ -1107,13 +1111,13 @@ function F9_2LateralTorsionalBucklingHogging(shapeType, Fy, E, d, Sx, Iy, J, Lb)
     }
 
   } else {
-    html += `<p>For sections with continuous bracing, lateral-torsional buckling does not apply</p>`;
+    html += `<div>For sections with continuous bracing, lateral-torsional buckling does not apply</div>`;
   }
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [Mn_converted, html];
@@ -1139,36 +1143,36 @@ function F9_3FlangeLocalBucklingSagging(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf
   Mp = Mp * 12;
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    html += `<p><strong>For tee stems in tension (sagging)</strong></p>`;
+    html += `<div><strong>For tee stems in tension (sagging)</strong></div>`;
 
     if (flangeClass === 'compact') {
-      html += `<p>For sections with compact flanges, flange local buckling does not apply</p>`;
+      html += `<div>For sections with compact flanges, flange local buckling does not apply</div>`;
 
     } else {
       // elastic section modulus referred to compression flange, in.3 (mm3)
       const Sxc = Ix / y;
 
       if (flangeClass === 'noncompact') {
-        html += `<p>For sections with noncompact flanges</p>
-                 <p>Elastic section modulus referred to compression flange</p>
-                 <p>${Sxc_} = ${Ix_} / ${y_} = ${Sxc.toFixed(2)} in.<sup>3</sup></p>`;
+        html += `<div>For sections with noncompact flanges</div>
+                 <div>Elastic section modulus referred to compression flange</div>
+                 <div class="indented-line">${Sxc_} = ${Ix_} / ${y_} = ${Sxc.toFixed(2)} in.<sup>3</sup></div>`;
 
         const My = Fy * Sx;
-        html += `<p>Yield moment</p>
-                 <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+        html += `<div>Yield moment</div>
+                 <div class="indented-line">${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</div>`;
 
         Mn = Mp - (Mp - 0.7 * Fy * Sxc) * (lambdaf - lambdapf) / (lambdarf - lambdapf);
-        html += `<p>${Mn_} = ${Mp_} - (${Mp_} - 0.7 ${Fy_} ${Sxc_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in &le; 1.6 ${My_}</p>`;
+        html += `<div>${Mn_} = ${Mp_} - (${Mp_} - 0.7 ${Fy_} ${Sxc_}) (${lambdaf_} - ${lambdapf_}) / (${lambdarf_} - ${lambdapf_}) = ${Mn.toFixed(2)} k-in &le; 1.6 ${My_}</div>`;
 
         Mn = Math.min(Mn, 1.6 * My);
 
       } else if (flangeClass === 'slender') {
-        html += `<p>For sections with slender flanges</p>
-                 <p>Elastic section modulus referred to compression flange</p>
-                 <p>${Sxc_} = ${Ix_} / ${y_} = ${Sxc.toFixed(2)} in.<sup>3</sup></p>`;
+        html += `<div>For sections with slender flanges</div>
+                 <div>Elastic section modulus referred to compression flange</div>
+                 <div class="indented-line">${Sxc_} = ${Ix_} / ${y_} = ${Sxc.toFixed(2)} in.<sup>3</sup></div>`;
 
         Mn = 0.7 * E * Sxc / lambdaf**2;
-        html += `<p>${Mn_} = 0.7 ${E_} ${Sxc_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(2)} k-in</p>`;
+        html += `<div>${Mn_} = 0.7 ${E_} ${Sxc_} / ${lambdaf_}<sup>2</sup> = ${Mn.toFixed(2)} k-in</div>`;
       }
     }
   } else if (['2L'].includes(shapeType)) {
@@ -1178,7 +1182,7 @@ function F9_3FlangeLocalBucklingSagging(shapeType, Mp, Fy, E, y, Ix, Sx, lambdaf
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [Mn_converted, html];
@@ -1201,7 +1205,7 @@ function F9_4WebLocalBucklingHogging(shapeType, Fy, E, Sx, lambdaw, webClass) {
   let html = '';
 
   if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    html += `<p><strong>For tee stems in compression (hogging)</strong></p>`;
+    html += `<div><strong>For tee stems in compression (hogging)</strong></div>`;
 
     const calcTerm1 = Math.sqrt(E / Fy);
     const calcTerm1_ = `&radic;(${E_} / ${Fy_})`;
@@ -1209,25 +1213,28 @@ function F9_4WebLocalBucklingHogging(shapeType, Fy, E, Sx, lambdaw, webClass) {
     let Fcr = 0;
     if (webClass === 'compact') {
       // (1) when lambdaw ≤ 0.84 sqrt(E / Fy), compact
-      html += `<p>For sections with compact stems</p>`;
+      html += `<div>For sections with compact stems</div>`;
       Fcr = Fy;
-      html += `<p>${Fcr_} = ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+      html += `<div>Critical stress</div>
+               <div class="indented-line">${Fcr_} = ${Fy_} = ${Fcr.toFixed(2)} ksi</div>`;
 
     } else if (webClass === 'noncompact') {
       // (2) when 0.84 sqrt(E / Fy) < lambdaw ≤ 1.52 sqrt(E / Fy), noncompact
-      html += `<p>For sections with noncompact stems</p>`;
+      html += `<div>For sections with noncompact stems</div>`;
       Fcr = (1.43 - 0.515 * lambdaw / calcTerm1) * Fy;
-      html += `<p>${Fcr_} = (1.43 - 0.515 ${lambdaw_} &radic;(${Fy_} / ${E_})) ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+      html += `<div>Critical stress</div>
+               <div class="indented-line">${Fcr_} = (1.43 - 0.515 ${lambdaw_} &radic;(${Fy_} / ${E_})) ${Fy_} = ${Fcr.toFixed(2)} ksi</div>`;
 
     } else if (webClass === 'slender') {
       // (3) when lambdaw > 1.52 sqrt(E / Fy), slender
-      html += `<p>For sections with slender stems</p>`;
+      html += `<div>For sections with slender stems</div>`;
       Fcr = 1.52 * E / lambdaw**2;
-      html += `<p>${Fcr_} = 1.52 ${E_} / ${lambdaw_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</p>`;
+      html += `<div>Critical stress</div>
+               <div class="indented-line">${Fcr_} = 1.52 ${E_} / ${lambdaw_}<sup>2</sup> = ${Fcr.toFixed(2)} ksi</div>`;
     }
 
     Mn = Fcr * Sx;
-    html += `<p>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in</p>`;
+    html += `<div>${Mn_} = ${Fcr_} ${Sx_} = ${Mn.toFixed(2)} k-in</div>`;
 
   } else if (['2L'].includes(shapeType)) {
     // call function F10_3
@@ -1236,7 +1243,7 @@ function F9_4WebLocalBucklingHogging(shapeType, Fy, E, Sx, lambdaw, webClass) {
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
   if (Mn) {
-    html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+    html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
   }
 
   return [Mn_converted, html];
@@ -1251,15 +1258,15 @@ function F10_1Yielding(Fy, Sx) {
   let html = '';
 
   const My = Fy * Sx;
-  html += `<p>Yield moment</p>
-           <p>${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</p>`;
+  html += `<div>Yield moment</div>
+           <div class="indented-line">${My_} = ${Fy_} ${Sx_} = ${My.toFixed(2)} k-in</div>`;
 
   Mn = 1.5 * My;
-  html += `<p>${Mn_} = 1.5 ${My_} = ${Mn.toFixed(2)} k-in</p>`;
+  html += `<div>${Mn_} = 1.5 ${My_} = ${Mn.toFixed(2)} k-in</div>`;
 
   // convert Mn from k-in to k-ft
   const Mn_converted = Mn / 12;
-  html += `<p>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</p>`;
+  html += `<div>${Mn_} = ${Mn.toFixed(1)} k-in = ${Mn_converted.toFixed(1)} k-ft</div>`;
 
   return [phi, Mn_converted, html];
 }
