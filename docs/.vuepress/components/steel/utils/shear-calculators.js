@@ -216,69 +216,69 @@ function G2_1IShapedAndChannelWithoutTFA(shapeType, Fy, E, d, tw, lambdaw, consi
   let html = '';
 
   const Aw = d * tw;
-  html += `<p>Area of web</p>
-           <p>${Aw_} = ${d_} ${tw_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
+  html += `<div>Area of web</div>
+           <div class="indented-line">${Aw_} = ${d_} ${tw_} = ${Aw.toFixed(2)} in.<sup>2</sup></div>`;
   
   let Cv1 = 0;
   if (['W', 'M', 'S', 'HP'].includes(shapeType) && lambdaw <= 2.24 * Math.sqrt(E / Fy)) {
     phi = 1;
     Cv1 = 1;
-    html += `<p>For I-shaped members with ${lambdaw_} &le; 2.24 &radic;(${E_} / ${Fy_})</p>
-             <p>${phiv_} = ${phi.toFixed(2)}</p>
-             <p>${Cv1_} = ${Cv1.toFixed(1)}</p>
-             <p>Shear yielding governs</p>`;
+    html += `<div>For I-shaped members with ${lambdaw_} &le; 2.24 &radic;(${E_} / ${Fy_})</div>
+             <div class="indented-line">${phiv_} = ${phi.toFixed(2)}</div>
+             <div class="indented-line">${Cv1_} = ${Cv1.toFixed(1)}</div>
+             <div class="indented-line">Shear yielding governs</div>`;
   
   } else if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
     phi = 0.9;
 
     if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-      html += `<p>For I-shaped members with ${lambdaw_} &gt; 2.24 &radic;(${E_} / ${Fy_})</p>`;
+      html += `<div>For I-shaped members with ${lambdaw_} &gt; 2.24 &radic;(${E_} / ${Fy_})</div>`;
     } else if (['C', 'MC'].includes(shapeType)) {
-      html += `<p>For channels</p>`;
+      html += `<div>For channels</div>`;
     }
 
     let kv = 0;
     if (considerStiffener && a > 0) {
       const h = lambdaw * tw;
-      html += `<p>For webs with transverse stiffeners</p>
-               <p>${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</p>`;
+      html += `<div class="indented-line">Web plate shear buckling coefficient for webs with transverse stiffeners</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</div>`;
 
       if (a / h <= 3.0) {
         kv = 5 + 5 / (a / h)**2;
-        html += `<p>For ${a_} / ${h_} &le; 3.0</p>
-                 <p>${kv_} = 5 + 5 / (${a_} / ${h_})<sup>2</sup> = ${kv.toFixed(2)}</p>`;
+        html += `<div class="indented-line" style="--indented-line-level: 2;">For ${a_} / ${h_} &le; 3.0</div>
+                 <div class="indented-line" style="--indented-line-level: 2;">${kv_} = 5 + 5 / (${a_} / ${h_})<sup>2</sup> = ${kv.toFixed(2)}</div>`;
       } else {
         kv = 5.34;
-        html += `<p>For ${a_} / ${h_} &gt; 3.0</p>
-                 <p>${kv_} = 5.34</p>`;
+        html += `<div class="indented-line" style="--indented-line-level: 2;">For ${a_} / ${h_} &gt; 3.0</div>
+                 <div class="indented-line" style="--indented-line-level: 2;">${kv_} = 5.34</div>`;
       }
 
     } else {
       kv = 5.34;
-      html += `<p>For webs without transverse stiffeners</p>
-               <p>Web plate shear buckling coefficient</p>
-               <p>${kv_} = ${kv.toFixed(2)}</p>`;
+      html += `<div class="indented-line">Web plate shear buckling coefficient for webs without transverse stiffeners</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${kv_} = ${kv.toFixed(2)}</div>`;
     }
     
     const calcTerm1 = 1.10 * Math.sqrt(kv * E / Fy);
     const calcTerm1_ = `1.10 &radic;(${kv_} ${E_} / ${Fy_})`;
+    html += `<div class="indented-line">Web shear strength coefficient</div>`;
     if (lambdaw <= calcTerm1) {
       Cv1 = 1.0;
-      html += `<p>For ${lambdaw_} &le; ${calcTerm1_}</p>
-               <p>${Cv1_} = 1.0</p>
-               <p>Shear yielding governs</p>`;
+      html += `<div class="indented-line" style="--indented-line-level: 2;">For ${lambdaw_} &le; ${calcTerm1_}</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${Cv1_} = 1.0</div>
+               <div class="indented-line" style="--indented-line-level: 2;">Shear yielding governs</div>`;
 
     } else {
       Cv1 = calcTerm1 / lambdaw;
-      html += `<p>For ${lambdaw_} &gt; ${calcTerm1_}</p>
-               <p>${Cv1_} = ${calcTerm1_} / ${lambdaw_} = ${Cv1.toFixed(2)}</p>
-               <p>Shear buckling governs</p>`;
+      html += `<div class="indented-line" style="--indented-line-level: 2;">For ${lambdaw_} &gt; ${calcTerm1_}</div>
+               <div class="indented-line" style="--indented-line-level: 2;">${Cv1_} = ${calcTerm1_} / ${lambdaw_} = ${Cv1.toFixed(2)}</div>
+               <div class="indented-line" style="--indented-line-level: 2;">Shear buckling governs</div>`;
     }
   }
 
   Vn = 0.6 * Fy * Aw * Cv1;
-  html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} ${Cv1_} = ${Vn.toFixed(2)} k</p>
-           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+  html += `<div>${Vn_} = 0.6 ${Fy_} ${Aw_} ${Cv1_} = ${Vn.toFixed(2)} k</div>
+           <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
   
   return [phi, Vn, html];
 }
@@ -293,77 +293,76 @@ function G2_2IShapedAndChannelWithTFA(Fy, E, d, bf, tw, tf, lambdaw, considerSti
     phi = 0.9;
 
     const h = lambdaw * tw;
-    html += `<p>${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</p>`;
+    html += `<div>${h_} = ${lambdaw_} ${tw_} = ${h.toFixed(2)} in.</div>`;
     
     const calcTerm1 = a / h;
     const calcTerm1_ = `${a_} / ${h_}`;
 
     if (calcTerm1 > 3.0) {
-      html += `<p>Tension Field Action is not considered for ${calcTerm1_} &gt; 3</p>`;
+      html += `<div>Tension Field Action is not considered for ${calcTerm1_} &gt; 3</div>`;
 
     } else {
       const Aw = d * tw;
-      html += `<p>Area of web</p>
-               <p>${Aw_} = ${d_} ${tw_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
+      html += `<div>Area of web</div>
+               <div class="indented-line">${Aw_} = ${d_} ${tw_} = ${Aw.toFixed(2)} in.<sup>2</sup></div>`;
 
       const kv = 5 + 5 / calcTerm1**2;
-      html += `<p>Web plate shear buckling coefficient</p>
-               <p>${kv_} = 5 + 5 / (${calcTerm1_})<sup>2</sup> = ${kv.toFixed(2)}</p>`;
+      html += `<div>Web plate shear buckling coefficient</div>
+               <div class="indented-line">${kv_} = 5 + 5 / (${calcTerm1_})<sup>2</sup> = ${kv.toFixed(2)}</div>`;
 
       const calcTerm2 = 1.10 * Math.sqrt(kv * E / Fy);
       const calcTerm2_ = `1.10 &radic;(${kv_} ${E_} / ${Fy_})`;
 
       if (lambdaw <= calcTerm2) {
         Vn = 0.6 * Fy * Aw;
-        html += `<p>For ${lambdaw_} &le; ${calcTerm2_}</p>
-                 <p>Shear yielding governs</p>
-                 <p>${Vn_} = 0.6 ${Fy_} ${Aw_} = ${Vn.toFixed(2)} k</p>
-                 <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+        html += `<div>For ${lambdaw_} &le; ${calcTerm2_}</div>
+                 <div>Shear yielding governs</div>
+                 <div>${Vn_} = 0.6 ${Fy_} ${Aw_} = ${Vn.toFixed(2)} k</div>
+                 <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
       } else {
-        html += `<p>For ${lambdaw_} &gt; ${calcTerm2_}</p>`;
         const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
         html += Cv2Html;
 
         const Afc = bf * tf;
         const Aft = bf * tf;
-        html += `<p>Area of compression and tension flange</p>
-                 <p>${Afc_} = ${Aft_} = ${bf_} ${tf_} = ${Afc.toFixed(2)} in.<sup>2</sup></p>`;
+        html += `<div>Area of compression and tension flange</div>
+                 <div class="indented-line">${Afc_} = ${Aft_} = ${bf_} ${tf_} = ${Afc.toFixed(2)} in.<sup>2</sup></div>`;
 
         const bfc = bf;
         const bft = bf;
-        html += `<p>Width of compression and tension flange</p>
-                 <p>${bfc_} = ${bft_} = ${bf_} = ${bfc.toFixed(2)} in.</p>`;
+        html += `<div>Width of compression and tension flange</div>
+                 <div class="indented-line">${bfc_} = ${bft_} = ${bf_} = ${bfc.toFixed(2)} in.</div>`;
         
+        html += `<div>For ${lambdaw_} &gt; ${calcTerm2_}`;
         if (2 * Aw / (Afc + Aft) <= 2.5 && h / bfc <= 6.0 && h / bft <= 6.0) {
           Vn = 0.6 * Fy * Aw * (Cv2 + (1 - Cv2) / (1.15 * Math.sqrt(1 + calcTerm1**2)));
-          html += `<p>For 2 ${Aw_} / (${Afc_} + ${Aft_}) &le; 2.5, ${h_} / ${bfc_} &le; 6.0, and ${h_} / ${bft_} &le; 6.0</p>
-                   <p>${Vn_} = 0.6 ${Fy_} ${Aw_} (${Cv2_} + (1 - ${Cv2_}) / (1.15 &radic;(1 + (${calcTerm1_})<sup>2</sup>))) = ${Vn.toFixed(2)} k</p>
-                   <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+          html += `, 2 ${Aw_} / (${Afc_} + ${Aft_}) &le; 2.5, ${h_} / ${bfc_} &le; 6.0, and ${h_} / ${bft_} &le; 6.0</div>
+                   <div>${Vn_} = 0.6 ${Fy_} ${Aw_} (${Cv2_} + (1 - ${Cv2_}) / (1.15 &radic;(1 + (${calcTerm1_})<sup>2</sup>))) = ${Vn.toFixed(2)} k</div>
+                   <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
         } else {
           if (2 * Aw / (Afc + Aft) > 2.5) {
-            html += `<p>For 2 ${Aw_} / (${Afc_} + ${Aft_}) &gt; 2.5`;
             if (h / bfc > 6.0) {
-              html += `, ${h_} / ${bfc_} &gt; 6.0, and ${h_} / ${bft_} &gt; 6.0</p>`;
+              html += `, 2 ${Aw_} / (${Afc_} + ${Aft_}) &gt; 2.5, ${h_} / ${bfc_} &gt; 6.0, and ${h_} / ${bft_} &gt; 6.0</div>`;
             } else {
-              html += `</p>`;
+              html += ` and 2 ${Aw_} / (${Afc_} + ${Aft_}) &gt; 2.5</div>`;
             }
           } else {
             if (h / bfc > 6.0) {
-              html += `<p>For ${h_} / ${bfc_} &gt; 6.0, and ${h_} / ${bft_} &gt; 6.0</p>`;
+              html += `, ${h_} / ${bfc_} &gt; 6.0, and ${h_} / ${bft_} &gt; 6.0</div>`;
             }
           }
 
           Vn = 0.6 * Fy * Aw * (Cv2 + (1 - Cv2) / (1.15 * (calcTerm1 + Math.sqrt(1 + calcTerm1**2))));
-          html += `<p>${Vn_} = 0.6 ${Fy_} ${Aw_} (${Cv2_} + (1 - ${Cv2_}) / (1.15 (${calcTerm1_} + &radic;(1 + (${calcTerm1_})<sup>2</sup>)))) = ${Vn.toFixed(2)} k</p>
-                   <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+          html += `<div>${Vn_} = 0.6 ${Fy_} ${Aw_} (${Cv2_} + (1 - ${Cv2_}) / (1.15 (${calcTerm1_} + &radic;(1 + (${calcTerm1_})<sup>2</sup>)))) = ${Vn.toFixed(2)} k</div>
+                   <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
         }
       }
     }
 
   } else {
-    html += `To consider Tension Field Action, ${a_} must not be 0`;
+    html += `<div>To consider Tension Field Action, ${a_} must not be 0</div>`;
   }
 
   return [phi, Vn, html];
@@ -377,13 +376,13 @@ function G3Tee(Fy, E, b, t, lambdaw) {
 
   const kv = 1.2;
   const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
-  html += `<p>Web plate shear buckling coefficient</p>
-           <p>${kv_} = ${kv.toFixed(1)}</p>`;
+  html += `<div>Web plate shear buckling coefficient</div>
+           <div class="indented-line">${kv_} = ${kv.toFixed(1)}</div>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * b * t * Cv2;
-  html += `<p>${Vn_} = 0.6 ${Fy_} ${d_} ${tw_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
-           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+  html += `<div>${Vn_} = 0.6 ${Fy_} ${d_} ${tw_} ${Cv2_} = ${Vn.toFixed(2)} k</div>
+           <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
   return [phi, Vn, html];
 }
@@ -397,21 +396,21 @@ function G4RectangularHollowSection(axis, Fy, E, h, t, lambda) {
   let hshear_ = axis === 'x' ? h_ : b_;
   let Ashear_ = axis === 'x' ? Aw_ : Af_;
 
-  html += `<p>Area of ${axis === 'x' ? 'web' : 'flange'}</p>`;
+  html += `<div>Area of ${axis === 'x' ? 'web' : 'flange'}</div>`;
 
   const Aw = 2 * h * t;
-  html += `<p>${hshear_} = ${h.toFixed(2)} in.</p>
-           <p>${Ashear_} = 2 ${hshear_} ${tdes_} = ${Aw.toFixed(2)} in.<sup>2</sup></p>`;
+  html += `<div class="indented-line">${hshear_} = ${h.toFixed(2)} in.</div>
+           <div class="indented-line">${Ashear_} = 2 ${hshear_} ${tdes_} = ${Aw.toFixed(2)} in.<sup>2</sup></div>`;
 
   const kv = 5;
   const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda);
-  html += `<p>Web plate shear buckling coefficient</p>
-           <p>${kv_} = ${kv.toFixed(0)}</p>`;
+  html += `<div>Web plate shear buckling coefficient</div>
+           <div class="indented-line">${kv_} = ${kv.toFixed(0)}</div>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * Aw * Cv2;
-  html += `<p>${Vn_} = 0.6 ${Fy_} ${Ashear_} ${Cv2_} = ${Vn.toFixed(2)} k</p>
-           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+  html += `<div>${Vn_} = 0.6 ${Fy_} ${Ashear_} ${Cv2_} = ${Vn.toFixed(2)} k</div>
+           <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
   return [phi, Vn, html];
 }
@@ -424,28 +423,28 @@ function G5CircularHollowSection(Fy, E, Ag, D, lambda, Lv) {
 
   let Fcr1 = 0;
   let Fcr2 = 0;
-  html += `<p>Critical stress</p>`;
+  html += `<div>Critical stress</div>`;
   if (Lv > 0) {
     Fcr1 = 1.60 * E / (Math.sqrt(Lv / D) * lambda**(5 / 4));
-    html += `<p>${Fcr_} = 1.60 ${E_} / (&radic;(${Lv_} / ${OD_}) ${lambda_}<sup>5 / 4</sup>) = ${Fcr1.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">${Fcr_} = 1.60 ${E_} / (&radic;(${Lv_} / ${OD_}) ${lambda_}<sup>5 / 4</sup>) = ${Fcr1.toFixed(2)} ksi</div>`;
   }
   Fcr2 = 0.78 * E / lambda**(3 / 2);
-  html += `<p>${Fcr_} = 0.78 ${E_} / ${lambda_}<sup>3 / 2</sup> = ${Fcr2.toFixed(2)} ksi</p>`;
+  html += `<div class="indented-line">${Fcr_} = 0.78 ${E_} / ${lambda_}<sup>3 / 2</sup> = ${Fcr2.toFixed(2)} ksi</div>`;
 
   let Fcr = Math.max(Fcr1, Fcr2);
-  html += `<p>${Fcr_} = ${Fcr.toFixed(2)} ksi &le; 0.6 ${Fy_}</p>`;
+  html += `<div class="indented-line">${Fcr_} = ${Fcr.toFixed(2)} ksi &le; 0.6 ${Fy_}</div>`;
 
   if (Fcr <= 0.6 * Fy) {
-    html += `<p>Shear buckling governs</p>`;
+    html += `<div class="indented-line">Shear buckling governs</div>`;
   } else {
     Fcr = 0.6 * Fy;
-    html += `<p>Shear yielding governs</p>
-             <p>${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</p>`;
+    html += `<div class="indented-line">Shear yielding governs</div>
+             <div class="indented-line">${Fcr_} = 0.6 ${Fy_} = ${Fcr.toFixed(2)} ksi</div>`;
   }
 
   Vn = Fcr * Ag / 2;
-  html += `<p>${Vn_} = ${Fcr_} ${Ag_} / 2 = ${Vn.toFixed(2)} k</p>
-           <p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+  html += `<div>${Vn_} = ${Fcr_} ${Ag_} / 2 = ${Vn.toFixed(2)} k</div>
+           <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
   return [phi, Vn, html];
 }
@@ -458,19 +457,19 @@ function G6DoublyAndSinglySymmetricShape(shapeType, Fy, E, bf, tf, lambdaf) {
 
   const kv = 1.2;
   const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('y', Fy, E, kv, lambdaf);
-  html += `<p>Web plate shear buckling coefficient</p>
-           <p>${kv_} = ${kv.toFixed(1)}</p>`;
+  html += `<div>Web plate shear buckling coefficient</div>
+           <div class="indented-line">${kv_} = ${kv.toFixed(1)}</div>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * bf * tf * Cv2;
-  html += `<p>For each shear resisting element</p>
-           <p>${Vn_} = 0.6 ${Fy_} ${bf_} ${tf_} ${Cv2_} = ${Vn.toFixed(2)} k</p>`;
+  html += `<div>For each shear resisting element</div>
+           <div class="indented-line">${Vn_} = 0.6 ${Fy_} ${bf_} ${tf_} ${Cv2_} = ${Vn.toFixed(2)} k</div>`;
   
   if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
     Vn *= 2;
-    html += `<p>${Vn_} = 2 ${Vn_} = ${Vn.toFixed(2)} k</p>`;
+    html += `<div>${Vn_} = 2 ${Vn_} = ${Vn.toFixed(2)} k</div>`;
   }
-  html += `<p>${Vn_} = ${Vn.toFixed(1)} k</p>`;
+  html += `<div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
   return [phi, Vn, html];
 }
@@ -478,7 +477,7 @@ function G6DoublyAndSinglySymmetricShape(shapeType, Fy, E, bf, tf, lambdaf) {
 // Web Shear Buckling Coefficient, Cv2, Calculator
 function webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda) {
   let Cv2 = 0;
-  let html = '<p>Web shear buckling coefficient</p>';
+  let html = '<div>Web shear buckling coefficient</div>';
 
   let lambdawf_ = axis === 'x' ? lambdaw_ : lambdaf_;
 
@@ -487,21 +486,21 @@ function webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda) {
 
   if (lambda <= 1.10 * calcTerm1) {
     Cv2 = 1.0;
-    html += `<p>For ${lambdawf_} &le; 1.10 ${calcTerm1_}</p>
-             <p>${Cv2_} = ${Cv2.toFixed(1)}</p>
-             <p>Shear yielding governs</p>`;
+    html += `<div class="indented-line">For ${lambdawf_} &le; 1.10 ${calcTerm1_}</div>
+             <div class="indented-line">${Cv2_} = ${Cv2.toFixed(1)}</div>
+             <div class="indented-line">Shear yielding governs</div>`;
 
   } else if (lambda <= 1.37 * calcTerm1) {
     Cv2 = 1.10 * calcTerm1 / lambda;
-    html += `<p>For 1.10 ${calcTerm1_} &lt; ${lambdawf_} &le; 1.37 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.10 ${calcTerm1_} / ${lambdawf_} = ${Cv2.toFixed(2)}</p>
-             <p>Shear buckling governs</p>`;
+    html += `<div class="indented-line">For 1.10 ${calcTerm1_} &lt; ${lambdawf_} &le; 1.37 ${calcTerm1_}</div>
+             <div class="indented-line">${Cv2_} = 1.10 ${calcTerm1_} / ${lambdawf_} = ${Cv2.toFixed(2)}</div>
+             <div class="indented-line">Shear buckling governs</div>`;
 
   } else {
     Cv2 = 1.51 * kv * E / (lambda**2 * Fy);
-    html += `<p>For ${lambdawf_} &gt; 1.37 ${calcTerm1_}</p>
-             <p>${Cv2_} = 1.51 ${kv_} ${E_} / (${lambdawf_}<sup>2</sup> ${Fy_}) = ${Cv2.toFixed(2)}</p>
-             <p>Shear buckling governs</p>`;
+    html += `<div class="indented-line">For ${lambdawf_} &gt; 1.37 ${calcTerm1_}</div>
+             <div class="indented-line">${Cv2_} = 1.51 ${kv_} ${E_} / (${lambdawf_}<sup>2</sup> ${Fy_}) = ${Cv2.toFixed(2)}</div>
+             <div class="indented-line">Shear buckling governs</div>`;
   }
 
   return [Cv2, html];
