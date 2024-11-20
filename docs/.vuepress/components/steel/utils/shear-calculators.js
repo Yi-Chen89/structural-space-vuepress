@@ -1,4 +1,10 @@
 import { Fy_, Fu_, E_, G_ } from '../constants/variable-html';
+import { W_, A_ } from '../constants/variable-html';
+import { d_, Ht_, h_, OD_, bf_, B_, b_, ID_, tw_, tf_, t_, tdes_, kdes_ } from '../constants/variable-html';
+import { x_, y_, eo_, xp_, yp_ } from '../constants/variable-html';
+import { Ix_, Zx_, Sx_, rx_, Iy_, Zy_, Sy_, ry_, Iz_, rz_, Sz_, J_, Cw_, C_ } from '../constants/variable-html';
+import { ro_, H_ } from '../constants/variable-html';
+import { rts_, ho_ } from '../constants/variable-html';
 
 import { resultRenderDataConstructor } from './render-data-constructors';
 
@@ -510,42 +516,7 @@ function webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda) {
 
 
 // html notation
-// database variable notation
-const W_ = 'W';
-const A_ = 'A';
-const d_ = 'd';
-const Ht_ = 'Ht';
-const h_ = 'h';
-const OD_ = 'OD';
-const bf_ = 'b<sub>f</sub>';
-const B_ = 'B';
-const b_ = 'b';
-const ID_ = 'ID';
-const tw_ = 't<sub>w</sub>';
-const tf_ = 't<sub>f</sub>';
-const t_ = 't';
-const tdes_ = 't<sub>des</sub>';
-const y_ = 'y';
-const Ix_ = 'I<sub>x</sub>';
-const Zx_ = 'Z<sub>x</sub>';
-const Sx_ = 'S<sub>x</sub>';
-const rx_ = 'r<sub>x</sub>';
-const Iy_ = 'I<sub>y</sub>';
-const Zy_ = 'Z<sub>y</sub>';
-const Sy_ = 'S<sub>y</sub>';
-const ry_ = 'r<sub>y</sub>';
-const Iz_ = 'I<sub>z</sub>';
-const rz_ = 'r<sub>z</sub>';
-const Sz_ = 'S<sub>z</sub>';
-const J_ = 'J';
-const Cw_ = 'C<sub>w</sub>';
-const C_ = 'C';
-const rts_ = 'r<sub>ts</sub>';
-const ho_ = 'h<sub>o</sub>';
-
-
 const Lv_ = 'L<sub>v</sub>';
-
 
 const Fcr_ = 'F<sub>cr</sub>';
 
@@ -562,7 +533,6 @@ const Aft_ = 'A<sub>ft</sub>';
 
 const bfc_ = 'b<sub>fc</sub>';
 const bft_ = 'b<sub>ft</sub>';
-
 
 const Vn_ = 'V<sub>n</sub>';
 

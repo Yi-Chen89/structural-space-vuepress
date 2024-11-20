@@ -43,5 +43,8 @@ export const J_ = 'J';
 export const Cw_ = 'C<sub>w</sub>';
 export const C_ = 'C';
 
+export const ro_ = 'r<sub>o</sub>';
+export const H_ = 'H';
+
 export const rts_ = 'r<sub>ts</sub>';
 export const ho_ = 'h<sub>o</sub>';
