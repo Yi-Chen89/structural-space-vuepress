@@ -5,6 +5,7 @@ import { x_, y_, eo_, xp_, yp_ } from '../constants/variable-html';
 import { Ix_, Zx_, Sx_, rx_, Iy_, Zy_, Sy_, ry_, Iz_, rz_, Sz_, J_, Cw_, C_ } from '../constants/variable-html';
 import { ro_, H_ } from '../constants/variable-html';
 import { rts_, ho_ } from '../constants/variable-html';
+import { lambda_, lambdap_, lambdar_, lambdaf_, lambdapf_, lambdarf_, lambdaw_, lambdapw_, lambdarw_ } from '../constants/variable-html';
 
 import { resultRenderDataConstructor } from './render-data-constructors';
 
@@ -1293,13 +1294,7 @@ const Lp_ = 'L<sub>p</sub>';
 const Lr_ = 'L<sub>r</sub>';
 const Cb_ = 'C<sub>b</sub>';
 const Fcr_ = 'F<sub>cr</sub>';
-const lambda_ = '&lambda;';
-const lambdaf_ = '&lambda;<sub>f</sub>';
-const lambdapf_ = '&lambda;<sub>pf</sub>';
-const lambdarf_ = '&lambda;<sub>rf</sub>';
-const lambdaw_ = '&lambda;<sub>w</sub>';
-const lambdapw_ = '&lambda;<sub>pw</sub>';
-const lambdarw_ = '&lambda;<sub>rw</sub>';
+
 const be_ = 'b<sub>e</sub>';
 const he_ = 'h<sub>e</sub>';
 const Ixe_ = 'I<sub>x,e</sub>';

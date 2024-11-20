@@ -5,6 +5,7 @@ import { x_, y_, eo_, xp_, yp_ } from '../constants/variable-html';
 import { Ix_, Zx_, Sx_, rx_, Iy_, Zy_, Sy_, ry_, Iz_, rz_, Sz_, J_, Cw_, C_ } from '../constants/variable-html';
 import { ro_, H_ } from '../constants/variable-html';
 import { rts_, ho_ } from '../constants/variable-html';
+import { lambda_, lambdap_, lambdar_, lambdaf_, lambdapf_, lambdarf_, lambdaw_, lambdapw_, lambdarw_ } from '../constants/variable-html';
 
 import { resultRenderDataConstructor } from './render-data-constructors';
 
@@ -535,9 +536,5 @@ const bfc_ = 'b<sub>fc</sub>';
 const bft_ = 'b<sub>ft</sub>';
 
 const Vn_ = 'V<sub>n</sub>';
-
-const lambda_ = '&lambda;';
-const lambdaf_ = '&lambda;<sub>f</sub>';
-const lambdaw_ = '&lambda;<sub>w</sub>';
 
 const phiv_ = '&phi;<sub>v</sub>';

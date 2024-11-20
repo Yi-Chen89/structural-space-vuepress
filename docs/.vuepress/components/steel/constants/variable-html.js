@@ -48,3 +48,14 @@ export const H_ = 'H';
 
 export const rts_ = 'r<sub>ts</sub>';
 export const ho_ = 'h<sub>o</sub>';
+
+// slenderness variable notation
+export const lambda_ = '&lambda;';
+export const lambdap_ = '&lambda;<sub>p</sub>';
+export const lambdar_ = '&lambda;<sub>r</sub>';
+export const lambdaf_ = '&lambda;<sub>f</sub>';
+export const lambdapf_ = '&lambda;<sub>pf</sub>';
+export const lambdarf_ = '&lambda;<sub>rf</sub>';
+export const lambdaw_ = '&lambda;<sub>w</sub>';
+export const lambdapw_ = '&lambda;<sub>pw</sub>';
+export const lambdarw_ = '&lambda;<sub>rw</sub>';
