@@ -1,3 +1,5 @@
+import { Fy_, Fu_, E_, G_ } from '../constants/variable-html';
+
 import { resultRenderDataConstructor } from './render-data-constructors';
 
 // A360 Chapter F
@@ -1279,11 +1281,6 @@ function F10_1Yielding(Fy, Sx) {
 
 
 // html notation
-// material notation
-const Fy_ = 'F<sub>y</sub>';
-const Fu_ = 'F<sub>u</sub>';
-const E_ = 'E';
-const G_ = 'G';
 // database variable notation
 const W_ = 'W';
 const A_ = 'A';

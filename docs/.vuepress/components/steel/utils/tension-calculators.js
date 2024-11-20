@@ -1,3 +1,5 @@
+import { Fy_, Fu_, E_, G_ } from '../constants/variable-html';
+
 import { resultRenderDataConstructor } from './render-data-constructors';
 
 // A360 Chapter D
@@ -114,17 +116,12 @@ function effectiveNetAreaCalculator(Ag) {
   Ae = 0.75 * Ag;
   html += `<div>Effective net area</div>
            <div class="indented-line">${Ae_} = 0.75 ${Ag_} = ${Ae.toFixed(2)} in.<sup>2</sup></div>`;
-  
+
   return [Ae, html];
 }
 
 
 // html notation
-// material notation
-const Fy_ = 'F<sub>y</sub>';
-const Fu_ = 'F<sub>u</sub>';
-const E_ = 'E';
-const G_ = 'G';
 // database variable notation
 const W_ = 'W';
 const A_ = 'A';
