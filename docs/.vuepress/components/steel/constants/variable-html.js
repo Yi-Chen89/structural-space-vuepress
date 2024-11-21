@@ -59,3 +59,10 @@ export const lambdarf_ = '&lambda;<sub>rf</sub>';
 export const lambdaw_ = '&lambda;<sub>w</sub>';
 export const lambdapw_ = '&lambda;<sub>pw</sub>';
 export const lambdarw_ = '&lambda;<sub>rw</sub>';
+
+// nominal strength variable notation
+export const Pn_ = 'P<sub>n</sub>';
+export const Mp_ = 'M<sub>p</sub>';
+export const Mn_ = 'M<sub>n</sub>';
+export const Vn_ = 'V<sub>n</sub>';
+export const Tn_ = 'T<sub>n</sub>';

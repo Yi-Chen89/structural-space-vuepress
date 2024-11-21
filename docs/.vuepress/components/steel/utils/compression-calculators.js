@@ -6,6 +6,7 @@ import { Ix_, Zx_, Sx_, rx_, Iy_, Zy_, Sy_, ry_, Iz_, rz_, Sz_, J_, Cw_, C_ } fr
 import { ro_, H_ } from '../constants/variable-html';
 import { rts_, ho_ } from '../constants/variable-html';
 import { lambda_, lambdap_, lambdar_, lambdaf_, lambdapf_, lambdarf_, lambdaw_, lambdapw_, lambdarw_ } from '../constants/variable-html';
+import { Pn_, Mp_, Mn_, Vn_, Tn_ } from '../constants/variable-html';
 
 import { resultRenderDataConstructor } from './render-data-constructors';
 
@@ -659,5 +660,3 @@ const Fel_ = 'F<sub>el</sub>';
 
 const Ag_ = 'A<sub>g</sub>';
 const Ae_ = 'A<sub>e</sub>';
-
-const Pn_ = 'P<sub>n</sub>';
