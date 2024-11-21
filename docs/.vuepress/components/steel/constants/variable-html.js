@@ -60,6 +60,16 @@ export const lambdaw_ = '&lambda;<sub>w</sub>';
 export const lambdapw_ = '&lambda;<sub>pw</sub>';
 export const lambdarw_ = '&lambda;<sub>rw</sub>';
 
+// member length variable notation
+export const Lcx_ = 'L<sub>cx</sub>';
+export const Lcy_ = 'L<sub>cy</sub>';
+export const Lcz_ = 'L<sub>cz</sub>';
+export const Lb_ = 'L<sub>b</sub>';
+export const Lp_ = 'L<sub>p</sub>';
+export const Lr_ = 'L<sub>r</sub>';
+export const Lv_ = 'L<sub>v</sub>';
+export const L_ = 'L';
+
 // nominal strength variable notation
 export const Pn_ = 'P<sub>n</sub>';
 export const Mp_ = 'M<sub>p</sub>';

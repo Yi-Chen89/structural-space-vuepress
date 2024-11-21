@@ -6,6 +6,7 @@ import { Ix_, Zx_, Sx_, rx_, Iy_, Zy_, Sy_, ry_, Iz_, rz_, Sz_, J_, Cw_, C_ } fr
 import { ro_, H_ } from '../constants/variable-html';
 import { rts_, ho_ } from '../constants/variable-html';
 import { lambda_, lambdap_, lambdar_, lambdaf_, lambdapf_, lambdarf_, lambdaw_, lambdapw_, lambdarw_ } from '../constants/variable-html';
+import { Lcx_, Lcy_, Lcz_, Lb_, Lp_, Lr_, Lv_, L_ } from '../constants/variable-html';
 import { Pn_, Mp_, Mn_, Vn_, Tn_ } from '../constants/variable-html';
 
 import { resultRenderDataConstructor } from './render-data-constructors';
@@ -639,10 +640,6 @@ function capacityCalculator(Fcr, A, areaType) {
 
 
 // html notation
-const Lcx_ = 'L<sub>cx</sub>';
-const Lcy_ = 'L<sub>cy</sub>';
-const Lcz_ = 'L<sub>cz</sub>';
-
 const Fe_ = 'F<sub>e</sub>';
 const Fex_ = 'F<sub>ex</sub>';
 const Fey_ = 'F<sub>ey</sub>';

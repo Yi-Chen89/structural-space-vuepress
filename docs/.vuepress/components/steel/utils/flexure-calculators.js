@@ -6,6 +6,7 @@ import { Ix_, Zx_, Sx_, rx_, Iy_, Zy_, Sy_, ry_, Iz_, rz_, Sz_, J_, Cw_, C_ } fr
 import { ro_, H_ } from '../constants/variable-html';
 import { rts_, ho_ } from '../constants/variable-html';
 import { lambda_, lambdap_, lambdar_, lambdaf_, lambdapf_, lambdarf_, lambdaw_, lambdapw_, lambdarw_ } from '../constants/variable-html';
+import { Lcx_, Lcy_, Lcz_, Lb_, Lp_, Lr_, Lv_, L_ } from '../constants/variable-html';
 import { Pn_, Mp_, Mn_, Vn_, Tn_ } from '../constants/variable-html';
 
 import { resultRenderDataConstructor } from './render-data-constructors';
@@ -1290,9 +1291,6 @@ function F10_1Yielding(Fy, Sx) {
 
 // html notation
 // flexure calc variable notation
-const Lb_ = 'L<sub>b</sub>';
-const Lp_ = 'L<sub>p</sub>';
-const Lr_ = 'L<sub>r</sub>';
 const Cb_ = 'C<sub>b</sub>';
 const Fcr_ = 'F<sub>cr</sub>';
 
