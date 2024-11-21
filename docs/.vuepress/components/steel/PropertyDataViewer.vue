@@ -1,27 +1,26 @@
 <template>
-  <div>
-    <h2 style="display: flex; justify-content: space-between; align-items: center;">
+  <div class="property-data-container">
+    <h2 class="section-title">
       <span>{{ title }}</span>
-      <span
+      <span class="section-title-button"
         v-html="contentDisplayLocal === '-' ? '&minus;' : '&plus;'"
-        style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
         @click="toggleContentDisplay">
       </span>
     </h2>
 
     <div v-if="contentDisplayLocal === '-'">
-      <div style="font-size: 1.1em;"><strong>{{ subtitle }}</strong></div>
+      <div class="subsection-title-large">{{ subtitle }}</div>
 
       <div v-for="(renderData, index) in renderDataList" :key="index">
-        <p><strong>{{ sectionTitles[index] }}</strong></p>
+        <div class="subsection-title-small">{{ sectionTitles[index] }}</div>
 
-        <div style="margin-left: 1em;">
+        <div class="indented-container">
           <div v-for="(item, key) in renderData" :key="key">
-            <p>
+            <div>
               <span v-html="item.notation" :title="item.description"></span>
               <span> = {{ item.value }}&nbsp;</span>
               <span v-html="item.unit"></span>
-            </p>
+            </div>
           </div>
         </div>
       </div>

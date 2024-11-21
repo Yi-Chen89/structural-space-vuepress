@@ -1,6 +1,6 @@
 // html notation
 
-// material notation
+// material variable notation
 export const Fy_ = 'F<sub>y</sub>';
 export const Fu_ = 'F<sub>u</sub>';
 export const E_ = 'E';
