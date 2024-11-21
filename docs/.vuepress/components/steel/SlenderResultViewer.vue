@@ -1,74 +1,83 @@
 <template>
-  <div>
-    <h2 style="display: flex; justify-content: space-between; align-items: center;">
+  <div class="slender-result-container">
+    <h2 class="section-title">
       <span>{{ title }}</span>
-      <span
+      <span class="section-title-button"
         v-html="contentDisplayLocal === '-' ? '&minus;' : '&plus;'"
-        style="font-size: 0.9em; font-weight: normal; cursor: pointer;"
         @click="toggleContentDisplay">
       </span>
     </h2>
 
     <div v-if="contentDisplayLocal === '-'">
       <div>
-        <p style="font-size: 1.2em;"><strong>Element Width-to-Thickness Ratio</strong></p>
+        <div class="subsection-title-large">Element Width-to-Thickness Ratio</div>
 
         <div v-for="(item, key) in axialSlenderClass" :key="key">
           <div v-if="item.isApplicable">
-            <div style="margin-left: 1em;">
-              <p>
+            <div class="indented-container">
+              <div>
                 <span>{{ item.notation }}:&emsp;</span>
                 <span v-html="item.ratio.notation"></span> = <span v-html="item.ratio.html"></span>
-              </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div v-if="compressionDisplay">
-        <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
+        <div class="subsection-title-large">Subject to Axial Compression</div>
 
-        <div v-for="(item, key) in axialSlenderClass" :key="key">
-          <div v-if="item.isApplicable">
-            <p>
-              <strong>{{ item.notation }}</strong>
-            </p>
-            <div style="margin-left: 1em;">
-              <p>
-                <span>Nonslender Limiting Ratio:&emsp;</span>
-                <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
-              </p>
-              <p>
-                <strong>{{ item.notation }} is {{ item.class }}</strong>
-              </p>
+        <div class="indented-container">
+          <div v-for="(item, key) in axialSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
+              <div class="subsection-title-small">
+                {{ item.notation }}
+              </div>
+              <div class="indented-container">
+                <div>
+                  <span>Nonslender Limiting Ratio:&emsp;</span>
+                  <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
+                </div>
+                <div class="final-result">
+                  {{ item.notation }} is {{ item.class }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div v-if="flexureDisplay">
-        <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
+        <div class="subsection-title-large">Subject to Flexure</div>
         
-        <div v-for="(item, key) in flexureSlenderClass" :key="key">
-          <div v-if="item.isApplicable">
-            <p>
-              <strong>{{ item.notation }}</strong>
-            </p>
-            <div style="margin-left: 1em;">
-              <p>
-                <span>Compact Limiting Ratio:&emsp;</span>
-                <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
-              </p>
-              <p>
-                <span>Noncompact Limiting Ratio:&emsp;</span>
-                <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
-              </p>
-              <div v-if="shapeType === 'HSS Rect.'">
-                <p><strong>{{ item.notation }} is {{ item.class[0] }}</strong> (major axis bending)</p>
-                <p><strong>{{ item.notation }} is {{ item.class[1] }}</strong> (minor axis bending)</p>
+        <div class="indented-container">
+          <div v-for="(item, key) in flexureSlenderClass" :key="key">
+            <div v-if="item.isApplicable">
+              <div class="subsection-title-small">
+                {{ item.notation }}
               </div>
-              <div v-else>
-                <p><strong>{{ item.notation }} is {{ item.class[0] }}</strong></p>
+              <div class="indented-container">
+                <div>
+                  <span>Compact Limiting Ratio:&emsp;</span>
+                  <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
+                </div>
+                <div>
+                  <span>Noncompact Limiting Ratio:&emsp;</span>
+                  <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
+                </div>
+                <div v-if="shapeType === 'HSS Rect.'">
+                  <div class="final-result">
+                    {{ item.notation }} is {{ item.class[0] }} (major axis bending)
+                  </div>
+                  <div class="final-result">
+                    {{ item.notation }} is {{ item.class[1] }} (minor axis bending)
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="final-result">
+                    {{ item.notation }} is {{ item.class[0] }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -78,30 +87,30 @@
 
     <div v-else>
       <div v-if="compressionDisplay">
-        <p style="font-size: 1.2em;"><strong>Subject to Axial Compression</strong></p>
+        <div class="subsection-title-large">Subject to Axial Compression</div>
 
         <div v-for="(item, key) in axialSlenderClass" :key="key">
           <div v-if="item.isApplicable">
-            <div style="margin-left: 1em;">
-              <p>
+            <div class="indented-container">
+              <div>
                 {{ item.notation }} is {{ item.class }}
-              </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
       <div v-if="flexureDisplay">
-        <p style="font-size: 1.2em;"><strong>Subject to Flexure</strong></p>
+        <div class="subsection-title-large">Subject to Flexure</div>
         
         <div v-for="(item, key) in flexureSlenderClass" :key="key">
           <div v-if="item.isApplicable">
-            <div style="margin-left: 1em;">
+            <div class="indented-container">
               <div v-if="shapeType === 'HSS Rect.'">
-                <p>{{ item.notation }} is {{ item.class[0] }} (major) and {{ item.class[1] }} (minor)</p>
+                <div>{{ item.notation }} is {{ item.class[0] }} (major) and {{ item.class[1] }} (minor)</div>
               </div>
               <div v-else>
-                <p>{{ item.notation }} is {{ item.class[0] }}</p>
+                <div>{{ item.notation }} is {{ item.class[0] }}</div>
               </div>
             </div>
           </div>
