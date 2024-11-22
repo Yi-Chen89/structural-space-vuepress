@@ -147,7 +147,7 @@
             :unit="'in.'"
             @updateValidatedValue="validatedNumberHandler"
           />
-        
+          
           <NumberInputField
             v-if="maxToZeroShearDistanceInputDisplay"
             type="nonnegative"
@@ -177,6 +177,27 @@
           />
         </div>
       </div>
+    </div>
+
+    <div>
+      <SummaryViewer
+        v-if="summaryDisplay"
+        type="summary"
+        title="Summary"
+        :shape="selectedShape"
+        :grade="selectedGradeDesig"
+        :calcTitles="['Tensile Strength', 'Compressive Strength', 'Flexural Strength', 'Shear Strength', 'Torsional Strength']"
+        :calcDisplays="[tensionCalcDisplay, compressionCalcDisplay, flexureCalcDisplay, shearCalcDisplay, torsionCalcDisplay]"
+        :calcCriticalCapacities="[
+          [selectedShapeTensionCriticalCapacity],
+          [selectedShapeCompressionCriticalCapacity],
+          [selectedShapeMajorFlexureCriticalCapacity, selectedShapeMinorFlexureCriticalCapacity],
+          [selectedShapeMajorShearCriticalCapacity, selectedShapeMinorShearCriticalCapacity],
+          [selectedShapeTorsionCriticalCapacity]
+        ]"
+        :contentDisplay="summaryContentDisplay"
+        @updateContentDisplay="summaryContentDisplayHandler"
+      />
     </div>
 
     <div>
@@ -321,6 +342,7 @@
   import MultiSelector from '../common/MultiSelector.vue';
   import NumberInputField from '../common/NumberInputField.vue';
 
+  import SummaryViewer from './SummaryViewer.vue';
   import PropertyDataViewer from './PropertyDataViewer.vue';
   import SlenderResultViewer from './SlenderResultViewer.vue';
   import StrengthResultViewer from './StrengthResultViewer.vue';
@@ -333,6 +355,7 @@
       NumberInputField,
 
       // steel component
+      SummaryViewer,
       PropertyDataViewer,
       SlenderResultViewer,
       StrengthResultViewer,
@@ -378,6 +401,7 @@
         shapeTypeSelectionDisplay: true,
 
         // content display variable
+        summaryContentDisplay: '-',
         shapeDataContentDisplay: '-',
         gradeDataContentDisplay: '-',
         slenderClassContentDisplay: '-',
@@ -568,6 +592,10 @@
 
       // output display variable
 
+      summaryDisplay() {
+        return this.tensionCalcDisplay || this.compressionCalcDisplay || this.flexureCalcDisplay || this.shearCalcDisplay || this.torsionCalcDisplay;
+      },
+
       shapeDataDisplay() {
         return this.selectedShapeValid;
       },
@@ -589,7 +617,7 @@
       },
 
       tensionCalcDisplay() {
-        return this.tensionCalcValid && this.tensionCalcSelected;;
+        return this.tensionCalcValid && this.tensionCalcSelected;
       },
 
       compressionCalcDisplay() {
@@ -605,7 +633,7 @@
       },
 
       torsionCalcDisplay() {
-        return this.torsionCalcValid && this.torsionCalcSelected;;
+        return this.torsionCalcValid && this.torsionCalcSelected;
       },
 
       // calc variable
@@ -703,10 +731,6 @@
     },
 
     methods: {
-      showSlenderClassContent() {
-        this.slenderClassContentDisplay = this.slenderClassContentDisplay === '-' ? '+' : '-';
-      },
-
       validatedNumberHandler({ id, value }) {
         if (id === 'effectiveLengthX') {
           this.validatedEffectiveLengthX = value * 12;
@@ -725,6 +749,10 @@
         } else if (id === 'memberLength') {
           this.validatedMemberLength = value * 12;
         }
+      },
+
+      summaryContentDisplayHandler({ contentDisplay }) {
+        this.summaryContentDisplay = contentDisplay;
       },
 
       dataContentDisplayHandler({ type, contentDisplay }) {
@@ -765,6 +793,7 @@
         this.validatedMaxToZeroShearDistance = 0;
         this.validatedMemberLength = 0;
 
+        this.summaryContentDisplay = '-';
         this.shapeDataContentDisplay = '-';
         this.gradeDataContentDisplay = '-';
         this.slenderClassContentDisplay = '-';
