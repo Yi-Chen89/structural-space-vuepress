@@ -1,11 +1,11 @@
 <template>
   <div>
-    <p v-for="option in options" :key="option.value">
+    <div v-for="option in options" :key="option.value">
       <label>
         <input type="checkbox" :value="option.value" v-model="selectedLocal" />
-        {{ option.label }}
+        <span>&emsp;{{ option.label }}</span>
       </label>
-    </p>
+    </div>
   </div>
 </template>
   

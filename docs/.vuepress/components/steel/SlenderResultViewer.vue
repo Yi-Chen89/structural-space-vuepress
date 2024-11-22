@@ -27,20 +27,18 @@
       <div v-if="compressionDisplay">
         <div class="subsection-title-large">Subject to Axial Compression</div>
 
-        <div class="indented-container">
-          <div v-for="(item, key) in axialSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <div class="subsection-title-small">
-                {{ item.notation }}
+        <div v-for="(item, key) in axialSlenderClass" :key="key">
+          <div v-if="item.isApplicable">
+            <div class="subsection-title-small">
+              {{ item.notation }}
+            </div>
+            <div class="indented-container">
+              <div>
+                <span>Nonslender Limiting Ratio:&emsp;</span>
+                <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
               </div>
-              <div class="indented-container">
-                <div>
-                  <span>Nonslender Limiting Ratio:&emsp;</span>
-                  <span v-html="item.limit.notation"></span> = <span v-html="item.limit.html"></span>
-                </div>
-                <div class="final-result">
-                  {{ item.notation }} is {{ item.class }}
-                </div>
+              <div class="final-result">
+                {{ item.notation }} is {{ item.class }}
               </div>
             </div>
           </div>
@@ -50,33 +48,31 @@
       <div v-if="flexureDisplay">
         <div class="subsection-title-large">Subject to Flexure</div>
         
-        <div class="indented-container">
-          <div v-for="(item, key) in flexureSlenderClass" :key="key">
-            <div v-if="item.isApplicable">
-              <div class="subsection-title-small">
-                {{ item.notation }}
+        <div v-for="(item, key) in flexureSlenderClass" :key="key">
+          <div v-if="item.isApplicable">
+            <div class="subsection-title-small">
+              {{ item.notation }}
+            </div>
+            <div class="indented-container">
+              <div>
+                <span>Compact Limiting Ratio:&emsp;</span>
+                <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
               </div>
-              <div class="indented-container">
-                <div>
-                  <span>Compact Limiting Ratio:&emsp;</span>
-                  <span v-html="item.limit.compact.notation"></span> = <span v-html="item.limit.compact.html"></span>
+              <div>
+                <span>Noncompact Limiting Ratio:&emsp;</span>
+                <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
+              </div>
+              <div v-if="shapeType === 'HSS Rect.'">
+                <div class="final-result">
+                  {{ item.notation }} is {{ item.class[0] }} (major axis bending)
                 </div>
-                <div>
-                  <span>Noncompact Limiting Ratio:&emsp;</span>
-                  <span v-html="item.limit.noncompact.notation"></span> = <span v-html="item.limit.noncompact.html"></span>
+                <div class="final-result">
+                  {{ item.notation }} is {{ item.class[1] }} (minor axis bending)
                 </div>
-                <div v-if="shapeType === 'HSS Rect.'">
-                  <div class="final-result">
-                    {{ item.notation }} is {{ item.class[0] }} (major axis bending)
-                  </div>
-                  <div class="final-result">
-                    {{ item.notation }} is {{ item.class[1] }} (minor axis bending)
-                  </div>
-                </div>
-                <div v-else>
-                  <div class="final-result">
-                    {{ item.notation }} is {{ item.class[0] }}
-                  </div>
+              </div>
+              <div v-else>
+                <div class="final-result">
+                  {{ item.notation }} is {{ item.class[0] }}
                 </div>
               </div>
             </div>

@@ -1,30 +1,30 @@
 <template>
   <div>
-    <div>
-      <h2>Input</h2>
+    <div class="definition-container">
+      <h2>Definition</h2>
 
       <div>
-        <p v-if="shapeTypeSelectionDisplay" class="select-container">
+        <div v-if="shapeTypeSelectionDisplay">
           <label for="descShapeType">Select Shape Type:&emsp;</label>
-          <select id="descShapeType" v-model="selectedDescShapeType" class="select">
+          <select id="descShapeType" v-model="selectedDescShapeType">
             <option v-for="descShapeType in descShapeTypeList" :key="descShapeType" :value="descShapeType">
               {{ descShapeType }}
             </option>
           </select>
-        </p>
+        </div>
 
-        <p v-if="shapeSelectionDisplay" class="select-container">
+        <div v-if="shapeSelectionDisplay">
           <label for="shape">Select Shape:&emsp;</label>
-          <select id="shape" v-model="selectedShape" class="select">
+          <select id="shape" v-model="selectedShape">
             <option v-for="shape in shapeList" :key="shape" :value="shape">
               {{ shape }}
             </option>
           </select>
-        </p>
+        </div>
         
-        <p v-if="gradeSelectionDisplay" class="select-container">
+        <div v-if="gradeSelectionDisplay">
           <label for="grade">Select Grade:&emsp;</label>
-          <select id="grade" v-model="selectedGrade" class="select">
+          <select id="grade" v-model="selectedGrade">
             <option :key="selectedShapeTypeASTMSpecPreferredDesig" :value="selectedShapeTypeASTMSpecPreferredKey">
               {{ selectedShapeTypeASTMSpecPreferredDesig }}
             </option>
@@ -36,136 +36,146 @@
               {{ Desig }}
             </option>
           </select>
-        </p>
+        </div>
       </div>
       
       <div v-if="calcSelectionDisplay">
-        <p style="font-size: 1.2em;"><strong>Select Calculations</strong></p>
+        <div class="subsection-title-large">Select Calculations</div>
         
-        <MultiSelector
-          :options="calcOptions"
-          v-model="selectedCalcs"
-        />
+        <div class="indented-container">
+          <MultiSelector
+            :options="calcOptions"
+            v-model="selectedCalcs"
+          />
+        </div>
       </div>
       
       <div v-if="compressionInputDisplay">
-        <p style="font-size: 1.2em;"><strong>For Compression Calculation</strong></p>
+        <div class="subsection-title-large">For Compression Calculation</div>
 
-        <NumberInputField
-          v-if="effectiveLengthInputDisplay"
-          type="nonnegative"
-          id="effectiveLengthX"
-          label="Enter Effective Length about Major Axis (L<sub>cx</sub>)"
-          :enteredValue="enteredEffectiveLengthX"
-          :defaultValue="0"
-          :unit="'ft'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+        <div class="indented-container">
+          <NumberInputField
+            v-if="effectiveLengthInputDisplay"
+            type="nonnegative"
+            id="effectiveLengthX"
+            label="Enter Effective Length about Major Axis (L<sub>cx</sub>)"
+            :enteredValue="enteredEffectiveLengthX"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
 
-        <NumberInputField
-          v-if="effectiveLengthInputDisplay"
-          type="nonnegative"
-          id="effectiveLengthY"
-          label="Enter Effective Length about Minor Axis (L<sub>cy</sub>)"
-          :enteredValue="enteredEffectiveLengthY"
-          :defaultValue="0"
-          :unit="'ft'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+          <NumberInputField
+            v-if="effectiveLengthInputDisplay"
+            type="nonnegative"
+            id="effectiveLengthY"
+            label="Enter Effective Length about Minor Axis (L<sub>cy</sub>)"
+            :enteredValue="enteredEffectiveLengthY"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
 
-        <NumberInputField
-          v-if="effectiveLengthInputDisplay"
-          type="nonnegative"
-          id="effectiveLengthZ"
-          label="Enter Effective Length about Longitudinal Axis (L<sub>cz</sub>)"
-          :enteredValue="enteredEffectiveLengthZ"
-          :defaultValue="0"
-          :unit="'ft'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+          <NumberInputField
+            v-if="effectiveLengthInputDisplay"
+            type="nonnegative"
+            id="effectiveLengthZ"
+            label="Enter Effective Length about Longitudinal Axis (L<sub>cz</sub>)"
+            :enteredValue="enteredEffectiveLengthZ"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
+        </div>
       </div>
 
       <div v-if="flexureInputDisplay">
-        <p style="font-size: 1.2em;"><strong>For Flexure Calculation</strong></p>
+        <div class="subsection-title-large">For Flexure Calculation</div>
 
-        <NumberInputField
-          v-if="unbracedLengthInputDisplay"
-          type="nonnegative"
-          id="unbracedLength"
-          label="Enter Unbraced Length (L<sub>b</sub>)"
-          :enteredValue="enteredUnbracedLength"
-          :defaultValue="0"
-          :unit="'ft'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+        <div class="indented-container">
+          <NumberInputField
+            v-if="unbracedLengthInputDisplay"
+            type="nonnegative"
+            id="unbracedLength"
+            label="Enter Unbraced Length (L<sub>b</sub>)"
+            :enteredValue="enteredUnbracedLength"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
 
-        <NumberInputField
-          v-if="ltbModFactorInputDisplay"
-          type="positive"
-          id="ltbModFactor"
-          label="Enter LTB Modification Factor (C<sub>b</sub>)"
-          :enteredValue="enteredLTBModFactor"
-          :defaultValue="1"
-          :unit="''"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+          <NumberInputField
+            v-if="ltbModFactorInputDisplay"
+            type="positive"
+            id="ltbModFactor"
+            label="Enter LTB Modification Factor (C<sub>b</sub>)"
+            :enteredValue="enteredLTBModFactor"
+            :defaultValue="1"
+            :unit="''"
+            @updateValidatedValue="validatedNumberHandler"
+          />
+        </div>
       </div>
 
       <div v-if="shearInputDisplay">
-        <p style="font-size: 1.2em;"><strong>For Shear Calculation</strong></p>
+        <div class="subsection-title-large">For Shear Calculation</div>
 
-        <p v-if="considerTensionFieldActionSelectionDisplay" class="select-container">
-          <label for="considerTensionFieldAction">Consider Tension Field Action for Interior Web Panels:&emsp;</label>
-          <select id="considerTensionFieldAction" v-model="selectedConsiderTensionFieldAction" class="select">
-            <option :value="true">Yes</option>
-            <option :value="false">No</option>
-          </select>
-        </p>
+        <div class="indented-container">
+          <div v-if="considerTensionFieldActionSelectionDisplay">
+            <label for="considerTensionFieldAction">Consider Tension Field Action for Interior Web Panels:&emsp;</label>
+            <select id="considerTensionFieldAction" v-model="selectedConsiderTensionFieldAction">
+              <option :value="true">Yes</option>
+              <option :value="false">No</option>
+            </select>
+          </div>
 
-        <p v-if="considerTransverseStiffenerSelectionDisplay" class="select-container">
-          <label for="considerTransverseStiffener">Consider Transverse Stiffeners:&emsp;</label>
-          <select id="considerTransverseStiffener" v-model="selectedConsiderTransverseStiffener" class="select">
-            <option :value="true">Yes</option>
-            <option :value="false" :disabled="selectedConsiderTensionFieldAction">No</option>
-          </select>
-        </p>
+          <div v-if="considerTransverseStiffenerSelectionDisplay">
+            <label for="considerTransverseStiffener">Consider Transverse Stiffeners:&emsp;</label>
+            <select id="considerTransverseStiffener" v-model="selectedConsiderTransverseStiffener">
+              <option :value="true">Yes</option>
+              <option :value="false" :disabled="selectedConsiderTensionFieldAction">No</option>
+            </select>
+          </div>
 
-        <NumberInputField
-          v-if="transverseStiffenerDistanceInputDisplay"
-          type="nonnegative"
-          id="transverseStiffenerDistance"
-          label="Enter Clear Distance between Transverse Stiffeners (a)"
-          :enteredValue="enteredTransverseStiffenerDistance"
-          :defaultValue="0"
-          :unit="'in.'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+          <NumberInputField
+            v-if="transverseStiffenerDistanceInputDisplay"
+            type="nonnegative"
+            id="transverseStiffenerDistance"
+            label="Enter Clear Distance between Transverse Stiffeners (a)"
+            :enteredValue="enteredTransverseStiffenerDistance"
+            :defaultValue="0"
+            :unit="'in.'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
         
-        <NumberInputField
-          v-if="maxToZeroShearDistanceInputDisplay"
-          type="nonnegative"
-          id="maxToZeroShearDistance"
-          label="Enter Distance from Max to Zero Shear Force (L<sub>v</sub>)"
-          :enteredValue="enteredMaxToZeroShearDistance"
-          :defaultValue="0"
-          :unit="'ft'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+          <NumberInputField
+            v-if="maxToZeroShearDistanceInputDisplay"
+            type="nonnegative"
+            id="maxToZeroShearDistance"
+            label="Enter Distance from Max to Zero Shear Force (L<sub>v</sub>)"
+            :enteredValue="enteredMaxToZeroShearDistance"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
+        </div>
       </div>
 
       <div v-if="torsionInputDisplay">
-        <p style="font-size: 1.2em;"><strong>For Torsion Calculation</strong></p>
+        <div class="subsection-title-large">For Torsion Calculation</div>
 
-        <NumberInputField
-          v-if="memberLengthInputDisplay"
-          type="nonnegative"
-          id="memberLength"
-          label="Enter Member Length (L)"
-          :enteredValue="enteredMemberLength"
-          :defaultValue="0"
-          :unit="'ft'"
-          @updateValidatedValue="validatedNumberHandler"
-        />
+        <div class="indented-container">
+          <NumberInputField
+            v-if="memberLengthInputDisplay"
+            type="nonnegative"
+            id="memberLength"
+            label="Enter Member Length (L)"
+            :enteredValue="enteredMemberLength"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
+        </div>
       </div>
     </div>
 

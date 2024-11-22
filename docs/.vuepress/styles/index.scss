@@ -1,3 +1,46 @@
+.definition-container {
+  * {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  select,
+  input {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .subsection-title-large {
+    font-size: 1.2em;
+    font-weight: bold;
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .indented-container {
+    margin-left: 1em;
+  }
+
+  .number-input {
+    width: 5em;
+
+    /* Removes spinners in WebKit browsers */
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+
+  .error-message {
+    font-size: 0.9em;
+    font-style: italic;
+
+    margin-top: 0em;
+    margin-left: 1em;
+  }
+}
+
 .property-data-container,
 .slender-result-container,
 .strength-result-container {

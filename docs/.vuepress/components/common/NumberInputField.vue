@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p>
+    <div>
       <label :for="id"><span v-html="label"></span>:&emsp;</label>
-      <input
+      <input class="number-input"
         type="number"
         :id="id"
         v-model="enteredValueLocal"
@@ -10,7 +10,7 @@
       />
       <span>&nbsp;{{ unit }}</span>
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-    </p>
+    </div>
   </div>
 </template>
   
