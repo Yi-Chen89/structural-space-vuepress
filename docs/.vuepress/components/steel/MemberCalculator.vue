@@ -64,7 +64,7 @@
             :unit="'ft'"
             @updateValidatedValue="validatedNumberHandler"
           />
-
+          
           <NumberInputField
             v-if="effectiveLengthInputDisplay"
             type="nonnegative"
@@ -182,7 +182,6 @@
     <div>
       <SummaryViewer
         v-if="summaryDisplay"
-        type="summary"
         title="Summary"
         :shape="selectedShape"
         :grade="selectedGradeDesig"
@@ -335,7 +334,7 @@
 
   import { shapeWeightRenderDataFilterer } from './utils/data-filterers.js';
   import { shapeDimensionRenderDataFilterer } from './utils/data-filterers.js';
-  import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
+  // import { shapeSlenderRatioFilterer } from './utils/data-filterers.js';
   import { shapeSlenderRatioRenderDataFilterer } from './utils/data-filterers.js';
   import { shapePropertyRenderDataFilterer } from './utils/data-filterers.js';
 
@@ -650,16 +649,16 @@
         return astmSpecPropFetcher(this.selectedGrade);
       },
 
-      selectedShapeSlenderRatio() {
-        return shapeSlenderRatioFilterer(this.selectedShapeData, this.selectedShapeType);
-      },
+      // selectedShapeSlenderRatio() {
+      //   return shapeSlenderRatioFilterer(this.selectedShapeData, this.selectedShapeType);
+      // },
 
       selectedShapeAxialSlenderClass() {
-        return axialSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
+        return axialSlenderClassifier(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp);
       },
 
       selectedShapeFlexureSlenderClass() {
-        return flexureSlenderClassifier(this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeSlenderRatio);
+        return flexureSlenderClassifier(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp);
       },
 
       // calculated capacity
@@ -733,20 +732,28 @@
     methods: {
       validatedNumberHandler({ id, value }) {
         if (id === 'effectiveLengthX') {
+          this.enteredEffectiveLengthX = value;
           this.validatedEffectiveLengthX = value * 12;
         } else if (id === 'effectiveLengthY') {
+          this.enteredEffectiveLengthY = value;
           this.validatedEffectiveLengthY = value * 12;
         } else if (id === 'effectiveLengthZ') {
+          this.enteredEffectiveLengthZ = value;
           this.validatedEffectiveLengthZ = value * 12;
         } else if (id === 'unbracedLength') {
+          this.enteredUnbracedLength = value;
           this.validatedUnbracedLength = value * 12;
         } else if (id === 'ltbModFactor') {
+          this.enteredLTBModFactor = value;
           this.validatedLTBModFactor = value;
         } else if (id === 'transverseStiffenerDistance') {
+          this.enteredTransverseStiffenerDistance = value;
           this.validatedTransverseStiffenerDistance = value;
         } else if (id === 'maxToZeroShearDistance') {
+          this.enteredMaxToZeroShearDistance = value;
           this.validatedMaxToZeroShearDistance = value * 12;
         } else if (id === 'memberLength') {
+          this.enteredMemberLength = value;
           this.validatedMemberLength = value * 12;
         }
       },

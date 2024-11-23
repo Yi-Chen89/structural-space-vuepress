@@ -33,7 +33,7 @@
         required: true,
       },
       enteredValue: {
-        type: Number,
+        type: [Number, String],
         required: true,
       },
       defaultValue: {

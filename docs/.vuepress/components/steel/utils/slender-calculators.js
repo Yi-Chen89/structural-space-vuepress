@@ -1,8 +1,12 @@
+import { Fy_, Fu_, E_, G_ } from '../constants/variable-html';
+import { d_, Ht_, h_, OD_, bf_, B_, b_, ID_, tw_, tf_, t_, tdes_, kdes_ } from '../constants/variable-html';
+import { lambda_, lambdap_, lambdar_, lambdaf_, lambdapf_, lambdarf_, lambdaw_, lambdapw_, lambdarw_ } from '../constants/variable-html';
+
 // A360 Chapter B
 
-export function axialSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRatio) {
+export function axialSlenderClassifier(shapeData, shapeType, astmSpecProp) {
   // A360-16 B4 Table B4.1a
-  if (shapeType && astmSpecProp && shapeSlenderRatio) {
+  if (shapeData && shapeType && astmSpecProp) {
     const result = {
       'flange': {
         'isApplicable': false,
@@ -20,7 +24,7 @@ export function axialSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRati
       }
     };
 
-    const ratio = slenderRatioParser(shapeType, shapeSlenderRatio);
+    const ratio = slenderRatioParser(shapeData, shapeType);
     ['flange', 'web'].forEach(key => {
       result[key]['isApplicable'] = ratio[key]['isApplicable'];
       result[key]['notation'] = ratio[key]['notation'];
@@ -54,9 +58,9 @@ export function axialSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRati
   }
 }
 
-export function flexureSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRatio) {
+export function flexureSlenderClassifier(shapeData, shapeType, astmSpecProp) {
   // A360-16 B4 Table B4.1b
-  if (shapeType && astmSpecProp && shapeSlenderRatio) {
+  if (shapeData && shapeType && astmSpecProp) {
     const result = {
       'flange': {
         'isApplicable': false,
@@ -74,7 +78,7 @@ export function flexureSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRa
       }
     };
 
-    const ratio = slenderRatioParser(shapeType, shapeSlenderRatio);
+    const ratio = slenderRatioParser(shapeData, shapeType);
     ['flange', 'web'].forEach(key => {
       result[key]['isApplicable'] = ratio[key]['isApplicable'];
       result[key]['notation'] = ratio[key]['notation'];
@@ -126,7 +130,7 @@ export function flexureSlenderClassifier(shapeType, astmSpecProp, shapeSlenderRa
 
 // Helper Function
 
-function slenderRatioParser(shapeType, shapeSlenderRatio) {
+function slenderRatioParser(shapeData, shapeType) {
   const result = {
     'flange': {
       'isApplicable': false,
@@ -144,14 +148,14 @@ function slenderRatioParser(shapeType, shapeSlenderRatio) {
   let lambdaw = 0;
 
   if (['W', 'M', 'S', 'HP'].includes(shapeType)) {
-    lambdaf = shapeSlenderRatio['bf/2tf'];
+    lambdaf = shapeData['bf/2tf'];
     result['flange']['isApplicable'] = true;
     result['flange']['notation'] = 'Flange';
     result['flange']['ratio']['notation'] = `${lambdaf_}`;
     result['flange']['ratio']['value'] = lambdaf;
     result['flange']['ratio']['html'] = `${bf_} / 2 ${tf_} = ${lambdaf.toFixed(2)}`;
 
-    lambdaw = shapeSlenderRatio['h/tw'];
+    lambdaw = shapeData['h/tw'];
     result['web']['isApplicable'] = true;
     result['web']['notation'] = 'Web';
     result['web']['ratio']['notation'] = `${lambdaw_}`;
@@ -159,52 +163,67 @@ function slenderRatioParser(shapeType, shapeSlenderRatio) {
     result['web']['ratio']['html'] = `${h_} / ${tw_} = ${lambdaw.toFixed(2)}`;
 
   } else if (['C', 'MC'].includes(shapeType)) {
-    lambdaf = shapeSlenderRatio['b/t'];
+    lambdaf = shapeData['b/t'];
     result['flange']['isApplicable'] = true;
     result['flange']['notation'] = 'Flange';
     result['flange']['ratio']['notation'] = `${lambdaf_}`;
     result['flange']['ratio']['value'] = lambdaf;
     result['flange']['ratio']['html'] = `${bf_} / ${tf_} = ${lambdaf.toFixed(2)}`;
 
-    lambdaw = shapeSlenderRatio['h/tw'];
+    lambdaw = shapeData['h/tw'];
     result['web']['isApplicable'] = true;
     result['web']['notation'] = 'Web';
     result['web']['ratio']['notation'] = `${lambdaw_}`;
     result['web']['ratio']['value'] = lambdaw;
     result['web']['ratio']['html'] = `${h_} / ${tw_} = ${lambdaw.toFixed(2)}`;
 
-  } else if (['L', '2L'].includes(shapeType)) {
-    lambdaf = shapeSlenderRatio['b/t'];
+  } else if (['L'].includes(shapeType)) {
+    lambdaf = shapeData['d'] / shapeData['t'];
     result['flange']['isApplicable'] = true;
-    result['flange']['notation'] = 'Leg';
-    result['flange']['ratio']['notation'] = `${lambda_}`;
+    result['flange']['notation'] = 'Short Leg';
+    result['flange']['ratio']['notation'] = `${lambdaf_}`;
     result['flange']['ratio']['value'] = lambdaf;
-    result['flange']['ratio']['html'] = `${b_} / ${t_} = ${lambdaf.toFixed(2)}`;
+    result['flange']['ratio']['html'] = `${d_} / ${t_} = ${lambdaf.toFixed(2)}`;
+
+    lambdaw = shapeData['b/t'];
+    result['web']['isApplicable'] = true;
+    result['web']['notation'] = 'Long Leg';
+    result['web']['ratio']['notation'] = `${lambdaw_}`;
+    result['web']['ratio']['value'] = lambdaw;
+    result['web']['ratio']['html'] = `${b_} / ${t_} = ${lambdaw.toFixed(2)}`;
 
   } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
-    lambdaf = shapeSlenderRatio['bf/2tf'];
+    lambdaf = shapeData['bf/2tf'];
     result['flange']['isApplicable'] = true;
     result['flange']['notation'] = 'Flange';
     result['flange']['ratio']['notation'] = `${lambdaf_}`;
     result['flange']['ratio']['value'] = lambdaf;
     result['flange']['ratio']['html'] = `${bf_} / 2 ${tf_} = ${lambdaf.toFixed(2)}`;
 
-    lambdaw = shapeSlenderRatio['D/t'];
+    lambdaw = shapeData['D/t'];
     result['web']['isApplicable'] = true;
     result['web']['notation'] = 'Stem';
     result['web']['ratio']['notation'] = `${lambdaw_}`;
     result['web']['ratio']['value'] = lambdaw;
     result['web']['ratio']['html'] = `${d_} / ${t_} = ${lambdaw.toFixed(2)}`;
 
+  } else if (['2L'].includes(shapeType)) {
+    lambdaf = shapeData['b/t'];
+    result['flange']['isApplicable'] = true;
+    result['flange']['notation'] = 'Leg';
+    result['flange']['ratio']['notation'] = `${lambda_}`;
+    result['flange']['ratio']['value'] = lambdaf;
+    result['flange']['ratio']['html'] = `${b_} / ${t_} = ${lambdaf.toFixed(2)}`;
+
   } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
-    lambdaf = shapeSlenderRatio['b/tdes'];
+    lambdaf = shapeData['b/tdes'];
     result['flange']['isApplicable'] = true;
     result['flange']['notation'] = 'Flange';
     result['flange']['ratio']['notation'] = `${lambdaf_}`;
     result['flange']['ratio']['value'] = lambdaf;
     result['flange']['ratio']['html'] = `${b_} / ${tdes_} = ${lambdaf.toFixed(2)}`;
 
-    lambdaw = shapeSlenderRatio['h/tdes'];
+    lambdaw = shapeData['h/tdes'];
     result['web']['isApplicable'] = true;
     result['web']['notation'] = 'Web';
     result['web']['ratio']['notation'] = `${lambdaw_}`;
@@ -212,7 +231,7 @@ function slenderRatioParser(shapeType, shapeSlenderRatio) {
     result['web']['ratio']['html'] = `${h_} / ${tdes_} = ${lambdaw.toFixed(2)}`;
 
   } else if (['HSS Round', 'PIPE'].includes(shapeType)) {
-    lambdaf = shapeSlenderRatio['D/t'];
+    lambdaf = shapeData['D/t'];
     result['flange']['isApplicable'] = true;
     result['flange']['notation'] = 'Wall';
     result['flange']['ratio']['notation'] = `${lambda_}`;
@@ -280,6 +299,13 @@ function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     result['web']['limit']['notation'] = `${lambdarw_}`;
     result['web']['limit']['value'] = lambdarw;
     result['web']['limit']['html'] = `1.49 ${calcTerm1_} = ${lambdarw.toFixed(2)}`;
+
+  } else if (['L'].includes(shapeType)) {
+    // Table B4.1a Case 3
+    lambdarw = 0.45 * calcTerm1;
+    result['web']['limit']['notation'] = `${lambdar_}`;
+    result['web']['limit']['value'] = lambdarw;
+    result['web']['limit']['html'] = `0.45 ${calcTerm1_} = ${lambdarw.toFixed(2)}`;
 
   } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
     // Table B4.1a Case 4
@@ -392,6 +418,18 @@ function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     result['web']['limit']['noncompact']['value'] = lambdarw;
     result['web']['limit']['noncompact']['html'] = `5.70 ${calcTerm1_} = ${lambdarw.toFixed(2)}`;
 
+  } else if (['L'].includes(shapeType)) {
+    // Table B4.1b Case 12
+    lambdapw = 0.54 * calcTerm1;
+    result['web']['limit']['compact']['notation'] = `${lambdap_}`;
+    result['web']['limit']['compact']['value'] = lambdapw;
+    result['web']['limit']['compact']['html'] = `0.54 ${calcTerm1_} = ${lambdapw.toFixed(2)}`;
+
+    lambdarw = 0.91 * calcTerm1;
+    result['web']['limit']['noncompact']['notation'] = `${lambdar_}`;
+    result['web']['limit']['noncompact']['value'] = lambdarw;
+    result['web']['limit']['noncompact']['html'] = `0.91 ${calcTerm1_} = ${lambdarw.toFixed(2)}`;
+
   } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
     // Table B4.1b Case 14
     lambdapw = 0.84 * calcTerm1;
@@ -437,31 +475,3 @@ function flexureElementClassifier(slenderRatio, compactLimitRatio, noncompactLim
     return 'slender';
   }
 }
-
-
-// material notation
-const Fy_ = 'F<sub>y</sub>';
-const E_ = 'E';
-// database variable notation
-const d_ = 'd';
-const Ht_ = 'Ht';
-const h_ = 'h';
-const OD_ = 'OD';
-const bf_ = 'b<sub>f</sub>';
-const B_ = 'B';
-const b_ = 'b';
-const ID_ = 'ID';
-const tw_ = 't<sub>w</sub>';
-const tf_ = 't<sub>f</sub>';
-const t_ = 't';
-const tdes_ = 't<sub>des</sub>';
-
-const lambda_ = '&lambda;';
-const lambdap_ = '&lambda;<sub>p</sub>';
-const lambdar_ = '&lambda;<sub>r</sub>';
-const lambdaf_ = '&lambda;<sub>f</sub>';
-const lambdapf_ = '&lambda;<sub>pf</sub>';
-const lambdarf_ = '&lambda;<sub>rf</sub>';
-const lambdaw_ = '&lambda;<sub>w</sub>';
-const lambdapw_ = '&lambda;<sub>pw</sub>';
-const lambdarw_ = '&lambda;<sub>rw</sub>';
