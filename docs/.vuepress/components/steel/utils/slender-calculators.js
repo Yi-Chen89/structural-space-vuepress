@@ -209,7 +209,8 @@ function slenderRatioParser(shapeData, shapeType) {
 
   } else if (['2L'].includes(shapeType)) {
     lambdaf = shapeData['b/t'];
-    result['flange']['isApplicable'] = true;
+    // result['flange']['isApplicable'] = true;
+    result['flange']['isApplicable'] = false;
     result['flange']['notation'] = 'Leg';
     result['flange']['ratio']['notation'] = `${lambda_}`;
     result['flange']['ratio']['value'] = lambdaf;
