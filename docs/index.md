@@ -10,9 +10,7 @@ actions:
 
 features:
   - title: Steel
-    details: Steel calculator
-  # - title: Concrete
-  #   details: Concrete calculator
+    details: A calculator for evaluating member strength based on ANSI/AISC 360.
 
 footer: MIT Licensed | Copyright © 2024 Yi Chen
 ---

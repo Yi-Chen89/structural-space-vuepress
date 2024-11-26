@@ -5,9 +5,6 @@
 
 ## Steel
 
-[Steel](../steel/)
+[Steel](../steel/) page contains steel structure related calculators
 
-
-<!-- ## Concrete -->
-
-<!-- [Concrete](../concrete/) -->
+- [Member Calculator](../steel/#member-calculator)

@@ -356,7 +356,7 @@ function E4FlexuralTorsionalBucklingWithoutSlenderElementFcr(shapeType, Fy, E, G
 function flexuralTorsionalElasticBucklingStressCalculator(axisOfSym, E, G, Ag, r, J, Cw, ro, H, Lc, Lcz) {
   let Fe = 0;
   let html = `<div>Flexural-torsional elastic buckling stress</div>
-              <div class="indented-line">${ro_} = ${ro.toFixed(2)} in.,&emsp;
+              <div class="indented-line">${ro_} = ${ro.toFixed(2)} in.&emsp;
                                          ${H_} = ${H.toFixed(3)}</div>`;
 
   const calcTerm1 = Lc / r;
@@ -511,7 +511,7 @@ function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, la
 
       const [c1, c2] = effectiveWidthImperfectionAdjustmentFactorFinder(shapeType, elementType);
       html += `<div class="indented-line">Effective width imperfection adjustment factors</div>
-               <div class="indented-line" style="--indented-line-level: 2;">${c1_} = ${c1.toFixed(2)},&emsp;
+               <div class="indented-line" style="--indented-line-level: 2;">${c1_} = ${c1.toFixed(2)}&emsp;
                                                                             ${c2_} = ${c2.toFixed(2)}</div>`;
 
       const Fel = (c2 * lambdar / lambda)**2 * Fy;

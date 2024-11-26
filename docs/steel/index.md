@@ -9,8 +9,8 @@
 
 - tension
 - compression
-- flexure (major and minor)
-- shear (major and minor)
+- flexure (major and minor axes)
+- shear (major and minor axes)
 - torsion
 
 ::: tabs

@@ -463,7 +463,7 @@ function F2_2LateralTorsionalBuckling(shapeType, Mp, Fy, E, Sx, Iy, ry, J, Cw, r
   } else {
     // Lr: limiting unbraced length for the limit state of inelastic lateral-torsional buckling, in. (mm)
     html += `<div>Limiting laterally unbraced length for the limit state of inelastic lateral-torsional buckling</div>
-             <div class="indented-line">${rts_} = ${rts.toFixed(3)} in.,&emsp;
+             <div class="indented-line">${rts_} = ${rts.toFixed(3)} in.&emsp;
                                         ${ho_} = ${ho.toFixed(2)} in.</div>`;
 
     const calcTerm1 = E / (0.7 * Fy);
