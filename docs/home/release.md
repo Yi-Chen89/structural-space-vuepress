@@ -15,6 +15,9 @@
 
 ---
 
+- Inception on September 7, 2024
+- Initial release
+
 @tab Software
 
 **Site v1.0**
