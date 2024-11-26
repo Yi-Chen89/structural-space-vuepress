@@ -15,6 +15,19 @@
 
 ---
 
+- Inception on September 7, 2024
+- Initial release
+
+@tab Applicability
+
+**Steel v1.0**
+
+**Release Date**:
+
+---
+
+**Member Calculator**
+
 <steel-ApplicabilityMatrix />
 
 @tab Design Code
