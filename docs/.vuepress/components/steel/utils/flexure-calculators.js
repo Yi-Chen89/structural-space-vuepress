@@ -387,28 +387,31 @@ export function criticalFlexureResultProcessor(result) {
           }
         });
       });
-
-      const output = {};
+      
+      const output = [];
       const momentSign = ['Sagging', 'Hogging'];
-
+      
       criticalKeys.forEach((value, index) => {
         if (value) {
-          output[value] = result[value];
-          output[value]['nominalValue'] = result[value]['nominalValues'][index];
-          output[value]['designValue'] = result[value]['designValues'][index];
-          output[value]['titlePrefix'] = momentSign[index];
+          // deep copy
+          const object = JSON.parse(JSON.stringify(result[value]));
+
+          object['nominalValue'] = object['nominalValues'][index];
+          object['designValue'] = object['designValues'][index];
+          object['titlePrefix'] = momentSign[index];
+
+          output.push(object);
         }
       });
-
-      if (Object.keys(output).length === 1) {
-        const key = Object.keys(output)[0];
-        output[key]['titlePrefix'] = '';
+      
+      if (output.length === 1) {
+        output[0]['titlePrefix'] = '';
       }
-
+      
       // add isMultiState attribute
-      if (output) {
-        for (const key in output) {
-          output[key]['isMultiState'] = Object.keys(result).length > 1;
+      for (const item of output) {
+        if (item) {
+          item['isMultiState'] = Object.keys(result).length > 1;
         }
       }
       return output;
