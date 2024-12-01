@@ -212,16 +212,20 @@ export function criticalCompressionResultProcessor(result) {
           item[1]['designValue'] < min[1]['designValue'] ? item : min
       );
 
-      // convert list back to dictionary
-      // output data structure
-      // {
-      //   "Pn_3": { "isApplicable": true, "phiValue": 0.9, ... }
-      // }
-      const output = Object.fromEntries([criticalResult]);
+      // output data structure (deep copy)
+      // [
+      //   { "isApplicable": true, "phiValue": 0.9, ... }
+      // ]
+      const output = [];
+      // deep copy
+      const object = JSON.parse(JSON.stringify(criticalResult[1]));
+      output.push(object);
 
       // add isMultiState attribute
-      for (const key in output) {
-        output[key]['isMultiState'] = Object.keys(result).length > 1;
+      for (const item of output) {
+        if (item) {
+          item['isMultiState'] = Object.keys(result).length > 1;
+        }
       }
       return output;
 

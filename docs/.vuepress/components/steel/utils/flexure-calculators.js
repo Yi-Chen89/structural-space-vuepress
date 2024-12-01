@@ -388,6 +388,11 @@ export function criticalFlexureResultProcessor(result) {
         });
       });
       
+      // output data structure (deep copy)
+      // [
+      //   { "isApplicable": true, "phiValue": 0.9, ... },
+      //   { "isApplicable": true, "phiValue": 0.9, ... },
+      // ]
       const output = [];
       const momentSign = ['Sagging', 'Hogging'];
       
