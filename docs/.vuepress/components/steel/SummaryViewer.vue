@@ -26,14 +26,14 @@
                 Minor Axis
               </div>
             </div>
-
+            
             <div v-if="criticalCapacity">
-              <div v-for="(item, key) in criticalCapacity" :key="key">
+              <div v-for="(item, index) in criticalCapacity" :key="index">
                 <div class="indented-container">
                   <div>
                     <span v-html="item.designNotation"></span>
                     <span> = {{ item.designValue.toFixed(1) }} {{ item.unit }}</span>
-                    <span v-if="item.titlePrefix">&emsp;({{ item.titlePrefix || '' }})</span>
+                    <span v-if="item.titlePrefix">&emsp;({{ item.titlePrefix }})</span>
                   </div>
                 </div>
               </div>
