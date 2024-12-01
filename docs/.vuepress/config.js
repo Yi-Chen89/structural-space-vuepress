@@ -19,7 +19,7 @@ export default defineUserConfig({
   base: '/structural-space-vuepress/',
 
   theme: defaultTheme({
-    logo: 'https://vuejs.press/images/hero.png',
+    // logo: 'https://vuejs.press/images/hero.png',
 
     // configure GitHub link on navbar
     // repo: 'https://github.com/Yi-Chen89/structural-space-vuepress.git',
