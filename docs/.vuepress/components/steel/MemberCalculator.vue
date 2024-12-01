@@ -267,7 +267,7 @@
         :contentDisplay="flexureCalcContentDisplay"
         @updateContentDisplay="calcContentDisplayHandler"
       />
-
+      
       <StrengthResultViewer
         v-if="shearCalcDisplay"
         type="shear"
@@ -277,7 +277,7 @@
         :contentDisplay="shearCalcContentDisplay"
         @updateContentDisplay="calcContentDisplayHandler"
       />
-
+      
       <StrengthResultViewer
         v-if="torsionCalcDisplay"
         type="torsion"
@@ -291,11 +291,7 @@
 
     <footer class="footer-container">
       <hr>
-      <div>Steel Construction Manual 15th Edition</div>
-      <ul>
-        <li>AISC Shapes Database v15.0</li>
-        <li>ANSI/AISC 360-16</li>
-      </ul>
+      <div>Engineer is responsible for verifying the accuracy, suitability, and applicability of the calculated results</div>
     </footer>
   </div>
 </template>
