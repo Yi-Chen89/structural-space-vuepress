@@ -30,14 +30,14 @@
 
         <div v-if="criticalCapacity">
           <div class="subsection-title-small"
-            v-if="Object.values(criticalCapacity).some(item => item.isMultiState)">
+            v-if="criticalCapacity.some(item => item.isMultiState)">
             Governing Limit State
           </div>
-          <div v-for="(item, key) in criticalCapacity" :key="key">
+          <div v-for="(item, index) in criticalCapacity" :key="index">
             <div class="indented-container">
               <div class="subsection-title-small"
                 v-if="item.isMultiState">
-                {{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})
+                {{ item.titlePrefix }} {{ title }} ({{ item.section }})
               </div>
               <div v-if="item.isMultiState">
                 <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
@@ -71,10 +71,10 @@
         </div>
 
         <div v-if="criticalCapacity">
-          <div v-for="(item, key) in criticalCapacity" :key="key">
+          <div v-for="(item, index) in criticalCapacity" :key="index">
             <div class="indented-container">
               <div class="subsection-title-small">
-                {{ item.titlePrefix || '' }} {{ title }} ({{ item.section }})
+                {{ item.titlePrefix }} {{ title }} ({{ item.section }})
               </div>
               <div>
                 <span v-html="item.nominalNotation"></span> = {{ item.nominalValue.toFixed(1) }} {{ item.unit }}
