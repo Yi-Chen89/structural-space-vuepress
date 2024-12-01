@@ -175,37 +175,41 @@ export function criticalShearResultProcessor(result) {
         item['isApplicable'] && item['designValue'] !== 0
       );
 
-    let output = null;
+    // output data structure (deep copy)
+    // [
+    //   { "isApplicable": true, "phiValue": 0.9, ... }
+    // ]
+    const output = [];
     if (filteredResultAsList.length === 1) {
-      // convert list back to dictionary
-      // output data structure
-      // {
-      //   "Vn_2_1": { "isApplicable": true, "phiValue": 0.9, ... }
-      // }
-      output = Object.fromEntries(filteredResultAsList);
-
+      // deep copy
+      const object = JSON.parse(JSON.stringify(filteredResultAsList[0][1]));
+      output.push(object);
+      
     } else if (filteredResultAsList.length === 2) {
       const designValue_2_1 = filteredResultAsList[0][1]['designValue'];
       const designValue_2_2 = filteredResultAsList[1][1]['designValue'];
 
       if (designValue_2_1 >= designValue_2_2) {
-        // convert list back to dictionary
-        output = Object.fromEntries([filteredResultAsList[0]]);
+        // deep copy
+        const object = JSON.parse(JSON.stringify(filteredResultAsList[0][1]));
+        output.push(object);
         
       } else {
         const panel = ['End Web Panel', 'Interior Web Panel'];
-        filteredResultAsList.forEach((value, index) => {
-          value[1]['titlePrefix'] = panel[index];
-        });
 
-        output = Object.fromEntries(filteredResultAsList);
+        filteredResultAsList.forEach((value, index) => {
+          // deep copy
+          const object = JSON.parse(JSON.stringify(value[1]));
+          object['titlePrefix'] = panel[index];
+          output.push(object);
+        });
       }
     }
 
     // add isMultiState attribute
-    if (output) {
-      for (const key in output) {
-        output[key]['isMultiState'] = Object.keys(result).length > 1;
+    for (const item of output) {
+      if (item) {
+        item['isMultiState'] = Object.keys(result).length > 1;
       }
     }
     return output;
