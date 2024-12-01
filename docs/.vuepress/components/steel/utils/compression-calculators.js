@@ -214,11 +214,16 @@ export function criticalCompressionResultProcessor(result) {
 
       // output data structure (deep copy)
       // [
-      //   { "isApplicable": true, "phiValue": 0.9, ... }
+      //   { "phiValue": 0.9, ..., "isMultiState": true }
       // ]
       const output = [];
       // deep copy
       const object = JSON.parse(JSON.stringify(criticalResult[1]));
+      // remove unnecessary key-value from object
+      const keysToRemove = ['isApplicable', 'html', 'title'];
+      keysToRemove.forEach(keyToRemove => {
+        delete object[keyToRemove];
+      });
       output.push(object);
 
       // add isMultiState attribute

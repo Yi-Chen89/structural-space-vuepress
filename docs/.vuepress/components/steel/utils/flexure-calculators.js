@@ -390,8 +390,8 @@ export function criticalFlexureResultProcessor(result) {
       
       // output data structure (deep copy)
       // [
-      //   { "isApplicable": true, "phiValue": 0.9, ... },
-      //   { "isApplicable": true, "phiValue": 0.9, ... },
+      //   { "phiValue": 0.9, ..., "isMultiState": true },
+      //   { "phiValue": 0.9, ..., "isMultiState": true },
       // ]
       const output = [];
       const momentSign = ['Sagging', 'Hogging'];
@@ -405,6 +405,11 @@ export function criticalFlexureResultProcessor(result) {
           object['designValue'] = object['designValues'][index];
           object['titlePrefix'] = momentSign[index];
 
+          // remove unnecessary key-value from object
+          const keysToRemove = ['isApplicable', 'nominalValues', 'designValues', 'html', 'title'];
+          keysToRemove.forEach(keyToRemove => {
+            delete object[keyToRemove];
+          });
           output.push(object);
         }
       });

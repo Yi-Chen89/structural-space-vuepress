@@ -177,7 +177,7 @@ export function criticalShearResultProcessor(result) {
 
     // output data structure (deep copy)
     // [
-    //   { "isApplicable": true, "phiValue": 0.9, ... }
+    //   { "phiValue": 0.9, ..., "isMultiState": true }
     // ]
     const output = [];
     if (filteredResultAsList.length === 1) {
@@ -205,6 +205,14 @@ export function criticalShearResultProcessor(result) {
         });
       }
     }
+
+    // remove unnecessary key-value from object
+    const keysToRemove = ['isApplicable', 'html', 'title'];
+    output.forEach((object) => {
+      keysToRemove.forEach((keyToRemove) => {
+        delete object[keyToRemove];
+      });
+    });
 
     // add isMultiState attribute
     for (const item of output) {
