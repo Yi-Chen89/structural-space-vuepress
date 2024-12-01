@@ -11,18 +11,25 @@
 
 **Steel v1.0**
 
-**Release Date**:
+**Release Date**: December 1, 2024
 
 ---
 
 - Inception on September 7, 2024
 - Initial release
+- Member Calculator
+  - only works for US Customary units
+  - only works for AISC Shapes
+  - only produces LRFD design strengths
+  - slenderness class does not work for 2L shapes
+  - refer to *Applicability* tab for shape applicability
+  - refer to *Design Code* tab for AISC Shapes Database and ANSI/AISC 360 version
 
 @tab Applicability
 
 **Steel v1.0**
 
-**Release Date**:
+**Release Date**: December 1, 2024
 
 ---
 
@@ -34,7 +41,7 @@
 
 **Steel v1.0**
 
-**Release Date**:
+**Release Date**: December 1, 2024
 
 ---
 
@@ -46,7 +53,7 @@
 
 **Steel v1.0**
 
-**Release Date**:
+**Release Date**: December 1, 2024
 
 ---
 
