@@ -20,7 +20,7 @@
 - Front Page
   - uses default hero image from VuePress
 - Steel Page
-  - refer to steel release card for detail
+  - refer to [Steel Release Card v1.0](../steel/release.html) for detail
 
 @tab Software
 
