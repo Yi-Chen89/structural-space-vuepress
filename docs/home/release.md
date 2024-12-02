@@ -11,18 +11,22 @@
 
 **Site v1.0**
 
-**Release Date**:
+**Release Date**: December 1, 2024
 
 ---
 
 - Inception on September 7, 2024
-- Initial release
+- Initial Release
+- Front Page
+  - uses default hero image from VuePress
+- Steel Page
+  - refer to steel release card for detail
 
 @tab Software
 
 **Site v1.0**
 
-**Release Date**:
+**Release Date**: December 1, 2024
 
 ---
 
