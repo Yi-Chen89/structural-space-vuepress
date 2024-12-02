@@ -16,7 +16,7 @@
 ---
 
 - Inception on September 7, 2024
-- Initial release
+- Initial Release
 - Member Calculator
   - only works for US Customary units
   - only works for AISC Shapes
