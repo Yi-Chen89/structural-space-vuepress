@@ -1,5 +1,5 @@
 {
-  "All": ["W", "M", "S", "HP", "C", "MC", "WT", "MT", "ST", "HSS Rect.", "HSS Square", "HSS Round", "PIPE"],
+  "All": ["W", "M", "S", "HP", "C", "MC", "L", "WT", "MT", "ST", "HSS Rect.", "HSS Square", "HSS Round", "PIPE"],
   "I-Shaped": ["W", "M", "S", "HP"],
   "Channel": ["C", "MC"],
   "Tee": ["WT", "MT", "ST"],

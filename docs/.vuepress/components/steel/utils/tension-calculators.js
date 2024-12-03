@@ -22,7 +22,7 @@ export function tensionCalculator(shapeData, shapeType, astmSpecProp) {
       'Pn_2_b': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
     };
 
-    if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square', 'HSS Round', 'PIPE'].includes(shapeType)) {
+    if (['W', 'M', 'S', 'HP', 'C', 'MC', 'L', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square', 'HSS Round', 'PIPE'].includes(shapeType)) {
       const { A } = shapeData;
 
       // D2(a) Tension Yielding
