@@ -54,13 +54,25 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
         result['Vn_2_2']['html'] = html_2_2;
       }
 
+    } else if (['L'].includes(shapeType)) {
+      // G3
+
+      const { b, t } = shapeData;
+      
+      result['Vn_3']['isApplicable'] = true;
+      const [phi_3, Vn_3, html_3] = G3AngleAndTee('x', shapeType, Fy, E, b, t, lambdaw);
+      result['Vn_3']['phiValue'] = phi_3;
+      result['Vn_3']['nominalValue'] = Vn_3;
+      result['Vn_3']['designValue'] = phi_3 * Vn_3;
+      result['Vn_3']['html'] = html_3;
+
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       // G3
 
       const { d, tw } = shapeData;
 
       result['Vn_3']['isApplicable'] = true;
-      const [phi_3, Vn_3, html_3] = G3Tee(Fy, E, d, tw, lambdaw);
+      const [phi_3, Vn_3, html_3] = G3AngleAndTee('x', shapeType, Fy, E, d, tw, lambdaw);
       result['Vn_3']['phiValue'] = phi_3;
       result['Vn_3']['nominalValue'] = Vn_3;
       result['Vn_3']['designValue'] = phi_3 * Vn_3;
@@ -112,6 +124,7 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
     } = slenderClass;
 
     let result = {
+      'Vn_3': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
       'Vn_4': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
       'Vn_5': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
       'Vn_6': {'isApplicable': false, 'phiValue': 0, 'nominalValue': 0, 'designValue': 0, 'html': null},
@@ -128,6 +141,18 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_6']['nominalValue'] = Vn_6;
       result['Vn_6']['designValue'] = phi_6 * Vn_6;
       result['Vn_6']['html'] = html_6;
+
+    } else if (['L'].includes(shapeType)) {
+      // G3
+
+      const { d, t } = shapeData;
+      
+      result['Vn_3']['isApplicable'] = true;
+      const [phi_3, Vn_3, html_3] = G3AngleAndTee('y', shapeType, Fy, E, d, t, lambdaf);
+      result['Vn_3']['phiValue'] = phi_3;
+      result['Vn_3']['nominalValue'] = Vn_3;
+      result['Vn_3']['designValue'] = phi_3 * Vn_3;
+      result['Vn_3']['html'] = html_3;
 
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       // G4
@@ -392,19 +417,29 @@ function G2_2IShapedAndChannelWithTFA(Fy, E, d, bf, tw, tf, lambdaw, considerSti
 }
 
 // G3 Single Angles and Tees
-function G3Tee(Fy, E, b, t, lambdaw) {
+function G3AngleAndTee(axis, shapeType, Fy, E, b, t, lambda) {
   let phi = 0.9;
   let Vn = 0;
   let html = '';
 
+  let bshear_ = '';
+  let tshear_ = '';
+  if (['L'].includes(shapeType)) {
+    bshear_ = axis === 'x' ? b_ : d_;
+    tshear_ = t_;
+  } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    bshear_ = d_;
+    tshear_ = tw_;
+  }
+
   const kv = 1.2;
-  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator('x', Fy, E, kv, lambdaw);
+  const [Cv2, Cv2Html] = webShearBucklingCoefficientCalculator(axis, Fy, E, kv, lambda);
   html += `<div>Web plate shear buckling coefficient</div>
            <div class="indented-line">${kv_} = ${kv.toFixed(1)}</div>`;
   html += Cv2Html;
 
   Vn = 0.6 * Fy * b * t * Cv2;
-  html += `<div>${Vn_} = 0.6 ${Fy_} ${d_} ${tw_} ${Cv2_} = ${Vn.toFixed(2)} k</div>
+  html += `<div>${Vn_} = 0.6 ${Fy_} ${bshear_} ${tshear_} ${Cv2_} = ${Vn.toFixed(2)} k</div>
            <div>${Vn_} = ${Vn.toFixed(1)} k</div>`;
 
   return [phi, Vn, html];
