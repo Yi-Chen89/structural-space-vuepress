@@ -6,11 +6,11 @@
           <th></th>
           <th>I-Shaped</th>
           <th>Channel</th>
+          <th>Angle</th>
+          <th>Tee</th>
           <th>RHS</th>
           <th>CHS</th>
-          <th>Tee</th>
-          <th>2L</th>
-          <th>L</th>
+          <th>2-Angle</th>
         </tr>
       </thead>
 
@@ -22,37 +22,37 @@
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
-          <td></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
         <tr>
           <td class="row-header">Compression</td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
           <td></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
         <tr>
           <td class="row-header">Flexure Major</td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
           <td></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
         <tr>
           <td class="row-header">Flexure Minor</td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
           <td></td>
           <td></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
         <tr>
@@ -62,7 +62,7 @@
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
-          <td></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
         <tr>
@@ -72,17 +72,17 @@
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
           <td><span v-html="check"></span></td>
-          <td></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
         <tr>
           <td class="row-header">Torsion</td>
           <td></td>
           <td></td>
-          <td><span v-html="check"></span></td>
-          <td><span v-html="check"></span></td>
           <td></td>
           <td></td>
+          <td><span v-html="check"></span></td>
+          <td><span v-html="check"></span></td>
           <td></td>
         </tr>
       </tbody>
@@ -91,13 +91,13 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      check: "<strong>&check;</strong>"
-    };
-  }
-};
+  export default {
+    data() {
+      return {
+        check: "<strong>&check;</strong>"
+      };
+    }
+  };
 </script>
 
 <style scoped>

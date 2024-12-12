@@ -9,6 +9,64 @@
 
 @tab Note
 
+**Steel v1.1**
+
+**Release Date**: 
+
+---
+
+- Member Calculator
+  - only works for US Customary units
+  - only works for AISC Shapes
+  - only produces LRFD design strengths
+  - slenderness class does not work for 2L shapes
+  - refer to *Applicability* tab for shape applicability
+  - refer to *Design Code* tab for AISC Shapes Database and ANSI/AISC 360 version
+
+@tab Applicability
+
+**Steel v1.1**
+
+**Release Date**: 
+
+---
+
+**Member Calculator**
+
+<steel-applicability-v1-1 />
+
+@tab Design Code
+
+**Steel v1.1**
+
+**Release Date**: 
+
+---
+
+- Steel Construction Manual 15th Edition
+  - AISC Shapes Database v15.0
+  - ANSI/AISC 360-16
+
+@tab Software
+
+**Steel v1.1**
+
+**Release Date**: 
+
+---
+
+- VuePress v2.0.0-rc.18
+- Vue v3.5.12
+
+:::
+
+
+## Older
+
+::: tabs
+
+@tab Note
+
 **Steel v1.0**
 
 **Release Date**: December 1, 2024
@@ -35,7 +93,7 @@
 
 **Member Calculator**
 
-<steel-ApplicabilityMatrix />
+<steel-applicability-v1-0 />
 
 @tab Design Code
 
@@ -61,6 +119,3 @@
 - Vue v3.5.12
 
 :::
-
-
-<!-- ## Older -->
