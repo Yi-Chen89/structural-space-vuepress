@@ -140,7 +140,24 @@
         "description": "flange thickness"
       }
     },
-    "L": {
+    "L Equal": {
+      "d": {
+        "notation": "d",
+        "unit": "in.",
+        "description": "width of shorter leg"
+      },
+      "b": {
+        "notation": "b",
+        "unit": "in.",
+        "description": "width of longer leg"
+      },
+      "t": {
+        "notation": "t",
+        "unit": "in.",
+        "description": "angle leg thickness"
+      }
+    },
+    "L Unequal": {
       "d": {
         "notation": "d",
         "unit": "in.",
@@ -373,7 +390,14 @@
         "description": "web slenderness ratio"
       }
     },
-    "L": {
+    "L Equal": {
+      "b/t": {
+        "notation": "b / t",
+        "unit": "",
+        "description": "longer leg slenderness ratio"
+      }
+    },
+    "L Unequal": {
       "b/t": {
         "notation": "b / t",
         "unit": "",
@@ -806,7 +830,79 @@
         "description": "warping constant"
       }
     },
-    "L": {
+    "L Equal": {
+      "A": {
+        "notation": "A",
+        "unit": "in.<sup>2</sup>",
+        "description": "cross-sectional area"
+      },
+      "Ix": {
+        "notation": "I<sub>x</sub>",
+        "unit": "in.<sup>4</sup>",
+        "description": "moment of inertia about x-axis"
+      },
+      "Zx": {
+        "notation": "Z<sub>x</sub>",
+        "unit": "in.<sup>3</sup>",
+        "description": "plastic section modulus about x-axis"
+      },
+      "Sx": {
+        "notation": "S<sub>x</sub>",
+        "unit": "in.<sup>3</sup>",
+        "description": "elastic section modulus about x-axis"
+      },
+      "rx": {
+        "notation": "r<sub>x</sub>",
+        "unit": "in.",
+        "description": "radius of gyration about x-axis"
+      },
+      "Iy": {
+        "notation": "I<sub>y</sub>",
+        "unit": "in.<sup>4</sup>",
+        "description": "moment of inertia about y-axis"
+      },
+      "Zy": {
+        "notation": "Z<sub>y</sub>",
+        "unit": "in.<sup>3</sup>",
+        "description": "plastic section modulus about y-axis"
+      },
+      "Sy": {
+        "notation": "S<sub>y</sub>",
+        "unit": "in.<sup>3</sup>",
+        "description": "elastic section modulus about y-axis"
+      },
+      "ry": {
+        "notation": "r<sub>y</sub>",
+        "unit": "in.",
+        "description": "radius of gyration about y-axis"
+      },
+      "Iz": {
+        "notation": "I<sub>z</sub>",
+        "unit": "in.<sup>4</sup>",
+        "description": "moment of inertia about z-axis"
+      },
+      "rz": {
+        "notation": "r<sub>z</sub>",
+        "unit": "in.",
+        "description": "radius of gyration about z-axis"
+      },
+      "Sz": {
+        "notation": "S<sub>z</sub>",
+        "unit": "in.<sup>3</sup>",
+        "description": "elastic section modulus about z-axis"
+      },
+      "J": {
+        "notation": "J",
+        "unit": "in.<sup>4</sup>",
+        "description": "torsional moment of inertia"
+      },
+      "Cw": {
+        "notation": "C<sub>w</sub>",
+        "unit": "in.<sup>6</sup>",
+        "description": "warping constant"
+      }
+    },
+    "L Unequal": {
       "A": {
         "notation": "A",
         "unit": "in.<sup>2</sup>",

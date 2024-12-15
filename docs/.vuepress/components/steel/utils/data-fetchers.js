@@ -50,28 +50,30 @@ export function shapeTypeFetcher(unit, shape) {
   // fetch data
   const shapeData = shapeDataFetcher(unit, shape)
 
+  let shapeTypeResult = null;
   if (shapeData && 'Type' in shapeData) {
-    const shapeTyoe = shapeData['Type'];
-    if (shapeTyoe === 'HSS') {
+    const shapeType = shapeData['Type'];
+
+    if (shapeType === 'HSS') {
       const countX = shape.split('X').length - 1;
+
       if (countX === 2) {
         const { Ht, B } = shapeData;
-        if (Ht !== B) {
-          return 'HSS Rect.';
-        } else {
-          return 'HSS Square';
-        }
+        shapeTypeResult = Ht !== B ? 'HSS Rect.' : 'HSS Square';
       } else if (countX === 1) {
-        return 'HSS Round';
-      } else {
-        return null;
+        shapeTypeResult = 'HSS Round';
       }
+
+    } else if (shapeType === 'L') {
+      const { d, b } = shapeData;
+      shapeTypeResult = d === b ? 'L Equal' : 'L Unequal';
+      
     } else {
-      return shapeData['Type'];
+      shapeTypeResult = shapeType;
     }
-  } else {
-    return null;
   }
+  
+  return shapeTypeResult;
 }
 
 export function shapeASTMSpecListFetcher(shapeType) {

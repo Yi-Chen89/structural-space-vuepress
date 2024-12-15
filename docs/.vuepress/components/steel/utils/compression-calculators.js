@@ -128,7 +128,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
         result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
       }
     
-    } else if (['L'].includes(shapeType)) {
+    } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
       const { A, h, b, t, x, y, rx, ry, J, Cw, ro } = shapeData;
 
       // E3 Flexural Buckling

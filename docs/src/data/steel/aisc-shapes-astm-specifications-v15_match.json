@@ -133,7 +133,29 @@
       "A588"
     ]
   },
-  "L": {
+  "L Equal": {
+    "ASTM_Designation_preferred": "A36",
+    "ASTM_Designation_applicable": [
+      "A529 Gr. 50",
+      "A529 Gr. 55",
+      "A709 36",
+      "A572 Gr. 42",
+      "A572 Gr. 50",
+      "A572 Gr. 55",
+      "A572 Gr. 60",
+      "A572 Gr. 65",
+      "A709 50",
+      "A709 50S",
+      "A709 50W",
+      "A913 50",
+      "A913 60",
+      "A913 65",
+      "A913 70",
+      "A992",
+      "A588"
+    ]
+  },
+  "L Unequal": {
     "ASTM_Designation_preferred": "A36",
     "ASTM_Designation_applicable": [
       "A529 Gr. 50",

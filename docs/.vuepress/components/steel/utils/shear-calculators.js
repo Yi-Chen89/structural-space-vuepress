@@ -54,7 +54,7 @@ export function majorShearCalculator(shapeData, shapeType, astmSpecProp, slender
         result['Vn_2_2']['html'] = html_2_2;
       }
 
-    } else if (['L'].includes(shapeType)) {
+    } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
       // G3
 
       const { b, t } = shapeData;
@@ -142,7 +142,7 @@ export function minorShearCalculator(shapeData, shapeType, astmSpecProp, slender
       result['Vn_6']['designValue'] = phi_6 * Vn_6;
       result['Vn_6']['html'] = html_6;
 
-    } else if (['L'].includes(shapeType)) {
+    } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
       // G3
 
       const { d, t } = shapeData;
@@ -424,7 +424,7 @@ function G3AngleAndTee(axis, shapeType, Fy, E, b, t, lambda) {
 
   let bshear_ = '';
   let tshear_ = '';
-  if (['L'].includes(shapeType)) {
+  if (['L Equal', 'L Unequal'].includes(shapeType)) {
     bshear_ = axis === 'x' ? b_ : d_;
     tshear_ = t_;
   } else if (['WT', 'MT', 'ST'].includes(shapeType)) {

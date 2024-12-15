@@ -208,7 +208,7 @@ export function majorFlexureCalculator(shapeData, shapeType, astmSpecProp, slend
       result['Mn_9_4']['designValues'] = [phi_9_4 * Mn_9_4_pos, phi_9_4 * Mn_9_4_neg];
       result['Mn_9_4']['html'] = html_9_4;
 
-    } else if (['L'].includes(shapeType)) {
+    } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
       // F10
       // limit state: Y, LTB, LLB
 

@@ -177,7 +177,7 @@ function slenderRatioParser(shapeData, shapeType) {
     result['web']['ratio']['value'] = lambdaw;
     result['web']['ratio']['html'] = `${h_} / ${tw_} = ${lambdaw.toFixed(2)}`;
 
-  } else if (['L'].includes(shapeType)) {
+  } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
     lambdaf = shapeData['d'] / shapeData['t'];
     result['flange']['isApplicable'] = true;
     result['flange']['notation'] = 'Short Leg';
@@ -269,7 +269,7 @@ function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     result['flange']['limit']['value'] = lambdarf;
     result['flange']['limit']['html'] = `0.56 ${calcTerm1_} = ${lambdarf.toFixed(2)}`;
 
-  } else if (['L'].includes(shapeType)) {
+  } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
     // Table B4.1a Case 3
     lambdarf = 0.45 * calcTerm1;
     result['flange']['limit']['notation'] = `${lambdar_}`;
@@ -301,7 +301,7 @@ function axialSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     result['web']['limit']['value'] = lambdarw;
     result['web']['limit']['html'] = `1.49 ${calcTerm1_} = ${lambdarw.toFixed(2)}`;
 
-  } else if (['L'].includes(shapeType)) {
+  } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
     // Table B4.1a Case 3
     lambdarw = 0.45 * calcTerm1;
     result['web']['limit']['notation'] = `${lambdar_}`;
@@ -365,7 +365,7 @@ function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     result['flange']['limit']['noncompact']['value'] = lambdarf;
     result['flange']['limit']['noncompact']['html'] = `1.0 ${calcTerm1_} = ${lambdarf.toFixed(2)}`;
 
-  } else if (['L'].includes(shapeType)) {
+  } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
     // Table B4.1b Case 12
     lambdapf = 0.54 * calcTerm1;
     result['flange']['limit']['compact']['notation'] = `${lambdap_}`;
@@ -419,7 +419,7 @@ function flexureSlenderLimitRatioCalculator(shapeType, astmSpecProp) {
     result['web']['limit']['noncompact']['value'] = lambdarw;
     result['web']['limit']['noncompact']['html'] = `5.70 ${calcTerm1_} = ${lambdarw.toFixed(2)}`;
 
-  } else if (['L'].includes(shapeType)) {
+  } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
     // Table B4.1b Case 12
     lambdapw = 0.54 * calcTerm1;
     result['web']['limit']['compact']['notation'] = `${lambdap_}`;
