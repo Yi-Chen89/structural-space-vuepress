@@ -129,7 +129,7 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       }
     
     } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
-      const { A, h, b, t, x, y, rx, ry, J, Cw, ro } = shapeData;
+      const { A, d, b, t, x, y, rx, ry, J, Cw, ro } = shapeData;
 
       // E3 Flexural Buckling
       const [phi_3, Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
@@ -157,6 +157,22 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       } else if (flange === 'slender' || web === 'slender') {
         // E7
         // limit state: LB
+
+        result['Pn_3_7']['isApplicable'] = true;
+        const [Ae_3, AeHtml_3] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, d, b, t, t, Fcr_3, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
+        const [Pn_3_7, PnHtml_3_7] = capacityCalculator(Fcr_3, Ae_3, 'effective');
+        result['Pn_3_7']['phiValue'] = phi_3;
+        result['Pn_3_7']['nominalValue'] = Pn_3_7;
+        result['Pn_3_7']['designValue'] = phi_3 * Pn_3_7;
+        result['Pn_3_7']['html'] = FcrHtml_3 + AeHtml_3 + PnHtml_3_7;
+
+        result['Pn_4_7']['isApplicable'] = true;
+        const [Ae_4, AeHtml_4] = E7MemberWithSlenderElementAe(shapeType, Fy, E, A, d, b, t, t, Fcr_4, lambdaf, lambdaw, lambdarf, lambdarw, flange, web);
+        const [Pn_4_7, PnHtml_4_7] = capacityCalculator(Fcr_4, Ae_4, 'effective');
+        result['Pn_4_7']['phiValue'] = phi_4;
+        result['Pn_4_7']['nominalValue'] = Pn_4_7;
+        result['Pn_4_7']['designValue'] = phi_4 * Pn_4_7;
+        result['Pn_4_7']['html'] = FcrHtml_4 + AeHtml_4 + PnHtml_4_7;
       }
     
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
@@ -615,12 +631,21 @@ function E7MemberWithSlenderElementAe(shapeType, Fy, E, Ag, b, h, tf, tw, Fcr, l
     return [Ae, html];
   }
 
-  if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square'].includes(shapeType)) {
+  if (['W', 'M', 'S', 'HP', 'C', 'MC', 'L Equal', 'L Unequal', 'WT', 'MT', 'ST', 'HSS Rect.', 'HSS Square'].includes(shapeType)) {
+    // calculate effective width for flange
+    let [be, beHtml] = effectiveWidthCalculator(shapeType, 'flange', Fy, b, Fcr, lambdaf, lambdarf, flangeClass);
+
+    // calculate effective width for web or stem
     if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
       h = lambdaw * tw;
     }
-    const [be, beHtml] = effectiveWidthCalculator(shapeType, 'flange', Fy, b, Fcr, lambdaf, lambdarf, flangeClass);
-    const [he, heHtml] = effectiveWidthCalculator(shapeType, 'web', Fy, h, Fcr, lambdaw, lambdarw, webClass);
+    let [he, heHtml] = effectiveWidthCalculator(shapeType, 'web', Fy, h, Fcr, lambdaw, lambdarw, webClass);
+
+    if (['L Equal'].includes(shapeType)) {
+      beHtml = '';
+      heHtml += `<div class="indented-line" style="--indented-line-level: 2;">${de_} = ${be_} = ${he.toFixed(2)} in.</div>`;
+    }
+    
     html += beHtml + heHtml;
 
     let AeHtml = '';
@@ -653,14 +678,18 @@ function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, la
   let lambdar_ = '';
   let beff_ = '';
   let bfull_ = '';
+  let elementType_ = elementType;
   if (elementType === 'flange') {
     lambda_ = lambdaf_;
     lambdar_ = lambdarf_;
     beff_ = be_;
-    if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
+    bfull_ = bf_;
+    if (['L Equal', 'L Unequal'].includes(shapeType)) {
+      beff_ = de_;
+      bfull_ = d_;
+      elementType_ = shapeType === 'L Equal' ? 'leg' : 'short leg';
+    } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       bfull_ = b_;
-    } else {
-      bfull_ = bf_;
     }
 
   } else if (elementType === 'web') {
@@ -668,28 +697,31 @@ function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, la
     lambdar_ = lambdarw_;
     beff_ = he_;
     bfull_ = h_;
-
-  } else if (elementType === 'stem') {
-    lambda_ = lambdaw_;
-    lambdar_ = lambdarw_;
-    beff_ = de_;
-    bfull_ = d_;
+    if (['L Equal', 'L Unequal'].includes(shapeType)) {
+      beff_ = be_;
+      bfull_ = b_;
+      elementType_ = shapeType === 'L Equal' ? 'leg' : 'long leg';
+    } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+      beff_ = de_;
+      bfull_ = d_;
+      elementType_ = 'stem';
+    }
   }
 
   const calcTerm1 = lambdar * Math.sqrt(Fy / Fcr);
   const calcTerm1_ = `${lambdar_} &radic;(${Fy_} / ${Fcr_})`;
 
   if (elementClass === 'nonslender') {
-    html += `<div>For nonslender ${elementType}s</div>
+    html += `<div>For nonslender ${elementType_}s</div>
              <div class="indented-line">Effective width, ${beff_} = ${bfull_}</div>`;
 
   } else {
     if (lambda <= calcTerm1) {
-      html += `<div>For slender ${elementType}s and ${lambda_} &le; ${calcTerm1_}</div>
+      html += `<div>For slender ${elementType_}s and ${lambda_} &le; ${calcTerm1_}</div>
                <div class="indented-line">Effective width, ${beff_} = ${bfull_}</div>`;
 
     } else {
-      html += `<div>For slender ${elementType}s and ${lambda_} &gt; ${calcTerm1_}</div>`
+      html += `<div>For slender ${elementType_}s and ${lambda_} &gt; ${calcTerm1_}</div>`
       
       if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
         html += `<div class="indented-line">${bfull_} = ${lambda_} ${tw_} = ${b.toFixed(2)} in.</div>`;
@@ -744,17 +776,28 @@ function effectiveAreaCalculator(shapeType, Ag, b, h, tf, tw, be, he) {
   let hweb_ = '';
   let tflange_ = '';
   let tweb_ = '';
+  let beff_ = be_;
+  let heff_ = he_;
   if (['W', 'M', 'S', 'HP', 'C', 'MC'].includes(shapeType)) {
     bflange_ = bf_;
     hweb_ = h_;
     tflange_ = tf_;
     tweb_ = tw_;
 
+  } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
+    bflange_ = d_;
+    hweb_ = b_;
+    tflange_ = t_;
+    tweb_ = t_;
+    beff_ = de_;
+    heff_ = be_;
+
   } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
     bflange_ = bf_;
     hweb_ = d_;
     tflange_ = tf_;
     tweb_ = tw_;
+    heff_ = de_;
 
   } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
     bflange_ = b_;
@@ -767,20 +810,20 @@ function effectiveAreaCalculator(shapeType, Ag, b, h, tf, tw, be, he) {
   let calcTerm1_ = '';
   if (['W', 'M', 'S', 'HP', 'C', 'MC','HSS Rect.', 'HSS Square'].includes(shapeType)) {
     calcTerm1 = 2 * (b - be) * tf;
-    calcTerm1_ = `2 (${bflange_} - ${be_}) ${tflange_}`;
-  } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
+    calcTerm1_ = `2 (${bflange_} - ${beff_}) ${tflange_}`;
+  } else if (['L Equal', 'L Unequal', 'WT', 'MT', 'ST'].includes(shapeType)) {
     calcTerm1 = (b - be) * tf;
-    calcTerm1_ = `(${bflange_} - ${be_}) ${tflange_}`;
+    calcTerm1_ = `(${bflange_} - ${beff_}) ${tflange_}`;
   }
 
   let calcTerm2 = 0;
   let calcTerm2_ = '';
   if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
     calcTerm2 = 2 * (h - he) * tw;
-    calcTerm2_ = `2 (${hweb_} - ${he_}) ${tweb_}`;
-  } else if (['W', 'M', 'S', 'HP', 'C', 'MC', 'WT', 'MT', 'ST'].includes(shapeType)) {
+    calcTerm2_ = `2 (${hweb_} - ${heff_}) ${tweb_}`;
+  } else if (['W', 'M', 'S', 'HP', 'C', 'MC', 'L Equal', 'L Unequal', 'WT', 'MT', 'ST'].includes(shapeType)) {
     calcTerm2 = (h - he) * tw;
-    calcTerm2_ = `(${hweb_} - ${he_}) ${tweb_}`;
+    calcTerm2_ = `(${hweb_} - ${heff_}) ${tweb_}`;
   }
 
   html += `<div>Effective area</div>`;
