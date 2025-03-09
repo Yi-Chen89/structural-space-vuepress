@@ -86,6 +86,46 @@
             :unit="'ft'"
             @updateValidatedValue="validatedNumberHandler"
           />
+
+          <NumberInputField
+            v-if="angleLengthInputDisplay"
+            type="nonnegative"
+            id="angleLength"
+            label="Enter Length between Work Points (L)"
+            :enteredValue="enteredAngleLength"
+            :defaultValue="0"
+            :unit="'ft'"
+            @updateValidatedValue="validatedNumberHandler"
+          />
+
+          <div v-if="angleMemberTypeSelectionDisplay">
+            <label for="angleMemberType">Select Angle Member Type:&emsp;</label>
+            <select id="angleMemberType" v-model="selectedAngleMemberType">
+              <option :value="0">Individual Member</option>
+              <option :value="1">Web Member of Planar Truss</option>
+              <option :value="2">Web Member of Box or Space Truss</option>
+            </select>
+          </div>
+
+          <div v-if="angleConnectedLegSelectionDisplay">
+            <label for="angleConnectedLeg">Select Angle Connected Leg:&emsp;</label>
+            <select id="angleConnectedLeg" v-model="selectedAngleConnectedLeg">
+              <option :value="0">Longer Leg</option>
+              <option :value="1">Shorter Leg</option>
+            </select>
+          </div>
+
+          <!-- <div v-if="angleLengthInputDisplay">
+            <div>The effects of eccentricity on single-angle members are permitted to be neglected and the member evaluated as axially loaded using one of the effective slenderness ratios specified in Section E5(a) or E5(b)</div>
+            <ol>
+              <li>Members are loaded at the ends in compression through the same one leg</li>
+              <li>Members are attached by welding or by connections with a minimum of two bolts</li>
+              <li>There are no intermediate transverse loads</li>
+              <li>L<sub>c</sub> / r does not exceed 200</li>
+              <li>For unequal leg angles, the ratio of long leg width to short leg width is less than 1.7</li>
+            </ol>
+            <div>Single-angle members that do NOT meet these requirements shall be evaluated for combined axial load and flexure</div>
+          </div> -->
         </div>
       </div>
 
@@ -375,6 +415,9 @@
         enteredEffectiveLengthX: 0,
         enteredEffectiveLengthY: 0,
         enteredEffectiveLengthZ: 0,
+        enteredAngleLength: 0,
+        selectedAngleMemberType: 0,
+        selectedAngleConnectedLeg: 0,
         enteredUnbracedLength: 0,
         enteredLTBModFactor: 1,
         selectedConsiderTensionFieldAction: false,
@@ -386,6 +429,7 @@
         validatedEffectiveLengthX: 0,
         validatedEffectiveLengthY: 0,
         validatedEffectiveLengthZ: 0,
+        validatedAngleLength: 0,
         validatedUnbracedLength: 0,
         validatedLTBModFactor: 1,
         validatedTransverseStiffenerDistance: 0,
@@ -549,7 +593,16 @@
         return this.selectedGradeValid && this.compressionCalcSelected;
       },
       effectiveLengthInputDisplay() {
-        return this.selectedGradeValid;
+        return this.selectedGradeValid && !['L Equal', 'L Unequal'].includes(this.selectedShapeType);
+      },
+      angleLengthInputDisplay() {
+        return this.selectedGradeValid && ['L Equal', 'L Unequal'].includes(this.selectedShapeType);
+      },
+      angleMemberTypeSelectionDisplay() {
+        return this.selectedGradeValid && ['L Equal', 'L Unequal'].includes(this.selectedShapeType);
+      },
+      angleConnectedLegSelectionDisplay() {
+        return this.selectedGradeValid && ['L Unequal'].includes(this.selectedShapeType);
       },
 
       flexureInputDisplay() {
@@ -667,7 +720,7 @@
       },
 
       selectedShapeCompressionCapacity() {
-        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ);
+        return compressionCalculator(this.selectedShapeData, this.selectedShapeType, this.selectedASTMSpecProp, this.selectedShapeAxialSlenderClass, this.validatedEffectiveLengthX, this.validatedEffectiveLengthY, this.validatedEffectiveLengthZ, this.validatedAngleLength, this.selectedAngleMemberType, this.selectedAngleConnectedLeg);
       },
       selectedShapeCompressionCriticalCapacity() {
         return criticalCompressionResultProcessor(this.selectedShapeCompressionCapacity);
@@ -736,6 +789,9 @@
         } else if (id === 'effectiveLengthZ') {
           this.enteredEffectiveLengthZ = value;
           this.validatedEffectiveLengthZ = value * 12;
+        } else if (id === 'angleLength') {
+          this.enteredAngleLength = value;
+          this.validatedAngleLength = value * 12;
         } else if (id === 'unbracedLength') {
           this.enteredUnbracedLength = value;
           this.validatedUnbracedLength = value * 12;
@@ -779,6 +835,9 @@
         this.enteredEffectiveLengthX = 0;
         this.enteredEffectiveLengthY = 0;
         this.enteredEffectiveLengthZ = 0;
+        this.enteredAngleLength = 0;
+        this.selectedAngleMemberType = 0;
+        this.selectedAngleConnectedLeg = 0;
         this.enteredUnbracedLength = 0;
         this.enteredLTBModFactor = 1;
         this.selectedConsiderTensionFieldAction = false;
@@ -790,6 +849,7 @@
         this.validatedEffectiveLengthX = 0;
         this.validatedEffectiveLengthY = 0;
         this.validatedEffectiveLengthZ = 0;
+        this.validatedAngleLength = 0;
         this.validatedUnbracedLength = 0;
         this.validatedLTBModFactor = 1;
         this.validatedTransverseStiffenerDistance = 0;

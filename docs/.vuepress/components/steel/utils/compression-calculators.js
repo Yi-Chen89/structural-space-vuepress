@@ -13,7 +13,7 @@ import { resultRenderDataConstructor } from './render-data-constructors';
 
 // A360 Chapter E
 
-export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lcx, Lcy, Lcz) {
+export function compressionCalculator(shapeData, shapeType, astmSpecProp, slenderClass, Lcx, Lcy, Lcz, L, angleMemberType, angleConnectedLeg) {
   if (shapeData && shapeType && astmSpecProp && slenderClass) {
     const { Fy, E, G } = astmSpecProp;
     const {
@@ -129,10 +129,10 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       }
     
     } else if (['L Equal', 'L Unequal'].includes(shapeType)) {
-      const { A, d, b, t, x, y, rx, ry, J, Cw, ro } = shapeData;
+      const { A, d, b, t, x, y, rx, ry, rz, J, Cw, ro } = shapeData;
 
       // E3 Flexural Buckling
-      const [phi_3, Fcr_3, FcrHtml_3] = E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy);
+      const [phi_3, Fcr_3, FcrHtml_3] = E3AngleFlexuralBucklingWithoutSlenderElementFcr(shapeType, Fy, E, d, b, rx, ry, rz, L, angleMemberType, angleConnectedLeg);
 
       // E4 Flexural-Torsional Buckling
       const [phi_4, Fcr_4, FcrHtml_4] = E4_cFlexuralTorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, A, t, x, y, rx, ry, J, Cw, ro, Lcx, Lcy, Lcz, lambdaw);
@@ -292,7 +292,7 @@ export function criticalCompressionResultProcessor(result) {
 
 // Helper Function
 
-// E3 Flexural Buckling of Members without Slender Elements
+// E3 Flexural Buckling of Members without Slender Elements (except Angle)
 function E3FlexuralBucklingWithoutSlenderElementFcr(Fy, E, rx, ry, Lcx, Lcy) {
   let phi = 0.9;
   let Fcr = 0;
@@ -618,6 +618,113 @@ function criticalStressCalculator(Fy, Fe) {
 
 // E5 Single-Angle Compression Members
 
+function E3AngleFlexuralBucklingWithoutSlenderElementFcr(shapeType, Fy, E, d, b, rx, ry, rz, L, memberType, connectedLeg) {
+  let phi = 0.9;
+  let Fcr = 0;
+  let html = '';
+
+  if (L === 0) {
+    Fcr = Fy;
+    html += `<div>Critical stress</div>
+             <div class="indented-line">For ${L_} = 0, ${Fcr_} = ${Fy_} = ${Fy.toFixed(2)} ksi</div>`;
+
+  } else {
+    let calcTerm1 = 0;
+    let calcTerm1_ = `${Lc_} / r`;
+    let calcTerm1Html = '';
+
+    [calcTerm1, calcTerm1Html] = E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz, L, memberType, connectedLeg);
+    html += calcTerm1Html;
+
+    if (calcTerm1 > 200) {
+      html += `<div class="note-message">Effective slenderness ratio preferably should not exceed 200</div>`;
+    }
+
+    const Fe = Math.PI**2 * E / calcTerm1**2;
+    html += `<div>Elastic buckling stress</div>
+             <div class="indented-line">${Fe_} = &pi;<sup>2</sup> ${E_} / (${calcTerm1_})<sup>2</sup> = ${Fe.toFixed(2)} ksi</div>`;
+
+    let FcrHtml = '';
+    [Fcr, FcrHtml] = criticalStressCalculator(Fy, Fe);
+    html += FcrHtml;
+  }
+
+  return [phi, Fcr, html];
+}
+
+function E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz, L, memberType, connectedLeg) {
+  // connectedLeg = 0 for longer leg
+  // connectedLeg = 1 for shorter leg
+
+  let Lc_r = 0;
+  let html = '';
+
+  const Lc_r_ = `${Lc_} / r`;
+
+  html += `<div>Effective slenderness ratio</div>`;
+
+  let ra = 0;
+  if (shapeType === 'L Equal') {
+    html += `<div class="indented-line">For equal-leg angle, ${ra_} = ${rx_} = ${ry_} = ${rx.toFixed(2)} in.</div>`;
+    ra = rx;
+  } else {
+    if (connectedLeg === 0) {
+      html += `<div class="indented-line">For unequal-leg angle connected through the longer leg, ${ra_} = ${ry_} = ${ry.toFixed(2)} in.</div>`;
+      ra = ry;
+    } else if (connectedLeg === 1) {
+      html += `<div class="indented-line">For unequal-leg angle connected through the shorter leg, ${ra_} = ${rx_} = ${rx.toFixed(2)} in.</div>`;
+      ra = rx;
+    }
+  }
+
+  const calcTerm1 = L / ra;
+  const calcTerm1_ = `${L_} / ${ra_}`;
+  html += `<div class="indented-line" style="--indented-line-level: 2;">${calcTerm1_} = ${calcTerm1.toFixed(2)}</div>`;
+
+  const threshold = (memberType === 2) ? 75 : 80;
+  const threshold_ = (memberType === 2) ? '75' : '80';
+  const const1 = (memberType === 2) ? 60 : 72;
+  const const1_ = (memberType === 2) ? '60' : '72';
+  const coeff1 = (memberType === 2) ? 0.8 : 0.75;
+  const coeff1_ = (memberType === 2) ? '0.8 ' : '0.75 ';
+  const const2 = (memberType === 2) ? 45 : 32;
+  const const2_ = (memberType === 2) ? '45' : '32';
+  const coeff2 = (memberType === 2) ? 1 : 1.25;
+  const coeff2_ = (memberType === 2) ? '' : '1.25 ';
+
+  let calcBase = '';
+  if (calcTerm1 <= threshold) {
+    Lc_r = const1 + coeff1 * calcTerm1;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">For ${calcTerm1_} &le; ${threshold_}</div></div>`;
+    calcBase += `${Lc_r_} = ${const1_} + ${coeff1_}${calcTerm1_}`;
+  } else {
+    Lc_r = const2 + coeff2 * calcTerm1;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">For ${calcTerm1_} &gt; ${threshold_}</div></div>`;
+    calcBase += `${Lc_r_} = ${const2_} + ${coeff2_}${calcTerm1_}`;
+  }
+
+  if (connectedLeg === 0) {
+    html += `<div class="indented-line" style="--indented-line-level: 2;">${calcBase} = ${Lc_r.toFixed(2)}</div>`;
+
+  } else if (connectedLeg === 1) {
+    const coeff3 = (memberType === 2) ? 0.82 : 0.95;
+    const coeff3_ = (memberType === 2) ? '0.82' : '0.95';
+
+    const calcTerm2 = coeff3 * L / rz;
+    const calcTerm2_ = `${coeff3_} ${L_} / ${rz_}`;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">${calcTerm2_} = ${calcTerm2.toFixed(2)}</div>`;
+
+    const coeff4 = (memberType === 2) ? 6 : 4;
+    const coeff4_ = (memberType === 2) ? '6' : '4';
+    Lc_r += coeff4 * ((b / d)**2 - 1);
+    html += `<div class="indented-line" style="--indented-line-level: 2;">${calcBase} + ${coeff4_} ((${b_} / ${d_})<sup>2</sup> - 1) = ${Lc_r.toFixed(2)} &ge; ${calcTerm2_}</div>`;
+
+    Lc_r = Math.max(Lc_r, calcTerm2);
+    html += `<div class="indented-line" style="--indented-line-level: 2;">${Lc_r_} = ${Lc_r.toFixed(2)}</div>`;
+  }
+
+  return [Lc_r, html];
+}
 
 // E6 Built-Up Members
 
@@ -894,3 +1001,6 @@ const ey_ = 'e<sub>y</sub>';
 
 const xo_ = 'x<sub>o</sub>';
 const yo_ = 'y<sub>o</sub>';
+
+const ra_ = 'r<sub>a</sub>';
+const Lc_ = 'L<sub>c</sub>';
