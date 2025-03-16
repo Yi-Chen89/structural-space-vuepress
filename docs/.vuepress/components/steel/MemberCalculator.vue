@@ -115,17 +115,20 @@
             </select>
           </div>
 
-          <!-- <div v-if="angleLengthInputDisplay">
-            <div>The effects of eccentricity on single-angle members are permitted to be neglected and the member evaluated as axially loaded using one of the effective slenderness ratios specified in Section E5(a) or E5(b)</div>
-            <ol>
-              <li>Members are loaded at the ends in compression through the same one leg</li>
-              <li>Members are attached by welding or by connections with a minimum of two bolts</li>
-              <li>There are no intermediate transverse loads</li>
-              <li>L<sub>c</sub> / r does not exceed 200</li>
-              <li>For unequal leg angles, the ratio of long leg width to short leg width is less than 1.7</li>
-            </ol>
-            <div>Single-angle members that do NOT meet these requirements shall be evaluated for combined axial load and flexure</div>
-          </div> -->
+          <div v-if="angleLengthInputDisplay" class="assumption-statement">
+            <div>Calculation Assumption</div>
+            <div class="indented-container">
+              <div>The effects of eccentricity on single-angle members are permitted to be neglected and the member evaluated as axially loaded using the effective slenderness ratios specified in Section E5(a) or E5(b), provided that the following requirements are met:</div>
+              <ol>
+                <li>Members are loaded at the ends in compression through the same one leg</li>
+                <li>Members are attached by welding or by connections with a minimum of two bolts</li>
+                <li>There are no intermediate transverse loads</li>
+                <li>L<sub>c</sub> / r does not exceed 200</li>
+                <li>For unequal leg angles, the ratio of long leg width to short leg width is less than 1.7</li>
+              </ol>
+              <div>Single-angle members that do not meet these requirements shall be evaluated for combined axial load and flexure.</div>
+            </div>
+          </div>
         </div>
       </div>
 
