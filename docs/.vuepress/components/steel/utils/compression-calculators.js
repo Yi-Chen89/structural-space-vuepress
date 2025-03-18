@@ -135,7 +135,8 @@ export function compressionCalculator(shapeData, shapeType, astmSpecProp, slende
       const [phi_3, Fcr_3, FcrHtml_3] = E3AngleFlexuralBucklingWithoutSlenderElementFcr(shapeType, Fy, E, d, b, rx, ry, rz, L, angleMemberType, angleConnectedLeg);
 
       // E4 Flexural-Torsional Buckling
-      const [phi_4, Fcr_4, FcrHtml_4] = E4_cFlexuralTorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, A, t, x, y, rx, ry, J, Cw, ro, Lcx, Lcy, Lcz, lambdaw);
+      // const [phi_4, Fcr_4, FcrHtml_4] = E4_cFlexuralTorsionalBucklingWithoutSlenderElementFcr(Fy, E, G, A, t, x, y, rx, ry, J, Cw, ro, Lcx, Lcy, Lcz, lambdaw);
+      const [phi_4, Fcr_4, FcrHtml_4] = E4AngleFlexuralTorsionalBucklingWithoutSlenderElementFcr();
 
       if (flange === 'nonslender' && web === 'nonslender') {
         // E3 E4
@@ -617,7 +618,6 @@ function criticalStressCalculator(Fy, Fe) {
 }
 
 // E5 Single-Angle Compression Members
-
 function E3AngleFlexuralBucklingWithoutSlenderElementFcr(shapeType, Fy, E, d, b, rx, ry, rz, L, memberType, connectedLeg) {
   let phi = 0.9;
   let Fcr = 0;
@@ -633,11 +633,26 @@ function E3AngleFlexuralBucklingWithoutSlenderElementFcr(shapeType, Fy, E, d, b,
     let calcTerm1_ = `${Lc_} / r`;
     let calcTerm1Html = '';
 
+    if (shapeType === 'L Unequal') {
+      html += `<div>For unequal-leg angle, check ratio of longer leg width to shorter leg width</div>`;
+
+      const calcTerm2 = b / d;
+      const calcTerm2_ = `${b_} / ${d_}`;
+      if (calcTerm2 < 1.7) {
+        html += `<div class="indented-line">${calcTerm2_} = ${calcTerm2.toFixed(2)} &lt; 1.7</div>`;
+      } else {
+        html += `<div class="indented-line">${calcTerm2_} = ${calcTerm2.toFixed(2)} &ge; 1.7</div>
+                 <div>Member shall be evaluated for combined axial load and flexure</div>`;
+        return [phi, Fcr, html];
+      }
+    }
+
     [calcTerm1, calcTerm1Html] = E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz, L, memberType, connectedLeg);
     html += calcTerm1Html;
 
     if (calcTerm1 > 200) {
-      html += `<div class="note-message">Effective slenderness ratio preferably should not exceed 200</div>`;
+      html += `<div>Member shall be evaluated for combined axial load and flexure</div>`;
+      return [phi, Fcr, html];
     }
 
     const Fe = Math.PI**2 * E / calcTerm1**2;
@@ -652,6 +667,17 @@ function E3AngleFlexuralBucklingWithoutSlenderElementFcr(shapeType, Fy, E, d, b,
   return [phi, Fcr, html];
 }
 
+function E4AngleFlexuralTorsionalBucklingWithoutSlenderElementFcr() {
+  // can merge with E4_cFlexuralTorsionalBucklingWithoutSlenderElementFcr()
+  let phi = 0.9;
+  let Fcr = 0;
+  let html = '';
+
+  html += `<div>There are no ASTM A36/A36M hot-rolled angles for which this limit state applies</div>`;
+
+  return [phi, Fcr, html];
+}
+
 function E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz, L, memberType, connectedLeg) {
   // connectedLeg = 0 for longer leg
   // connectedLeg = 1 for shorter leg
@@ -661,7 +687,8 @@ function E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz,
 
   const Lc_r_ = `${Lc_} / r`;
 
-  html += `<div>Effective slenderness ratio</div>`;
+  html += `<div>Effective slenderness ratio by `;
+  html += (memberType === 2) ? `E5(b)</div>` : `E5(a)</div>`;
 
   let ra = 0;
   if (shapeType === 'L Equal') {
@@ -695,16 +722,16 @@ function E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz,
   let calcBase = '';
   if (calcTerm1 <= threshold) {
     Lc_r = const1 + coeff1 * calcTerm1;
-    html += `<div class="indented-line" style="--indented-line-level: 2;">For ${calcTerm1_} &le; ${threshold_}</div></div>`;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">For ${calcTerm1_} &le; ${threshold_}</div>`;
     calcBase += `${Lc_r_} = ${const1_} + ${coeff1_}${calcTerm1_}`;
   } else {
     Lc_r = const2 + coeff2 * calcTerm1;
-    html += `<div class="indented-line" style="--indented-line-level: 2;">For ${calcTerm1_} &gt; ${threshold_}</div></div>`;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">For ${calcTerm1_} &gt; ${threshold_}</div>`;
     calcBase += `${Lc_r_} = ${const2_} + ${coeff2_}${calcTerm1_}`;
   }
 
   if (connectedLeg === 0) {
-    html += `<div class="indented-line" style="--indented-line-level: 2;">${calcBase} = ${Lc_r.toFixed(2)}</div>`;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">${calcBase} = ${Lc_r.toFixed(2)}`;
 
   } else if (connectedLeg === 1) {
     const coeff3 = (memberType === 2) ? 0.82 : 0.95;
@@ -720,8 +747,10 @@ function E5AngleEffectiveSlendernessRatioCalculator(shapeType, d, b, rx, ry, rz,
     html += `<div class="indented-line" style="--indented-line-level: 2;">${calcBase} + ${coeff4_} ((${b_} / ${d_})<sup>2</sup> - 1) = ${Lc_r.toFixed(2)} &ge; ${calcTerm2_}</div>`;
 
     Lc_r = Math.max(Lc_r, calcTerm2);
-    html += `<div class="indented-line" style="--indented-line-level: 2;">${Lc_r_} = ${Lc_r.toFixed(2)}</div>`;
+    html += `<div class="indented-line" style="--indented-line-level: 2;">${Lc_r_} = ${Lc_r.toFixed(2)}`;
   }
+
+  html += (Lc_r <= 200) ? ` &le; 200</div>` : ` &gt; 200</div>`;
 
   return [Lc_r, html];
 }
@@ -794,7 +823,7 @@ function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, la
     if (['L Equal', 'L Unequal'].includes(shapeType)) {
       beff_ = de_;
       bfull_ = d_;
-      elementType_ = shapeType === 'L Equal' ? 'leg' : 'short leg';
+      elementType_ = shapeType === 'L Equal' ? 'leg' : 'shorter leg';
     } else if (['HSS Rect.', 'HSS Square'].includes(shapeType)) {
       bfull_ = b_;
     }
@@ -807,7 +836,7 @@ function effectiveWidthCalculator(shapeType, elementType, Fy, b, Fcr, lambda, la
     if (['L Equal', 'L Unequal'].includes(shapeType)) {
       beff_ = be_;
       bfull_ = b_;
-      elementType_ = shapeType === 'L Equal' ? 'leg' : 'long leg';
+      elementType_ = shapeType === 'L Equal' ? 'leg' : 'longer leg';
     } else if (['WT', 'MT', 'ST'].includes(shapeType)) {
       beff_ = de_;
       bfull_ = d_;
